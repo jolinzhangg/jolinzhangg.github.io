@@ -239,8 +239,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/05/09/transaction/" itemprop="url">
-                  Transaction
+                <a class="post-title-link" href="/2016/05/10/mysql-engine/" itemprop="url">
+                  MySQL Engine
                 </a>
               
             
@@ -253,8 +253,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-09T16:59:22+08:00" content="2016-05-09">
-              2016-05-09
+            <time itemprop="dateCreated" datetime="2016-05-10T14:23:33+08:00" content="2016-05-10">
+              2016-05-10
             </time>
           </span>
 
@@ -283,10 +283,128 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<p>![MySQL服务器逻辑架构图]（/image/transaction_1.jpg）</p>
+            <p>在文件系统中，MySQL为每个数据库（也称schema）保存为数据目录下的一个子目录。创建表时，MySQL会在数据库子目录下创建一个和表同名的.frm文件报错表的定义。由于使用文件系统的目录和文件来保存数据库和表，所以大小写敏感性就和平台密切相关。windows大小写不敏感；而类unix则敏感。如图1-图3所示。</p>
+<p><img src="http://i1.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_3.jpg" alt="图1">图1<br><img src="http://i3.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_2.jpg" alt="图2">图2<br><img src="http://i2.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_1.jpg" alt="图3">图3</p>
 
           
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/09/transaction/" itemprop="url">
+                  Transaction
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-09T16:59:22+08:00" content="2016-05-09">
+              2016-05-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="MySQL的逻辑架构图。"><a href="#MySQL的逻辑架构图。" class="headerlink" title="MySQL的逻辑架构图。"></a>MySQL的逻辑架构图。</h2><p>最上层是连接管理、授权认证、安全等。每个客户端连接会在服务器中拥有一个线程。连接时，服务器首先对其进行认证，基于用户名、原始主机细信息和密码。成功后会进一步验证是否具有执行某个特定查询的权限。</p>
+<p>第二层包括查询解析、分析、优化、换成以及所有内置函数（如，日期、时间、数学等），所有跨存储引擎的功能：存储过程、触发器、视图等。mysql会解析查询，创建内部数据结果（解析树），进行诸如，重新查询、决定表的读写顺序，以及如何选择合适的索引等。可以通过hint提示优化器，影响决策过程；也可以explain，请求优化器解释优化过程的各个因素。</p>
+<p>第三层是存储引擎。</p>
+<p><img src="http://hi.csdn.net/attachment/201109/1/0_1314876855Seq2.gif" alt="MySQL服务器逻辑架构图"></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/09/transaction/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -453,6 +571,25 @@
           </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/markdown/" itemprop="url" rel="index">
+                    <span itemprop="name">markdown</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
 
           
             
@@ -476,84 +613,18 @@
 
       
         
-          
-            <pre><code># h1
+          <pre><code># h1
 ## h2
 ### h3
 #### h4
 ##### h5
 ###### h6
-</code></pre><h1 id="h1"><a href="#h1" class="headerlink" title="h1"></a>h1</h1><h2 id="h2"><a href="#h2" class="headerlink" title="h2"></a>h2</h2><h3 id="h3"><a href="#h3" class="headerlink" title="h3"></a>h3</h3><h4 id="h4"><a href="#h4" class="headerlink" title="h4"></a>h4</h4><h5 id="h5"><a href="#h5" class="headerlink" title="h5"></a>h5</h5><h6 id="h6"><a href="#h6" class="headerlink" title="h6"></a>h6</h6><pre><code>*italia*
-**bold**
-单个回车是空格
-连续回车才是分段
-
-段内后面两个空格  
-换行
-
-&gt;引文内容
-大标题
-=
-小标题
--
-</code></pre><p><em>italia</em><br><strong>bold</strong></p>
-<p>单个回车是空格<br>连续回车才是分段</p>
-<p>段内<br>换行</p>
-<blockquote>
-<p>引文内容</p>
-</blockquote>
-<p>大标题<br>=<br>小标题<br>-</p>
-<pre><code>--- 
-上面是一条分割线
-
-- 无序列表
-- 无序列表
-- 无序列表
-
-1. 有序列表
-2. 有序列表
-3. 有序列表
-
-- 嵌套-外层
-  + 内层
-  + 内层
-- 外层
-  + 内层
---- 
-上面是一条分割线
-</code></pre><ul>
-<li>无序列表</li>
-<li>无序列表</li>
-<li>无序列表</li>
-</ul>
-<ol>
-<li>有序列表</li>
-<li>有序列表</li>
-<li>有序列表</li>
-</ol>
-<ul>
-<li>嵌套-外层<ul>
-<li>内层</li>
-<li>内层</li>
-</ul>
-</li>
-<li>外层<ul>
-<li>内层</li>
-</ul>
-</li>
-</ul>
-<p>图片和链接</p>
-<pre><code>[超链接](url)
-![图片](url)
-</code></pre><p><a href="http://jolinzhangg.github.io" target="_blank" rel="external">超链接</a></p>
-<p><img src="http://i2.itc.cn/20160505/3094_cddec05b_a89d_00e9_67f7_7b5782685f2d_1.jpg" alt="图片"></p>
-<p>代码 java</p>
-<pre><code>Class Person {
-    private int id;
-    private String name;
-}
-</code></pre>
-          
+</code></pre><h1 id="h1"><a href="#h1" class="headerlink" title="h1"></a>h1</h1><h2 id="h2"><a href="#h2" class="headerlink" title="h2"></a>h2</h2><h3 id="h3"><a href="#h3" class="headerlink" title="h3"></a>h3</h3><h4 id="h4"><a href="#h4" class="headerlink" title="h4"></a>h4</h4><h5 id="h5"><a href="#h5" class="headerlink" title="h5"></a>h5</h5><h6 id="h6"><a href="#h6" class="headerlink" title="h6"></a>h6</h6>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/05/markdown/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -621,6 +692,25 @@
           </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">hexo</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
 
           
             
@@ -644,18 +734,12 @@
 
       
         
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-          
+          <p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/05/hello-world/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -723,13 +807,27 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
 
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
           
 
         </nav>

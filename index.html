@@ -239,6 +239,401 @@
             
               
                 
+                <a class="post-title-link" href="/2016/05/17/dubbo-getting-started/" itemprop="url">
+                  duboo入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-17T10:15:51+08:00" content="2016-05-17">
+              2016-05-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/17/dubbo-getting-started/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/17/dubbo-getting-started/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="http://dubbo.io/dubbo-architecture-roadmap.jpg-version=1&amp;modificationDate=1331143666000.jpg" alt=""></p>
+<p><img src="http://dubbo.io/dubbo-service-governance.jpg-version=1&amp;modificationDate=1331887614000.jpg" alt=""></p>
+<p><img src="http://dubbo.io/dubbo-architecture.jpg-version=1&amp;modificationDate=1330892870000.jpg" alt=""></p>
+<p>节点角色说明：</p>
+<pre><code>Provider: 暴露服务的服务提供方。
+Consumer: 调用远程服务的服务消费方。
+Registry: 服务注册与发现的注册中心。
+Monitor: 统计服务的调用次调和调用时间的监控中心。
+Container: 服务运行容器。
+</code></pre><p>调用关系说明：</p>
+<pre><code>0. 服务容器负责启动，加载，运行服务提供者。
+1. 服务提供者在启动时，向注册中心注册自己提供的服务。
+2. 服务消费者在启动时，向注册中心订阅自己所需的服务。
+3. 注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费者。
+4. 服务消费者，从提供者地址列表中，基于软负载均衡算法，选一台提供者进行调用，如果调用失败，再选另一台调用。
+5. 服务消费者和提供者，在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心。
+</code></pre><p>注册中心负责服务地址的注册与查找，相当于目录服务，服务提供者和消费者只在启动时与注册中心交互，注册中心不转发请求，压力较小。</p>
+<p><img src="http://dubbo.io/dubbo-architecture-future.jpg-version=1&amp;modificationDate=1329978098000.jpg" alt=""></p>
+<blockquote>
+<p>dubbo官方入门文档 <a href="http://dubbo.io/Getting+Started-zh.htm" target="_blank" rel="external">http://dubbo.io/Getting+Started-zh.htm</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/16/java-memory/" itemprop="url">
+                  Java内存区域
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-16T16:55:27+08:00" content="2016-05-16">
+              2016-05-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/16/java-memory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/16/java-memory/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>当前线程执行字节码的行号指示器。在虚拟机的概念模型里，通过这个行号指示下一条要执行的指令，分支、循环、跳转、异常处理、线程恢复等。线程独立。当执行java方法的时候，指示的是虚拟机字节码指令的地址；执行native方法是，这个值为空。</p>
+<p>唯一一个没有在虚拟机规范中规定任何OutOfMemoryError的区域。</p>
+<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>线程私有。栈帧的入栈和出栈过程。每个栈帧存储局部变量表、操作数栈、动态链接库、方法出口等信息。可以抛出StackOverflowError异常，栈本身不够用；OutOfMemoryError，扩充栈的时候没有申请到足够的空间。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>运行native方法服务。也会抛出上述两个异常。</p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>虚拟机管理的最大一块内存。虚拟机规范要求，所有对象实例以及数组都要在堆上分配。分代：新生代和老年代；新生代分为Eden区和两个Survivor区。规范规定，堆可以处于物理上不连续的内存空间中，只要逻辑上连续即可，就像磁盘一样。当堆中没有足够的内存分配，且堆无法扩展的时候，将会跑出OutOfMemoryError异常。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>线程共享，存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。HotSpot将其称为永久代，是因为GC分代收集扩展至方法区。回收目标针对常量池的回收和类型的卸载。也会跑出OutOfMemoryError异常。</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>方法区的一部分，存放各种字面量和符号引用。String类的intern()返回这里的值。同意可能返回OutOfMemoryError异常。</p>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>Direct Memory并不是虚机运行时数据区的一部分，也不是虚拟机规范定义的内存区域。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/11/mysql-schema/" itemprop="url">
+                  Schema
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-11T14:11:35+08:00" content="2016-05-11">
+              2016-05-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/11/mysql-schema/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/mysql-schema/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="选择优化的数据类型"><a href="#选择优化的数据类型" class="headerlink" title="选择优化的数据类型"></a>选择优化的数据类型</h2><p>选择数据类型设计schema通常有以下几个简单的原则：</p>
+<ol>
+<li>更小的通常更好。<br>例如如果只需要存0~200，那么tinyint unsigned更好。因为更小的数据类型，占用的更少的磁盘、内存和cpu缓存，处理所需的cpu周期也更少。</li>
+<li>简单就好。<br>简单的数据类型操作通常需要更少的cpu周期。如，整形比字符操作代价更低，因为字符集和排序校对规则使字符比较比整形复杂。<br>例子：日期应该使用date,time,datetime而不是字符串；IP地址应该使用整形。</li>
+<li>尽量避免NULL。<br>可为null的列使得索引、索引统计和值比较更复杂。这样的列需要占据额外的存储空间，每个索引记录需要一个额外的字节。因此如果打算在列上建索引，最好加上not null限制。</li>
+</ol>
+<p>第一步需要确定大类型：数字、字符串、时间等；第二步，确定存储范围精度等。eg. TIMESTAMP（4B）比DATETIME（8B）少一半存储空间，可以根据时区变化，具有自动更新的能力；但同时允许的时间范围也小的多。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/11/mysql-schema/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/10/mysql-engine/" itemprop="url">
                   MySQL Engine
                 </a>
@@ -341,7 +736,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/05/09/transaction/" itemprop="url">
+                <a class="post-title-link" href="/2016/05/09/mysql-transaction/" itemprop="url">
                   Transaction
                 </a>
               
@@ -385,8 +780,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/05/09/transaction/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/09/transaction/" itemprop="commentsCount"></span>
+                <a href="/2016/05/09/mysql-transaction/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/09/mysql-transaction/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -415,7 +810,7 @@
 <p>第三层是存储引擎。</p>
 <p><img src="http://hi.csdn.net/attachment/201109/1/0_1314876855Seq2.gif" alt="MySQL服务器逻辑架构图"></p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/09/transaction/#more" rel="contents">
+            <a class="btn" href="/2016/05/09/mysql-transaction/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -523,7 +918,33 @@
 <li>将随机IO变为顺序IO</li>
 </ol>
 <p>三星系统：索引将相关记录放在一起；索引中的数据顺序和查找中的数据顺序一致；索引中的列包含了查询中需要的全部列。</p>
-<h2 id="高性能的索引策略"><a href="#高性能的索引策略" class="headerlink" title="高性能的索引策略"></a>高性能的索引策略</h2>
+<h2 id="高性能的索引策略"><a href="#高性能的索引策略" class="headerlink" title="高性能的索引策略"></a>高性能的索引策略</h2><h3 id="独立的列"><a href="#独立的列" class="headerlink" title="独立的列"></a>独立的列</h3><p>如果查询中的列不是独立的（索引的列不能是表达式的一部分或者函数的参数），则mysql不会使用索引。</p>
+<pre><code>这个查询
+select actor_id from sakila.actor where actor_id + 1 = 5;
+</code></pre><h3 id="前缀索引和索引的选择性"><a href="#前缀索引和索引的选择性" class="headerlink" title="前缀索引和索引的选择性"></a>前缀索引和索引的选择性</h3><p>当需要索引很长的字符列的时候，一种可以模拟hash索引；另一种是索引开始的部分字符，这样可以大大节约索引空间，提高索引效率。</p>
+<p>索引选择性，指的是不重复的索引值和记录总数（#T）的比值，范围从1/#T到1之间。索引选择性越高查询效率越高，因为mysql可以通过它过滤掉更多的行。唯一索引的选择性是1，性能最好。</p>
+<p>一般情况，某个列前缀的选择性也足够高，对应blob，text和很长的varchar，必须使用。mysql也不允许索引这些列的完整长度。因此关键在于选择前缀的长度，使其基数接近于整个列的基数。</p>
+<ol>
+<li>首先计算该字符列的count</li>
+<li>然后逐一测试left（column，num）的count，其中column是列，num是前缀长度；即比较各个前缀长度的count是否和第一步中的count相似。</li>
+</ol>
+<p>另一种方法是计算完整列的选择性，并使前缀的选择性接近于完整列的选择性。</p>
+<pre><code>select count(distinct city)/count(*) from city_demo;
+select count(distinct left(city,3)/count(*) as sel3,    #0.0239
+        count(distinct left(city,4)/count(*) as sel4,    #0.0293
+        count(distinct left(city,5)/count(*) as sel5,    #0.02305
+        count(distinct left(city,6)/count(*) as sel6,    #0.0309
+        count(distinct left(city,7)/count(*) as sel7,    #0.0310
+from city_demo;
+</code></pre><p>这个测试发现完整列的选择性是0.0312，所以当前缀选择性接近0.031的时候，基本就可用了。所以7的时候就可用了。如果再增加，提升的幅度已经就很小了。</p>
+<p>在考虑平均选择性的同时，有例外情况，需要考虑最坏情况下的选择性。即如果数据分布很不均匀，前缀效果会降低。比如上诉例子中长度为4的前缀，就可能出现不均的情况。实际中，如果地名用长度为4的前缀，以San和New开头的城市的选择性会很差，因为以这些词开头的城市太多了。所以使用平均选择性的时候还要考虑分布情况。</p>
+<p>创建前缀索引</p>
+<pre><code>alert table city_demo add key (city(7));
+</code></pre><p>但mysql无法使用前缀索引做group by和order by。</p>
+<p>针对16进制的唯一ID使用索引是常见场景，可考虑长度为8的前缀索引，通常能显著提升性能。</p>
+<h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>不要为每个列都建立索引，可以试图建立组合。mysql在5.0之后提供了一种“索引合并”的策略，一定程度上可以是用表上的多个单列索引定位指定的行，但实际情况更多的说明表上建立索引比较糟糕。</p>
+<p>- </p>
+
           
         
       
@@ -842,7 +1263,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -850,7 +1271,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -859,7 +1280,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

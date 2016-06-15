@@ -1,0 +1,717 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="juc,ReentrantLock," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="和Synchronized一样，ReentrantLock也是可重入的，可作为内置锁的替代物。
+与Synchronized相比较而言，ReentrantLock有以下优势：支持公平/非公平锁、支持可中断的锁、支持非阻塞的tryLock(可超时)、支持锁条件、可跨代码块使用(一个地方加锁，另一个地方解锁)，总之比Synchronized更加灵活。但也有缺点，比如锁需要显示解锁、无法充分享用JVM内部">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReentrantLock">
+<meta property="og:url" content="http://yoursite.com/2016/06/14/juc/reentrantlock/index.html">
+<meta property="og:site_name" content="凤凰花开芙蓉畔">
+<meta property="og:description" content="和Synchronized一样，ReentrantLock也是可重入的，可作为内置锁的替代物。
+与Synchronized相比较而言，ReentrantLock有以下优势：支持公平/非公平锁、支持可中断的锁、支持非阻塞的tryLock(可超时)、支持锁条件、可跨代码块使用(一个地方加锁，另一个地方解锁)，总之比Synchronized更加灵活。但也有缺点，比如锁需要显示解锁、无法充分享用JVM内部">
+<meta property="og:updated_time" content="2016-06-15T06:30:28.022Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReentrantLock">
+<meta name="twitter:description" content="和Synchronized一样，ReentrantLock也是可重入的，可作为内置锁的替代物。
+与Synchronized相比较而言，ReentrantLock有以下优势：支持公平/非公平锁、支持可中断的锁、支持非阻塞的tryLock(可超时)、支持锁条件、可跨代码块使用(一个地方加锁，另一个地方解锁)，总之比Synchronized更加灵活。但也有缺点，比如锁需要显示解锁、无法充分享用JVM内部">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> ReentrantLock | 凤凰花开芙蓉畔 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">凤凰花开芙蓉畔</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ReentrantLock
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-14T15:18:23+08:00" content="2016-06-14">
+              2016-06-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/juc/" itemprop="url" rel="index">
+                    <span itemprop="name">juc</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/14/juc/reentrantlock/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/14/juc/reentrantlock/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>和Synchronized一样，ReentrantLock也是可重入的，可作为内置锁的替代物。</p>
+<p>与Synchronized相比较而言，ReentrantLock有以下优势：支持公平/非公平锁、支持可中断的锁、支持非阻塞的tryLock(可超时)、支持锁条件、可跨代码块使用(一个地方加锁，另一个地方解锁)，总之比Synchronized更加灵活。但也有缺点，比如锁需要显示解锁、无法充分享用JVM内部性能提升带来的好处等等。</p>
+<pre><code>public interface Lock {
+    /**
+     * 获取锁，若无法获取到，则当前线程被阻塞。直到获取成功为止。
+     */
+    void lock();
+    /**
+     * 获取锁，若无法获取到，则当前线程被阻塞。直到发生以下两种情况：
+     * 获取成功；或者
+     * 其他线程中断当前线程 
+     */
+    void lockInterruptibly() throws InterruptedException;
+    /**
+     * 如果当前锁可用，获取成功返回true；否则返回false
+     */
+    boolean tryLock();
+    /**
+     * 与lockInterruptibly相似，还有第三种情况，即达到超时时间。
+     * 如果当前锁可用，获取成功返回true；否则返回false
+     */
+    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+    /**
+     * 释放锁
+     */
+    void unlock();
+    /**
+     * 返回当前锁相关的条件。在条件等待之前，锁必须被当前线程占有，await方法会在等待前释放锁，在结束等待前重新获取锁
+     */
+    Condition newCondition();
+}
+</code></pre><p>基于AQS机制构建的同步类，内部都会使用相关类继承AQS。ReentrantLock也不例外。</p>
+<pre><code>// 内部协调机制对象
+private final Sync sync;
+// 抽象类继承AQS，具有公平和非公平版本的子类。利用AQS的state来表示锁持有(重入)的次数。. 
+abstract static class Sync extends AbstractQueuedSynchronizer 
+</code></pre><p>非公平锁子类，新来的类之间尝试获取锁，无论等待队列中是否有线程阻塞等待。</p>
+<pre><code>final static class NonfairSync extends Sync
+</code></pre><p>公平锁子类，只有在递归(重入)或者同步队列中没有其他线程或者当前线程是等待队列中的第一个线程时才准许访问</p>
+<pre><code>final static class FairSync extends Sync 
+</code></pre><p>非公平版的锁-加锁操作</p>
+<ol>
+<li>当前线程首先会无条件的执行一个CAS操作来获取锁，如果CAS操作成功，获取锁成功。</li>
+<li>如果第1步没成功，当前会检查锁是否被其他线程持有，也就是锁是否可用。</li>
+<li>如果没有其他线程持有锁，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
+<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。</li>
+<li>根据AQS的分析，上述2、3、4步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
+</ol>
+<p>公平版的锁-加锁操作</p>
+<ol>
+<li>当前线程首先会检查锁是否被其他线程持有，并且当前同步等待队列里有没有其他线程在等待。</li>
+<li>如果没有其他线程持有锁，且同步等待队列里没有其他线程，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
+<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。nonfairTryAcquire方法</li>
+<li>根据AQS的分析，上述1、2、3步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
+</ol>
+<p>非公平版和公平版锁的解锁操作一样</p>
+<ol>
+<li>当前线程首先将锁重入次数减1(AQS的state)，如果减1后结果为0，将当前同步器的线程信息置空，并唤醒同步等待队列中队头的等待线程。</li>
+<li>如果第1步中，重入次数减1后结果不为0(说明当前线程还持有当前锁)，方法结束。</li>
+</ol>
+<p>ReentrantLock实现，整体就是sync的一个代理。</p>
+<pre><code>public ReentrantLock() {
+    sync = new NonfairSync();
+}
+public ReentrantLock(boolean fair) {
+    sync = (fair)? new FairSync() : new NonfairSync();
+}
+
+public void lock() {
+    sync.lock();
+}
+
+public void lockInterruptibly() throws InterruptedException {
+    sync.acquireInterruptibly(1);
+}
+
+public boolean tryLock() {
+    return sync.nonfairTryAcquire(1);
+}
+
+public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
+    return sync.tryAcquireNanos(1, unit.toNanos(timeout));
+}
+
+public void unlock() {
+    sync.release(1);
+}
+public Condition newCondition() {
+    return sync.newCondition();
+}
+</code></pre><p>所有try方法，相当于非阻塞的方式获取锁。</p>
+<p>synchronized获得的内部锁存在一定的局限</p>
+<ol>
+<li><p>不能中断一个正在试图获得锁的线程 </p>
+</li>
+<li><p>试图获得锁时不能像trylock那样设定超时时间 </p>
+</li>
+<li><p>每个锁只有单一的条件，不像condition那样可以设置多个</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/juc/" rel="tag">#juc</a>
+          
+            <a href="/tags/ReentrantLock/" rel="tag">#ReentrantLock</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/02/redis/persistence/" rel="next" title="持久化">
+                <i class="fa fa-chevron-left"></i> 持久化
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/15/juc/countdownlatch/" rel="prev" title="CountDownLatch">
+                CountDownLatch <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/14/juc/reentrantlock/"
+           data-title="ReentrantLock" data-url="http://yoursite.com/2016/06/14/juc/reentrantlock/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/image/avatar.jpg"
+               alt="Sunwind" />
+          <p class="site-author-name" itemprop="name">Sunwind</p>
+          <p class="site-description motion-element" itemprop="description">含英咀华，凤凰于飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sunwind</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jolinzhangg"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -85,10 +85,10 @@
  * 可以在闭锁上等待，每次执行countdown后，count-1，当count=0时，等待的线程被唤醒
  */
 public class CountDownLatch {
-/**
- * 内部类，使用AQS同步，利用AQS的state做计数count
- */
-private static final class Sync extends Abstrac">
+    /**
+     * 内部类，使用AQS同步，利用AQS的state做计数count
+     */
+    private static final class Sync">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CountDownLatch">
 <meta property="og:url" content="http://yoursite.com/2016/06/15/juc/countdownlatch/index.html">
@@ -98,11 +98,11 @@ private static final class Sync extends Abstrac">
  * 可以在闭锁上等待，每次执行countdown后，count-1，当count=0时，等待的线程被唤醒
  */
 public class CountDownLatch {
-/**
- * 内部类，使用AQS同步，利用AQS的state做计数count
- */
-private static final class Sync extends Abstrac">
-<meta property="og:updated_time" content="2016-06-15T07:34:47.246Z">
+    /**
+     * 内部类，使用AQS同步，利用AQS的state做计数count
+     */
+    private static final class Sync">
+<meta property="og:updated_time" content="2016-06-15T08:00:03.990Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CountDownLatch">
 <meta name="twitter:description" content="package juc.test;
@@ -110,10 +110,10 @@ private static final class Sync extends Abstrac">
  * 可以在闭锁上等待，每次执行countdown后，count-1，当count=0时，等待的线程被唤醒
  */
 public class CountDownLatch {
-/**
- * 内部类，使用AQS同步，利用AQS的state做计数count
- */
-private static final class Sync extends Abstrac">
+    /**
+     * 内部类，使用AQS同步，利用AQS的state做计数count
+     */
+    private static final class Sync">
 
 
 
@@ -332,85 +332,86 @@ private static final class Sync extends Abstrac">
  * 可以在闭锁上等待，每次执行countdown后，count-1，当count=0时，等待的线程被唤醒
  */
 public class CountDownLatch {
-/**
- * 内部类，使用AQS同步，利用AQS的state做计数count
- */
-private static final class Sync extends AbstractQueuedSynchronizer {
-    private static final long serialVersionUID = 4982264981922014374L;
-
-    Sync(int count) {
-        setState(count);
-    }
-
-    int getCount() {
-        return getState();
-    }
-
-    /*
-     * count=0请求成功；否则，请求失败，请求线程将被阻塞
+    /**
+     * 内部类，使用AQS同步，利用AQS的state做计数count
      */
-    protected int tryAcquireShared(int acquires) {
-        return (getState() == 0) ? 1 : -1;
-    }
-    /*
-     * 释放
-     */
-    protected boolean tryReleaseShared(int releases) {
-        // Decrement count; signal when transition to zero
-        for (;;) {
-            int c = getState();
-            if (c == 0) // 闭锁已经是0，无需释放
-                return false;
-            int nextc = c-1;
-            if (compareAndSetState(c, nextc)) // CAS修改count=count-1
-                // 如果修改后为0表示闭锁已经打开，返回true；否则，说明还有等待的，闭锁处于关闭状态，返回false
-                return nextc == 0;
+    private static final class Sync extends AbstractQueuedSynchronizer {
+        private static final long serialVersionUID = 4982264981922014374L;
+
+        Sync(int count) {
+            setState(count);
+        }
+
+        int getCount() {
+            return getState();
+        }
+
+        /*
+         * count=0请求成功；否则，请求失败，请求线程将被阻塞
+         * 闭锁只有共享模式
+         */
+        protected int tryAcquireShared(int acquires) {
+            return (getState() == 0) ? 1 : -1;
+        }
+        /*
+         * 释放
+         */
+        protected boolean tryReleaseShared(int releases) {
+            // Decrement count; signal when transition to zero
+            for (;;) {
+                int c = getState();
+                if (c == 0) // 闭锁已经是0，无需释放
+                    return false;
+                int nextc = c-1;
+                if (compareAndSetState(c, nextc)) // CAS修改count=count-1
+                    // 如果修改后为0表示闭锁已经打开，返回true；否则，说明还有等待的，闭锁处于关闭状态，返回false
+                    return nextc == 0;
+            }
         }
     }
+
+    private final Sync sync;
+
+    /*
+     * 根据给定count值构造闭锁
+     */
+    public CountDownLatch(int count) {
+        if (count &lt; 0) throw new IllegalArgumentException(&quot;count &lt; 0&quot;);
+        this.sync = new Sync(count);
+    }
+
+     /* 
+      * 如果当前count为0，那么方法立即返回。 
+      * 如果当前count不为0，那么当前线程会一直等待，直到count被(其他线程)减到0或者当前线程被中断。 
+      */  
+    public void await() throws InterruptedException {
+        sync.acquireSharedInterruptibly(1); // AQS中的实现
+    }
+
+    /*
+     * 超时版await
+     */
+    public boolean await(long timeout, TimeUnit unit)
+        throws InterruptedException {
+        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
+    }
+
+    /*
+     * 递减count，当减到0时，唤醒所有等待的线程去调度。如果当前count是0，则什么都不会发生
+     */
+    public void countDown() {
+        sync.releaseShared(1);
+    }
+
+    public long getCount() {
+        return sync.getCount();
+    }
+
+    public String toString() {
+        return super.toString() + &quot;[Count = &quot; + sync.getCount() + &quot;]&quot;;
+    }
 }
-
-private final Sync sync;
-
-/*
- * 根据给定count值构造闭锁
- */
-public CountDownLatch(int count) {
-    if (count &lt; 0) throw new IllegalArgumentException(&quot;count &lt; 0&quot;);
-    this.sync = new Sync(count);
-}
-
- /* 
-  * 如果当前count为0，那么方法立即返回。 
-  * 如果当前count不为0，那么当前线程会一直等待，直到count被(其他线程)减到0或者当前线程被中断。 
-  */  
-public void await() throws InterruptedException {
-    sync.acquireSharedInterruptibly(1); // AQS中的实现
-}
-
-/*
- * 超时版await
- */
-public boolean await(long timeout, TimeUnit unit)
-    throws InterruptedException {
-    return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
-}
-
-/*
- * 递减count，当减到0时，唤醒所有等待的线程去调度。如果当前count是0，则什么都不会发生
- */
-public void countDown() {
-    sync.releaseShared(1);
-}
-
-public long getCount() {
-    return sync.getCount();
-}
-
-public String toString() {
-    return super.toString() + &quot;[Count = &quot; + sync.getCount() + &quot;]&quot;;
-}
-</code></pre><p>}</p>
-
+</code></pre>
       
     </div>
 
@@ -449,6 +450,10 @@ public String toString() {
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/15/juc/semaphore/" rel="prev" title="Semaphore">
+                Semaphore <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -520,7 +525,7 @@ public String toString() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -528,7 +533,7 @@ public String toString() {
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -537,7 +542,7 @@ public String toString() {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

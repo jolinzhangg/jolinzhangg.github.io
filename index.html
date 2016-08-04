@@ -239,6 +239,919 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/03/nginx/windows-install/" itemprop="url">
+                  Windows启动、停止nginx
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-03T09:58:30+08:00" content="2016-08-03">
+              2016-08-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/03/nginx/windows-install/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/03/nginx/windows-install/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>长久以来一直是在linux上配置和使用nginx，竟发现没在本地的windows上装过，今天特意试了一下，把安装和配置记录一下。</p>
+<p>首先下载windows版的nginx，我这里是为了学习openresty，所以下载了openresty的windows版，    <a href="https://openresty.org/download/openresty-1.9.15.1-win32.zip" target="_blank" rel="external">https://openresty.org/download/openresty-1.9.15.1-win32.zip</a></p>
+<p>无需安装，解压到指定目录即可，目录下有nginx.exe，相当于在linux目录中/sbin/nginx的作用。</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>进入nginx所在目录</p>
+<pre><code>1、start nginx
+2、nginx.exe
+两种方式，第二种或锁定命令行（cmd或者powershell），停服务需要再开启一个终端。建议第一种，这样命令行可以重新接受其他命令。
+</code></pre><h3 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h3><pre><code>1、nginx.exe -s stop
+2、nginx.exe -s quit
+网上资料有说这两种的区别：stop是快速停止nginx，可能并不保存相关信息；quit是完整有序的停止nginx，并保存相关信息。
+</code></pre><h3 id="重载配置"><a href="#重载配置" class="headerlink" title="重载配置"></a>重载配置</h3><pre><code>和linux中相同：nginx.exe -s reload
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/02/openresty/install/" itemprop="url">
+                  OpenResty安装
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-02T15:44:29+08:00" content="2016-08-02">
+              2016-08-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/OpenResty/" itemprop="url" rel="index">
+                    <span itemprop="name">OpenResty</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/02/openresty/install/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/02/openresty/install/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>正常的编译安装</p>
+<pre><code>wget http://openresty.org/download/ngx_openresty-1.7.4.1.tar.gz
+tar -xvf ngx_openresty-1.7.4.1.tar.gz
+cd ngx_openresty-1.7.4.1
+./configure --prefix=/opt/openresty
+make &amp;&amp; make install
+</code></pre><p>这里注意，make的时候报错：undefined reference to ‘pcre_free_study’，猜测可能是pcre库找不到的问题，在<a href="https://sourceforge.net/projects/pcre/下载pcre，并安装。" target="_blank" rel="external">https://sourceforge.net/projects/pcre/下载pcre，并安装。</a></p>
+<p>安装后，在configure中增加参数–with-pcre=../pcre-8.35，其中注意修改自己pcre库的目录即可。</p>
+<p>安装之后，测试下helloworld。例子来自官网。</p>
+<pre><code>mkdir ~/work
+cd ~/work
+mkdir logs/ conf/
+</code></pre><p>新建配置文件nginx.conf</p>
+<pre><code>worker_processes  1;
+error_log logs/error.log;
+events {
+    worker_connections 1024;
+}
+http {
+    server {
+        listen 8085;
+        location / {
+            default_type text/html;
+            content_by_lua &apos;
+                ngx.say(&quot;&lt;p&gt;hello, world&lt;/p&gt;&quot;)
+            &apos;;
+        }
+    }
+}
+</code></pre><p>在linux环境变量path中，增加/opt/openresty/nginx/sbin</p>
+<p>通过vi /etc/profile, 在文件中追加内容，source /etc/profile。</p>
+<p>启动测试的nginx</p>
+<pre><code>nginx -p `pwd`/ -c conf/nginx.conf
+</code></pre><p>测试</p>
+<pre><code>curl http://localhost:8085/
+</code></pre><p>显示的结果应该是</p>
+<pre><code>&lt;p&gt;hello, world&lt;/p&gt;
+</code></pre><p>代码说明</p>
+<pre><code>content_by_lua    后续lua代码
+content_by_lua_file  后续lua代码源文件
+lua_code_cache off；     默认是on，关闭后，会取消对lua代码的缓存，实时加载代码的更新，影响性能
+</code></pre><p>常用文档</p>
+<pre><code>https://www.nginx.com/resources/wiki/modules/lua/   
+https://github.com/openresty/lua-nginx-module         
+</code></pre><p>Lua的执行阶段</p>
+<ol>
+<li>init_by_lua http</li>
+<li>set_by_lua server, server if, location, location if</li>
+<li>rewrite_by_lua http, server, location, location if</li>
+<li>access_by_lua http, server, location, location if</li>
+<li>content_by_lua location, location if</li>
+<li>header_filter_by_lua http, server, location, location if</li>
+<li>body_filter_by_lua http, server, location, location if</li>
+<li>log_by_lua http, server, location, location if</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/26/es/setup/" itemprop="url">
+                  elasticsearch setup
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-26T15:02:37+08:00" content="2016-07-26">
+              2016-07-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/26/es/setup/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/26/es/setup/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <pre><code>$ bin/elasticsearch
+</code></pre><p>这条命令在*nix系统中，会在前台启动elasticsearch。如果需要后台启动，请添加-d参数。</p>
+<pre><code>$ bin/elasticsearch -d -p pid 
+$ kill `cat pid` 
+</code></pre><p>es可以将自己的PID打印到文件中，-p参数，指定pid存储的文件（pid文件中）</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/25/es/es-basic/" itemprop="url">
+                  elasticsearch入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-25T15:26:59+08:00" content="2016-07-25">
+              2016-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/25/es/es-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/25/es/es-basic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ol>
+<li>下载：curl -L -O <a href="https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.4/elasticsearch-2.3.4.tar.gz">https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.4/elasticsearch-2.3.4.tar.gz</a></li>
+<li>解压：tar -xvf elasticsearch-2.3.4.tar.gz</li>
+<li>cd elasticsearch-2.3.4/bin</li>
+<li>运行：./elasticsearch</li>
+</ol>
+<p>在此，运行es必须在非root用户下，否则会报错：不能在root用户下启动elasticsearch，所以通过以下步骤增加es用户，并修改拥有和组策略。</p>
+<pre><code>1. adduser es  #添加es用户
+2. chown -R es elasticsearch-2.3.4
+3. chgrp -R es elasticsearch-2.3.4
+</code></pre><p>可以指定cluster和node的名称：</p>
+<pre><code>./elasticsearch --cluster.name my_cluster_name --node.name my_node_name
+</code></pre>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/25/es/es-basic/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/11/spring/spring-basic/" itemprop="url">
+                  spring模块
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-11T15:49:27+08:00" content="2016-07-11">
+              2016-07-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/11/spring/spring-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/11/spring/spring-basic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>org.springframework</p>
+<h3 id="核心容器"><a href="#核心容器" class="headerlink" title="核心容器"></a>核心容器</h3><p>Spring-Core<br>Spring-Beans<br>Spring-Context<br>Spring-Context-Support<br>Spring-Expression</p>
+<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>Spring-AOP<br>Spring-Aspects</p>
+<h3 id="Messaging"><a href="#Messaging" class="headerlink" title="Messaging"></a>Messaging</h3><p>Spring-Messaging</p>
+<h3 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h3><p>Spring-Web<br>Spring-Webmvc<br>Spring-WebSocket<br>Spring-Webmvc-Portlet</p>
+<h3 id="Data-Access-Integration"><a href="#Data-Access-Integration" class="headerlink" title="Data Access / Integration"></a>Data Access / Integration</h3><p>Spring-JDBC<br>Spring-TX<br>Spring-ORM<br>Spring-OXM<br>Spring-JMS</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/07/juc/threadPoolExecutor/" itemprop="url">
+                  ThreadPoolExecutor
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-07T11:03:41+08:00" content="2016-07-07">
+              2016-07-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/juc/" itemprop="url" rel="index">
+                    <span itemprop="name">juc</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/07/juc/threadPoolExecutor/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/07/juc/threadPoolExecutor/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="execute"><a href="#execute" class="headerlink" title="execute"></a>execute</h3><p>线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。</p>
+<p>如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。</p>
+<p>后续的执行步骤是三种情况</p>
+<ol>
+<li>如果运行的线程数小于corePoolSize，则尝试新建一个线程，并设置当前的任务为该线程第一个需要处理的任务。</li>
+<li>如果运行的线程数大于等于corePoolSize，则将该任务添加到阻塞队列workQueue中，池子中的空闲线程就会去队列汇总取任务之心。</li>
+<li>当队列满了后，添加队列会失败，这是尝试直接创建一个线程，如果失败，可以得知，要么线程池已经关闭，要么是达到了饱和状态，不能在接受新任务，则该任务将被拒绝。</li>
+</ol>
+<p>execute代码</p>
+<pre><code>public void execute(Runnable command) {
+    if (command == null)
+        throw new NullPointerException();
+    int c = ctl.get();
+    // 上面的step1
+    if (workerCountOf(c) &lt; corePoolSize) {
+        if (addWorker(command, true))
+            return;
+        c = ctl.get();
+    }
+    // 上面的step2，workQueue.offer可以把command添加到阻塞队列中，这个地方有双检测
+    if (isRunning(c) &amp;&amp; workQueue.offer(command)) {
+        int recheck = ctl.get();
+        // double-checked，如果线程池关闭，还要remove
+        if (! isRunning(recheck) &amp;&amp; remove(command))
+            reject(command);
+        // 如果是running状态 c &amp; CAPACITY = e000 0000 &amp; 1000 0000 = 0
+        else if (workerCountOf(recheck) == 0)
+            addWorker(null, false);
+    }
+    else if (!addWorker(command, false))
+        reject(command);
+}
+</code></pre><h3 id="addWorker"><a href="#addWorker" class="headerlink" title="addWorker"></a>addWorker</h3><p>该方法用于创建一个新线程，即上面第一种情况。addWorker(firstTask,true)</p>
+<p>addWorker代码</p>
+<pre><code>private boolean addWorker(Runnable firstTask, boolean core) {
+    retry:
+    for (;;) {
+        int c = ctl.get();
+        int rs = runStateOf(c);
+
+        // Check if queue empty only if necessary.
+        // api说明中的解释是，如果线程池关闭或适合关闭，则方法返回false
+        if (rs &gt;= SHUTDOWN &amp;&amp;
+            ! (rs == SHUTDOWN &amp;&amp;
+               firstTask == null &amp;&amp;
+               ! workQueue.isEmpty()))
+            return false;
+
+        for (;;) {
+            int wc = workerCountOf(c);
+            // 如果worker数量比coresize大，或者比maxsize大，就不需要添加了
+            if (wc &gt;= CAPACITY ||
+                wc &gt;= (core ? corePoolSize : maximumPoolSize))
+                return false;
+            // 对clt做cas自增，成功后跳出外层循环retry；失败的话，说明有其他线程修改了clt，继续后续代码逻辑    
+            if (compareAndIncrementWorkerCount(c))
+                break retry;
+            c = ctl.get();  // Re-read ctl 重新获取ctl
+            if (runStateOf(c) != rs) // 不同，说明ctl变化，continue外层retry循环
+                continue retry;
+            // 否则，说明cas更新失败，应该重新内存循环，尝试再一次cas自增
+        }
+    }
+
+    // works是个存有work对象的hashset，为了保证线程安全，需要通过mainlock加锁，保证同步访问,当调用方，传入形参addWorker(null,false)的时候，是不会触发后面的加锁同步逻辑的
+    boolean workerStarted = false;
+    boolean workerAdded = false;
+    Worker w = null;
+    try {
+        final ReentrantLock mainLock = this.mainLock;
+        w = new Worker(firstTask);
+        final Thread t = w.thread;
+        if (t != null) {
+            mainLock.lock();
+            try {
+                // Recheck while holding lock.
+                // Back out on ThreadFactory failure or if
+                // shut down before lock acquired.
+                int c = ctl.get();
+                int rs = runStateOf(c);
+
+                if (rs &lt; SHUTDOWN ||
+                    (rs == SHUTDOWN &amp;&amp; firstTask == null)) {
+                    if (t.isAlive()) // precheck that t is startable
+                        throw new IllegalThreadStateException();
+                    workers.add(w);
+                    int s = workers.size();
+                    if (s &gt; largestPoolSize)
+                        largestPoolSize = s;
+                    workerAdded = true;
+                }
+            } finally {
+                mainLock.unlock();
+            }
+            if (workerAdded) {
+                t.start();
+                workerStarted = true;
+            }
+        }
+    } finally {
+        if (! workerStarted)
+            addWorkerFailed(w);
+    }
+    return workerStarted;
+}
+</code></pre><p>任务通过execute方法加入到线程池后，调用链是：</p>
+<p>execute –&gt; addWorker –&gt; t.start –&gt; 内部类worker.run() –&gt; runWorker –&gt; getTask() –&gt; workQueue.take 到这里就可以完成从队列中取任务执行，并且可以阻塞。具体何时getTask由上层方法调用决定，即step1，2，3。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/22/juc/concurrentSyncFramework/" itemprop="url">
                   Concurrent Synchronizer Framework
                 </a>
@@ -308,8 +1221,7 @@
 
       
         
-          
-            <h2 id="同步框架AQS"><a href="#同步框架AQS" class="headerlink" title="同步框架AQS"></a>同步框架AQS</h2><p>作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。</p>
+          <h2 id="同步框架AQS"><a href="#同步框架AQS" class="headerlink" title="同步框架AQS"></a>同步框架AQS</h2><p>作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。</p>
 <p>在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。</p>
 <p>conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。</p>
 <h3 id="AQS需满足的三要素"><a href="#AQS需满足的三要素" class="headerlink" title="AQS需满足的三要素"></a>AQS需满足的三要素</h3><ul>
@@ -324,293 +1236,11 @@
 <p>Doug Lea, The java.util.concurrent Synchronizer Framework, Science of Computer Programming, 2005, 58(3):293-309</p>
 </blockquote>
 <h3 id="AQS应用"><a href="#AQS应用" class="headerlink" title="AQS应用"></a>AQS应用</h3><p>一般是声明私有内部类去继承AQS，并代理AQS的全部或者部分方法。后面将会看到ReentrantLock，闭锁、信号量、屏障、读写锁，都是这样实现的。</p>
-<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h3><p>提供和synchronized关键字类似的同步功能，只是使用的时候需要显示地获取和释放锁。但是可以解决synchronized关键字不太容易解决的内置锁交叉的情况。同时，<strong>具备尝试非阻塞地获取锁；能被中断地获取锁，超时获取锁。</strong></p>
-<pre><code>如:     lock A
-    lock B
-    unlock A
-    lock C
-    unlock B
-    unlock D
-    ......
-</code></pre><p>Lock的使用方式：</p>
-<pre><code>Lock lock = new ReentrantLock()；
-lock.lock();
-try {
-} finally {
-    lock.unlock();  // 要在finally中释放锁，保证出现异常也能释放
-
-}
-</code></pre><h3 id="队列同步器AbstractQueuedSynchronizer（AQS）"><a href="#队列同步器AbstractQueuedSynchronizer（AQS）" class="headerlink" title="队列同步器AbstractQueuedSynchronizer（AQS）"></a>队列同步器AbstractQueuedSynchronizer（AQS）</h3><p>使用int成员变量表示同步状态，FIFO队列存储排队的线程。子类通过继承AQS实现它的抽象方法，来管理同步状态，通过getState,setState,compareAndSetState（使用CAS设置当前状态）操作同步状态。</p>
-<p>既支持独占式地获取同步状态，也支持共享式地获取同步状态。</p>
-<p>同步器提供的模板方法基本分为三类：独占式获取与释放同步状态、共享式获取与释放和查询同步队列中的等待下农村的情况。</p>
-<h4 id="同步队列"><a href="#同步队列" class="headerlink" title="同步队列"></a>同步队列</h4><p>FIFO双向队列，当线程获取同步状态失败时，会构造node节点并添加到队列尾并阻塞当前线程，当同步状态释放的时候，会把队首节点的线程唤醒，使其再次尝试获取同步状态。</p>
-<p>Node包含，获取同步状态失败线程的引用、等待状态以及前驱和后继节点。</p>
-<p>加入队列的过程是一个基于CAS的设置尾节点的方法：compareAndSetTail(Node expect, Node update)</p>
-<h4 id="独占式"><a href="#独占式" class="headerlink" title="独占式"></a>独占式</h4><p>获取独占式排他锁，无法中断，获取失败进入同步队列。</p>
-<pre><code>public final void acquire(int arg) {
-    if (!tryAcquire(arg) &amp;&amp;        // 线程安全的获取同步状态，失败后构造同步节点
-        acquireQueued(addWaiter(Node.EXCLUSIVE), arg)) // 并通过addWaiter添加到队列尾部
-        // acquireQueued自旋方式获取同步状态
-        selfInterrupt();
-}
-构造的节点是Node.exclusive这种独占式的，同一时刻只能有一个线程成功获取同步状态
-</code></pre><p>tryAcquire由具体的实现类实现，如ReentrantLock中公平锁和非公平锁的实现。    </p>
-<p>公平锁</p>
-<pre><code>protected final boolean tryAcquire(int acquires) {
-    final Thread current = Thread.currentThread();
-    int c = getState();
-    if (c == 0) { // 公平锁需要获取队首节点
-        if (!hasQueuedPredecessors() &amp;&amp;
-            compareAndSetState(0, acquires)) {
-            setExclusiveOwnerThread(current);
-            return true;
-        }
-    }
-    else if (current == getExclusiveOwnerThread()) { // 重入
-        int nextc = c + acquires;
-        if (nextc &lt; 0)
-            throw new Error(&quot;Maximum lock count exceeded&quot;);
-        setState(nextc);
-        return true;
-    }
-    return false;
-}
-</code></pre><p>非公平锁</p>
-<pre><code>final boolean nonfairTryAcquire(int acquires) {
-    final Thread current = Thread.currentThread();
-    int c = getState();
-    if (c == 0) { // 非公平锁，直接尝试获取状态
-        if (compareAndSetState(0, acquires)) {
-            setExclusiveOwnerThread(current);
-            return true;
-        }
-    }
-    else if (current == getExclusiveOwnerThread()) { // 重入
-        int nextc = c + acquires;
-        if (nextc &lt; 0) // overflow
-            throw new Error(&quot;Maximum lock count exceeded&quot;);
-        setState(nextc);
-        return true;
-    }
-    return false;
-}
-</code></pre><p>节点添加到队列尾部,<strong>这里存在疑问compareAndSetTail和下文的enq是否重复，另外compareAndSetTail的主时钟明确注明Used only by enq</strong></p>
-<pre><code>private Node addWaiter(Node mode) {
-    Node node = new Node(Thread.currentThread(), mode);
-    // Try the fast path of enq; backup to full enq on failure
-    Node pred = tail;
-    if (pred != null) {
-        node.prev = pred;
-        if (compareAndSetTail(pred, node)) {
-            pred.next = node;
-            return node;
-        }
-    }
-    enq(node);
-    return node;
-}
-// enq是死循环，设置成功才能返回，可以保证所有添加节点的线程串行化
-private Node enq(final Node node) {
-    for (;;) {
-        Node t = tail;
-        if (t == null) { // Must initialize
-            if (compareAndSetHead(new Node()))
-                tail = head;
-        } else {
-            node.prev = t;
-            if (compareAndSetTail(t, node)) {
-                t.next = node;
-                return t;
-            }
-        }
-    }
-}
-</code></pre><p>最后是acquireQueued</p>
-<pre><code>final boolean acquireQueued(final Node node, int arg) {
-    boolean failed = true;
-    try {
-        boolean interrupted = false;
-        for (;;) { // 死循环，自旋锁，节点自旋获取同步状态
-            final Node p = node.predecessor();
-            if (p == head &amp;&amp; tryAcquire(arg)) { // 前驱是头节点才会获取同步状态
-                setHead(node);
-                p.next = null; // help GC
-                failed = false;
-                return interrupted;
-            }
-            if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
-                parkAndCheckInterrupt())
-                interrupted = true;
-        }
-    } finally {
-        if (failed)
-            cancelAcquire(node);
-    }
-}
-</code></pre><p>这里头节点是成功获取到同步状态的节点，头节点释放同步状态后，才能唤醒后继节点。head最初会指向刚刚获取同步状态的节点，后续获取同步状态失败的节点会被添加到队列末尾。</p>
-<p>释放同步状态时，同步器调用tryRelease方法释放同步状态，然后唤醒头节点的后继节点。</p>
-<p>####共享式<br>同一时刻有多个线程同时获取到同步状态。</p>
-<pre><code>public final void acquireShared(int arg) {
-    if (tryAcquireShared(arg) &lt; 0) // 共享锁就是检查如果分配arg这么多状态后，剩余状态量的值是否还大于0.所以不满足条件，就自旋
-        doAcquireShared(arg);
-}
-private void doAcquireShared(int arg) {
-    final Node node = addWaiter(Node.SHARED);
-    boolean failed = true;
-    try {
-        boolean interrupted = false;
-        for (;;) {
-            final Node p = node.predecessor();
-            if (p == head) {
-                int r = tryAcquireShared(arg);
-                if (r &gt;= 0) {
-                    setHeadAndPropagate(node, r);
-                    p.next = null; // help GC
-                    if (interrupted)
-                        selfInterrupt();
-                    failed = false;
-                    return;
-                }
-            }
-            if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
-                parkAndCheckInterrupt())
-                interrupted = true;
-        }
-    } finally {
-        if (failed)
-            cancelAcquire(node);
-    }
-}
-</code></pre><p>与独占式不同，共享模式释放需要保证线程安全，通过循环和CAS。代码请参考doReleaseShared。</p>
-<h4 id="独占式超时-中断获取同步状态"><a href="#独占式超时-中断获取同步状态" class="headerlink" title="独占式超时/中断获取同步状态"></a>独占式超时/中断获取同步状态</h4><pre><code>private boolean doAcquireNanos(int arg, long nanosTimeout)
-    throws InterruptedException {
-    long lastTime = System.nanoTime();
-    final Node node = addWaiter(Node.EXCLUSIVE);
-    boolean failed = true;
-    try {
-        for (;;) {
-            final Node p = node.predecessor();
-            if (p == head &amp;&amp; tryAcquire(arg)) { // 前驱是头节点并尝试获取同步状态，与普通独占式相同
-                setHead(node);
-                p.next = null; // help GC
-                failed = false;
-                return true;
-            }
-            if (nanosTimeout &lt;= 0) // 达到超时时间，自旋结束，退出
-                return false;
-            if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
-                nanosTimeout &gt; spinForTimeoutThreshold)
-                LockSupport.parkNanos(this, nanosTimeout);
-            long now = System.nanoTime();
-            // 计算时间，即还应在等待自旋的时间
-            nanosTimeout -= now - lastTime;
-            lastTime = now;
-            if (Thread.interrupted())
-                throw new InterruptedException();
-        }
-    } finally {
-        if (failed)
-            cancelAcquire(node);
-    }
-}
-</code></pre><h2 id="并发容器和框架"><a href="#并发容器和框架" class="headerlink" title="并发容器和框架"></a>并发容器和框架</h2><h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h3><p>是现场安全且高效的HashMap。</p>
-<ol>
-<li>在并发环境下，使用HashMap可能导致死循环，HashMap在扩容的时候，会将原来的链表逆序扩容，如果连个线程，一个访问到了逆序扩容后的链表，一个访问的是原先的链表，那么e1-&gt;e2,e2-&gt;e1，就会造成死循环。</li>
-<li>而HashTable使用Synchronized关键字加锁，粒度太大，效率低下，当一个线程访问同步方法，其他方法均会进入阻塞和轮询状态。</li>
-<li>ConcurrentHashMap使用锁分段技术，降低对同一把锁的竞争，提高性能。</li>
-</ol>
-<p><img src="http://ifeve.com/wp-content/uploads/2012/12/ConcurrentHashMap%E7%BB%93%E6%9E%84%E5%9B%BE.jpg" alt=""></p>
-<h3 id="ConcurrentLinkedQueue"><a href="#ConcurrentLinkedQueue" class="headerlink" title="ConcurrentLinkedQueue"></a>ConcurrentLinkedQueue</h3><p>线程安全的队列有两种方式：阻塞算法，队列维护一把锁或两把锁（入队、出队各一把），因锁竞争无法获取时，阻塞操作；另一种是非阻塞方式，使用循环CAS，ConcurrentLinkedQueue就是这样一种队列。</p>
-<p>ConcurrentLinkedQueue是一个基于链接节点的无界线程安全队列，FIFO，队尾添加，队头获取。</p>
-<p><img src="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/11.jpg" alt="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/11.jpg"></p>
-<p>类图可以看出，队列包含head和tail节点，每个节点是一个node包含数据元素item和指向下一个node的next引用，通过next指向，所有node被连接成链表形式。默认情况下head为空，tail=head。</p>
-<h4 id="入队"><a href="#入队" class="headerlink" title="入队"></a>入队</h4><p>入队主要做两件事情：将入队节点设置成为当前队列尾节点的下一个；更新tail节点指向新的尾节点，这里当tail为空的时候，tail节点是不移动的，而是将入队节点设置为tail的next；否则，入队节点设置为tail。因此tail节点不总是指向尾节点。所以tail节点的指向方式会呈现交替的情况，如下图所示。</p>
-<p><img src="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/22.jpg" alt=""></p>
-<pre><code>public boolean offer(E e) {
-    // 入队元素null判断
-    checkNotNull(e);
-    // 入队前，用形参创建节点
-    final Node&lt;E&gt; newNode = new Node&lt;E&gt;(e);
-    // 死循环
-    for (Node&lt;E&gt; t = tail, p = t;;) {
-        Node&lt;E&gt; q = p.next;
-        if (q == null) {
-            // tail.next是空，通过cas在监测一次
-            if (p.casNext(null, newNode)) {
-                // 需要移动tail的情况，不需要则直接返回
-                if (p != t) // hop two nodes at a time
-                    casTail(t, newNode);  // Failure is OK.
-                return true;
-            }
-            // Lost CAS race to another thread; re-read next
-        }
-        else if (p == q)
-            // 
-            p = (t != (t = tail)) ? t : head;
-        else
-            // 
-            p = (p != t &amp;&amp; t != (t = tail)) ? t : q;
-    }
-}
-</code></pre><p>1、队列为空，tail=head，head.next-&gt;null</p>
-<p>循环条件赋值：p=t=tail, q=p.next &lt;=&gt; p.next=null &amp;&amp; q=null</p>
-<p>所以可以进入代码q==null的条件，将新节点加入到队尾，此时，队列情况如下：</p>
-<p>t=tail=head, head.next=e1, p.next=e1, 但p还是等于t，所以无需移动tail</p>
-<p>2、加入e2，p=t=tail=head, head.next=e1, 所以q=e1, p!=q</p>
-<p>进入else的条件，由于p==t，所以p被赋值为q后，p=q进入第二次循环（p==q只有第一次添加后才会出现）：</p>
-<p>q=p.next，此时由于p已经等于q等于e1，且e1是最后一个元素，所以p.next==null，所以q==null，进入第一个条件，将e2加入队尾，此时队列情况如下：</p>
-<p>t=tail=head-&gt;e1-&gt;e2, p=e1,因为p！=t，需要移动tail到e2的位置，此时tail.next==null，如再继续追加元素，将重新执行第一步中的情况，导致1，2交替执行。</p>
-<p>之所以使用这种交替更新tail的方法，是因为，每次更新tail都需要使用cas，如果能减少cas更新tail的次数会提供性能，所以doug lea才在tail与队尾距离超过一个元素后才移动，也就是添加过程，交替移动tail的情况。</p>
-<h4 id="出队"><a href="#出队" class="headerlink" title="出队"></a>出队</h4><p>出队操作与入队相似，只是这时候删除的是队首元素，同时移动head。同样为了提高性能，减少cas更新head的次数，当head与真正的队首元素距离超过一个null的时候，才移动head到当前真正的队首，否则，head还是指向null，head.next才是真正的队首。</p>
-<p><img src="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/33.jpg" alt=""></p>
-<h3 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h3><p>BlockingQueue是一个支持两个附加操作的队列，支持阻塞的插入和移除方法。</p>
-<p>当队列满时：队列会阻塞插入元素的线程，直到队列不满。<br>当队列空时：队列会阻塞移除元素的线程，直到队列非空。</p>
-<p>常用的场景是生产者消费者，生产者向队列生成添加元素，消费者从队列取出元素，阻塞队列就是生产者和消费者用来生成和消费元素的容器。</p>
-<h4 id="关于插入和删除操作的4种处理方法"><a href="#关于插入和删除操作的4种处理方法" class="headerlink" title="关于插入和删除操作的4种处理方法"></a>关于插入和删除操作的4种处理方法</h4><table>
-<thead>
-<tr>
-<th>方法</th>
-<th style="text-align:center">抛出异常</th>
-<th style="text-align:right">返回特殊值</th>
-<th>一直阻塞</th>
-<th>超时</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>插入方法</td>
-<td style="text-align:center">add(e)</td>
-<td style="text-align:right">offer(e)</td>
-<td>put(e)</td>
-<td>offer(e,time,unit)</td>
-</tr>
-<tr>
-<td>移除方法</td>
-<td style="text-align:center">remove()</td>
-<td style="text-align:right">poll()</td>
-<td>take()</td>
-<td>poll(time, unit)</td>
-</tr>
-<tr>
-<td>检查方法</td>
-<td style="text-align:center">element()</td>
-<td style="text-align:right">peek()</td>
-<td>无</td>
-<td>无</td>
-</tr>
-</tbody>
-</table>
-<h4 id="jdk7中的7个阻塞队列"><a href="#jdk7中的7个阻塞队列" class="headerlink" title="jdk7中的7个阻塞队列"></a>jdk7中的7个阻塞队列</h4><pre><code>1. ArrayBlockingQueue    数组、有界
-2. LinkedBolckingQueue    链表、有界
-3. PriorityBlockingQueue    支持优先级排序、无界
-4. DelayQueue    使用优先级队列实现、无界
-5. SynchronousQueue    不存储元素
-6. LinkedTransferQueue    链表、无界
-7. LinedBlockingDeque 链表、双向
-</code></pre><h4 id="阻塞队列的实现原理"><a href="#阻塞队列的实现原理" class="headerlink" title="阻塞队列的实现原理"></a>阻塞队列的实现原理</h4><p>使用condition的awati和signal方法，通知模式实现。</p>
-<h3 id="Fork-Join框架"><a href="#Fork-Join框架" class="headerlink" title="Fork/Join框架"></a>Fork/Join框架</h3><p>大任务分解成小任务，小任务执行结果汇总成大任务执行结果。</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/06/22/juc/concurrentSyncFramework/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -855,7 +1485,7 @@ public class SerializeTester implements Serializable {
               
                 
                 <a class="post-title-link" href="/2016/06/20/IO/io/" itemprop="url">
-                  好文章列表（不断更新）
+                  从操作系统的角度聊聊CPU和IO设备
                 </a>
               
             
@@ -882,8 +1512,8 @@ public class SerializeTester implements Serializable {
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/article/" itemprop="url" rel="index">
-                    <span itemprop="name">article</span>
+                  <a href="/categories/IO/" itemprop="url" rel="index">
+                    <span itemprop="name">IO</span>
                   </a>
                 </span>
 
@@ -924,9 +1554,21 @@ public class SerializeTester implements Serializable {
       
         
           
-            <h4 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h4><blockquote>
-<p><a href="http://ifeve.com/java-synchronized/" target="_blank" rel="external">http://ifeve.com/java-synchronized/</a>  方腾飞老师的聊聊并发系列</p>
-</blockquote>
+            <h2 id="操作系统的发展过程"><a href="#操作系统的发展过程" class="headerlink" title="操作系统的发展过程"></a>操作系统的发展过程</h2><h3 id="无操作系统时代"><a href="#无操作系统时代" class="headerlink" title="无操作系统时代"></a>无操作系统时代</h3><p>1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。</p>
+<ol>
+<li>用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。</li>
+<li>CPU等待人工操作。</li>
+</ol>
+<p>为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量大，CPU等待时间长，引入外围机作中转，将数据通过外围机输入到磁带上，主机在需要的时候直接读取磁带，解决CPU在等待时，资源的浪费为。</p>
+<h3 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h3><p>由监控程序，每次保着将磁带上的一个作业装入内存，旨在提高资源的利用率和系统的吞吐量。系统中始终只保持一道程序。具备：自动性、顺序性、单道性。</p>
+<h3 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h3><p>CPU等待IO设备结果时，可以被系统调度出去，暂时中断其对CPU的占用，是其他程序可以使用CPU，待IO处理完成后再由系统调度回来。具备：多道性、无序性（先进入内存的作业可能较后完成）、调度性。</p>
+<p>内存中驻留躲到程序，可保持资源处于忙碌状态，资源充分利用。CPU和其他资源保持“忙碌”状态，挡作业运行完成或运行不下去的时候才进行切换，开销小。</p>
+<p>批处理系统推动了多任务操作系统的发展。</p>
+<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多用户样子的系统，一台主机上，连接了多个带有显示器和键盘的终端，允许同时多个用户通过自己的终端，以交互的方式使用计算机，共享主机中的资源。</p>
+<p>及时接收：多路卡连接终端，缓冲区暂存键入的命令或数据。</p>
+<p>及时处理：作业不能先存于磁盘再调入内容，因为磁盘中的作业不能运行，也不能进行交互；不允许一个作业长期占用cpu，只在运行完毕或出现IO请求才被调度是不合适的。采用时间片轮转的方式，让每个作业都能运行一小段时间，这样，在一个不长的时间内会感觉所有用户所有作业都在得到响应。</p>
+<h3 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h3><p>及时响应外部事件的请求。</p>
+<h2 id="操作系统的特性"><a href="#操作系统的特性" class="headerlink" title="操作系统的特性"></a>操作系统的特性</h2><p>并发、共享、虚拟、异步。其中并发是其他三个的前提。<br>并发和并行的差别。并行指同一时刻发生；并发指同一时间间隔内发生。</p>
 
           
         
@@ -1077,1449 +1719,6 @@ public class SerializeTester implements Serializable {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/15/juc/semaphore/" itemprop="url">
-                  Semaphore
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-15T16:58:17+08:00" content="2016-06-15">
-              2016-06-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/juc/" itemprop="url" rel="index">
-                    <span itemprop="name">juc</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/15/juc/semaphore/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/15/juc/semaphore/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li>建立一个包含n个许可的信号量(内部的计数为n)，当一个线程从信号量中请求一个许可(调用acquire())，如果信号量中有许可的话(n大于0)，那么线程成功获取许可，信号量内部许可数量减1(n减1)；如果信号量中没有许可(n等于0)，那么当前线程阻塞。</li>
-<li>当一个线程归还许可(调用release()，内部计数加1)，其他在acquire()方法处等待的线程便有可能被唤醒来竞争许可。</li>
-<li>公平模式下，如果有线程在acquire()处等待，新来的请求线程会排在这些等待线程后面；非公平模式下，新来的请求线程可能会插队，比在acquire()处等待的线程提前申请到许可。</li>
-</ol>
-<p>代码分析</p>
-<pre><code>/*
- * 基于计数信号量，可用来管理一组许可
- */
-public class Semaphore implements java.io.Serializable {
-    private static final long serialVersionUID = -3222578661600680210L;
-    /** All mechanics via AbstractQueuedSynchronizer subclass */
-    private final Sync sync;
-
-    /**
-     * 通过AQS的state表示许可的数量，包含公平和非公平的实现
-     */
-    abstract static class Sync extends AbstractQueuedSynchronizer {
-        private static final long serialVersionUID = 1192457210091910933L;
-
-        Sync(int permits) {
-            setState(permits);
-        }
-
-        final int getPermits() {
-            return getState();
-        }
-        // 共享模式非公平的请求
-        final int nonfairTryAcquireShared(int acquires) {
-            for (;;) {
-                // 获取当前许可数量
-                int available = getState();
-                // 计算申请后剩余数量
-                int remaining = available - acquires;
-                /*
-                 * 如果申请后剩余&gt;=0，则通过CAS修改，修改成功后返回剩余数量；
-                 * 如果申请后剩余&lt;0，则直接返回数量
-                 */
-                if (remaining &lt; 0 ||
-                    compareAndSetState(available, remaining))
-                    return remaining;
-            }
-        }
-        /*
-         * 释放所，CAS，有int越界判断
-         */
-        protected final boolean tryReleaseShared(int releases) {
-            for (;;) {
-                int current = getState();
-                int next = current + releases;
-                if (next &lt; current) // overflow
-                    throw new Error(&quot;Maximum permit count exceeded&quot;);
-                if (compareAndSetState(current, next))
-                    return true;
-            }
-        }
-        /*
-         * 相当于release的逆操作
-         */
-        final void reducePermits(int reductions) {
-            for (;;) {
-                int current = getState();
-                int next = current - reductions;
-                if (next &gt; current) // underflow
-                    throw new Error(&quot;Permit count underflow&quot;);
-                if (compareAndSetState(current, next))
-                    return;
-            }
-        }
-
-        /*
-         * 将count置为0并返回
-         */
-        final int drainPermits() {
-            for (;;) {
-                int current = getState();
-                if (current == 0 || compareAndSetState(current, 0))
-                    return current;
-            }
-        }
-    }
-
-    /**
-     * 非公平
-     */
-    static final class NonfairSync extends Sync {
-        private static final long serialVersionUID = -2694183684443567898L;
-
-        NonfairSync(int permits) {
-            super(permits);
-        }
-
-        protected int tryAcquireShared(int acquires) {
-            return nonfairTryAcquireShared(acquires);
-        }
-    }
-
-    /**
-     * 公平
-     */
-    static final class FairSync extends Sync {
-        private static final long serialVersionUID = 2014338818796000944L;
-
-        FairSync(int permits) {
-            super(permits);
-        }
-
-        protected int tryAcquireShared(int acquires) {
-            for (;;) {
-                // 公平版的请求，需要先检查同步队列里有没有比当前线程更早的线程在等待。  
-                if (hasQueuedPredecessors())
-                    return -1;
-                int available = getState();
-                int remaining = available - acquires;
-                if (remaining &lt; 0 ||
-                    compareAndSetState(available, remaining))
-                    return remaining;
-            }
-        }
-    }
-
-    public Semaphore(int permits) {
-        sync = new NonfairSync(permits);
-    }
-
-    public Semaphore(int permits, boolean fair) {
-        sync = fair ? new FairSync(permits) : new NonfairSync(permits);
-    }
-
-    /**
-     * Acquires a permit from this semaphore, blocking until one is
-     * available, or the thread is {@linkplain Thread#interrupt interrupted}.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * one of two things happens:
-     * &lt;ul&gt;
-     * &lt;li&gt;Some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit; or
-     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}
-     * the current thread.
-     * &lt;/ul&gt;
-     *
-     * &lt;p&gt;If the current thread:
-     * &lt;ul&gt;
-     * &lt;li&gt;has its interrupted status set on entry to this method; or
-     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting
-     * for a permit,
-     * &lt;/ul&gt;
-     * then {@link InterruptedException} is thrown and the current thread&apos;s
-     * interrupted status is cleared.
-     *
-     * @throws InterruptedException if the current thread is interrupted
-     */
-    public void acquire() throws InterruptedException {
-        sync.acquireSharedInterruptibly(1);
-    }
-
-    /**
-     * Acquires a permit from this semaphore, blocking until one is
-     * available.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit.
-     *
-     * &lt;p&gt;If the current thread is {@linkplain Thread#interrupt interrupted}
-     * while waiting for a permit then it will continue to wait, but the
-     * time at which the thread is assigned a permit may change compared to
-     * the time it would have received the permit had no interruption
-     * occurred.  When the thread does return from this method its interrupt
-     * status will be set.
-     */
-    public void acquireUninterruptibly() {
-        sync.acquireShared(1);
-    }
-
-    /**
-     * Acquires a permit from this semaphore, only if one is available at the
-     * time of invocation.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * with the value {@code true},
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then this method will return
-     * immediately with the value {@code false}.
-     *
-     * &lt;p&gt;Even when this semaphore has been set to use a
-     * fair ordering policy, a call to {@code tryAcquire()} &lt;em&gt;will&lt;/em&gt;
-     * immediately acquire a permit if one is available, whether or not
-     * other threads are currently waiting.
-     * This &amp;quot;barging&amp;quot; behavior can be useful in certain
-     * circumstances, even though it breaks fairness. If you want to honor
-     * the fairness setting, then use
-     * {@link #tryAcquire(long, TimeUnit) tryAcquire(0, TimeUnit.SECONDS) }
-     * which is almost equivalent (it also detects interruption).
-     *
-     * @return {@code true} if a permit was acquired and {@code false}
-     *         otherwise
-     */
-    public boolean tryAcquire() {
-        return sync.nonfairTryAcquireShared(1) &gt;= 0;
-    }
-
-    /**
-     * Acquires a permit from this semaphore, if one becomes available
-     * within the given waiting time and the current thread has not
-     * been {@linkplain Thread#interrupt interrupted}.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * with the value {@code true},
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * one of three things happens:
-     * &lt;ul&gt;
-     * &lt;li&gt;Some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit; or
-     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}
-     * the current thread; or
-     * &lt;li&gt;The specified waiting time elapses.
-     * &lt;/ul&gt;
-     *
-     * &lt;p&gt;If a permit is acquired then the value {@code true} is returned.
-     *
-     * &lt;p&gt;If the current thread:
-     * &lt;ul&gt;
-     * &lt;li&gt;has its interrupted status set on entry to this method; or
-     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting
-     * to acquire a permit,
-     * &lt;/ul&gt;
-     * then {@link InterruptedException} is thrown and the current thread&apos;s
-     * interrupted status is cleared.
-     *
-     * &lt;p&gt;If the specified waiting time elapses then the value {@code false}
-     * is returned.  If the time is less than or equal to zero, the method
-     * will not wait at all.
-     *
-     * @param timeout the maximum time to wait for a permit
-     * @param unit the time unit of the {@code timeout} argument
-     * @return {@code true} if a permit was acquired and {@code false}
-     *         if the waiting time elapsed before a permit was acquired
-     * @throws InterruptedException if the current thread is interrupted
-     */
-    public boolean tryAcquire(long timeout, TimeUnit unit)
-        throws InterruptedException {
-        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
-    }
-
-    /**
-     * Releases a permit, returning it to the semaphore.
-     *
-     * &lt;p&gt;Releases a permit, increasing the number of available permits by
-     * one.  If any threads are trying to acquire a permit, then one is
-     * selected and given the permit that was just released.  That thread
-     * is (re)enabled for thread scheduling purposes.
-     *
-     * &lt;p&gt;There is no requirement that a thread that releases a permit must
-     * have acquired that permit by calling {@link #acquire}.
-     * Correct usage of a semaphore is established by programming convention
-     * in the application.
-     */
-    public void release() {
-        sync.releaseShared(1);
-    }
-
-    /**
-     * Acquires the given number of permits from this semaphore,
-     * blocking until all are available,
-     * or the thread is {@linkplain Thread#interrupt interrupted}.
-     */
-    public void acquire(int permits) throws InterruptedException {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        sync.acquireSharedInterruptibly(permits);
-    }
-
-    public void acquireUninterruptibly(int permits) {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        sync.acquireShared(permits);
-    }
-
-    public boolean tryAcquire(int permits) {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        return sync.nonfairTryAcquireShared(permits) &gt;= 0;
-    }
-
-    public boolean tryAcquire(int permits, long timeout, TimeUnit unit)
-        throws InterruptedException {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        return sync.tryAcquireSharedNanos(permits, unit.toNanos(timeout));
-    }
-
-    public void release(int permits) {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        sync.releaseShared(permits);
-    }
-
-    public int availablePermits() {
-        return sync.getPermits();
-    }
-
-    public int drainPermits() {
-        return sync.drainPermits();
-    }
-
-    protected void reducePermits(int reduction) {
-        if (reduction &lt; 0) throw new IllegalArgumentException();
-        sync.reducePermits(reduction);
-    }
-
-    public boolean isFair() {
-        return sync instanceof FairSync;
-    }
-
-    /**
-     * Queries whether any threads are waiting to acquire. Note that
-     * because cancellations may occur at any time, a {@code true}
-     * return does not guarantee that any other thread will ever
-     * acquire.  This method is designed primarily for use in
-     * monitoring of the system state.
-     *
-     * @return {@code true} if there may be other threads waiting to
-     *         acquire the lock
-     */
-    public final boolean hasQueuedThreads() {
-        return sync.hasQueuedThreads();
-    }
-
-    public final int getQueueLength() {
-        return sync.getQueueLength();
-    }
-
-    protected Collection&lt;Thread&gt; getQueuedThreads() {
-        return sync.getQueuedThreads();
-    }
-
-    public String toString() {
-        return super.toString() + &quot;[Permits = &quot; + sync.getPermits() + &quot;]&quot;;
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/15/juc/countdownlatch/" itemprop="url">
-                  CountDownLatch
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-15T15:34:09+08:00" content="2016-06-15">
-              2016-06-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/juc/" itemprop="url" rel="index">
-                    <span itemprop="name">juc</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/15/juc/countdownlatch/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/15/juc/countdownlatch/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <pre><code>package juc.test;
-/**
- * 可以在闭锁上等待，每次执行countdown后，count-1，当count=0时，等待的线程被唤醒
- */
-public class CountDownLatch {
-    /**
-     * 内部类，使用AQS同步，利用AQS的state做计数count
-     */
-    private static final class Sync extends AbstractQueuedSynchronizer {
-        private static final long serialVersionUID = 4982264981922014374L;
-
-        Sync(int count) {
-            setState(count);
-        }
-
-        int getCount() {
-            return getState();
-        }
-
-        /*
-         * count=0请求成功；否则，请求失败，请求线程将被阻塞
-         * 闭锁只有共享模式
-         */
-        protected int tryAcquireShared(int acquires) {
-            return (getState() == 0) ? 1 : -1;
-        }
-        /*
-         * 释放
-         */
-        protected boolean tryReleaseShared(int releases) {
-            // Decrement count; signal when transition to zero
-            for (;;) {
-                int c = getState();
-                if (c == 0) // 闭锁已经是0，无需释放
-                    return false;
-                int nextc = c-1;
-                if (compareAndSetState(c, nextc)) // CAS修改count=count-1
-                    // 如果修改后为0表示闭锁已经打开，返回true；否则，说明还有等待的，闭锁处于关闭状态，返回false
-                    return nextc == 0;
-            }
-        }
-    }
-
-    private final Sync sync;
-
-    /*
-     * 根据给定count值构造闭锁
-     */
-    public CountDownLatch(int count) {
-        if (count &lt; 0) throw new IllegalArgumentException(&quot;count &lt; 0&quot;);
-        this.sync = new Sync(count);
-    }
-
-     /* 
-      * 如果当前count为0，那么方法立即返回。 
-      * 如果当前count不为0，那么当前线程会一直等待，直到count被(其他线程)减到0或者当前线程被中断。 
-      */  
-    public void await() throws InterruptedException {
-        sync.acquireSharedInterruptibly(1); // AQS中的实现
-    }
-
-    /*
-     * 超时版await
-     */
-    public boolean await(long timeout, TimeUnit unit)
-        throws InterruptedException {
-        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
-    }
-
-    /*
-     * 递减count，当减到0时，唤醒所有等待的线程去调度。如果当前count是0，则什么都不会发生
-     */
-    public void countDown() {
-        sync.releaseShared(1);
-    }
-
-    public long getCount() {
-        return sync.getCount();
-    }
-
-    public String toString() {
-        return super.toString() + &quot;[Count = &quot; + sync.getCount() + &quot;]&quot;;
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/14/juc/reentrantlock/" itemprop="url">
-                  ReentrantLock
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-14T15:18:23+08:00" content="2016-06-14">
-              2016-06-14
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/juc/" itemprop="url" rel="index">
-                    <span itemprop="name">juc</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/14/juc/reentrantlock/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/14/juc/reentrantlock/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>和Synchronized一样，ReentrantLock也是可重入的，可作为内置锁的替代物。</p>
-<p>与Synchronized相比较而言，ReentrantLock有以下优势：支持公平/非公平锁、支持可中断的锁、支持非阻塞的tryLock(可超时)、支持锁条件、可跨代码块使用(一个地方加锁，另一个地方解锁)，总之比Synchronized更加灵活。但也有缺点，比如锁需要显示解锁、无法充分享用JVM内部性能提升带来的好处等等。</p>
-<pre><code>public interface Lock {
-    /**
-     * 获取锁，若无法获取到，则当前线程被阻塞。直到获取成功为止。
-     */
-    void lock();
-    /**
-     * 获取锁，若无法获取到，则当前线程被阻塞。直到发生以下两种情况：
-     * 获取成功；或者
-     * 其他线程中断当前线程 
-     */
-    void lockInterruptibly() throws InterruptedException;
-    /**
-     * 如果当前锁可用，获取成功返回true；否则返回false
-     */
-    boolean tryLock();
-    /**
-     * 与lockInterruptibly相似，还有第三种情况，即达到超时时间。
-     * 如果当前锁可用，获取成功返回true；否则返回false
-     */
-    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
-    /**
-     * 释放锁
-     */
-    void unlock();
-    /**
-     * 返回当前锁相关的条件。在条件等待之前，锁必须被当前线程占有，await方法会在等待前释放锁，在结束等待前重新获取锁
-     */
-    Condition newCondition();
-}
-</code></pre><p>基于AQS机制构建的同步类，内部都会使用相关类继承AQS。ReentrantLock也不例外。</p>
-<pre><code>// 内部协调机制对象
-private final Sync sync;
-// 抽象类继承AQS，具有公平和非公平版本的子类。利用AQS的state来表示锁持有(重入)的次数。. 
-abstract static class Sync extends AbstractQueuedSynchronizer 
-</code></pre><p>非公平锁子类，新来的类之间尝试获取锁，无论等待队列中是否有线程阻塞等待。</p>
-<pre><code>final static class NonfairSync extends Sync
-</code></pre><p>公平锁子类，只有在递归(重入)或者同步队列中没有其他线程或者当前线程是等待队列中的第一个线程时才准许访问</p>
-<pre><code>final static class FairSync extends Sync 
-</code></pre><p>非公平版的锁-加锁操作</p>
-<ol>
-<li>当前线程首先会无条件的执行一个CAS操作来获取锁，如果CAS操作成功，获取锁成功。</li>
-<li>如果第1步没成功，当前会检查锁是否被其他线程持有，也就是锁是否可用。</li>
-<li>如果没有其他线程持有锁，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
-<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。</li>
-<li>根据AQS的分析，上述2、3、4步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
-</ol>
-<p>公平版的锁-加锁操作</p>
-<ol>
-<li>当前线程首先会检查锁是否被其他线程持有，并且当前同步等待队列里有没有其他线程在等待。</li>
-<li>如果没有其他线程持有锁，且同步等待队列里没有其他线程，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
-<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。nonfairTryAcquire方法</li>
-<li>根据AQS的分析，上述1、2、3步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
-</ol>
-<p>非公平版和公平版锁的解锁操作一样</p>
-<ol>
-<li>当前线程首先将锁重入次数减1(AQS的state)，如果减1后结果为0，将当前同步器的线程信息置空，并唤醒同步等待队列中队头的等待线程。</li>
-<li>如果第1步中，重入次数减1后结果不为0(说明当前线程还持有当前锁)，方法结束。</li>
-</ol>
-<p>ReentrantLock实现，整体就是sync的一个代理。</p>
-<pre><code>public ReentrantLock() {
-    sync = new NonfairSync();
-}
-public ReentrantLock(boolean fair) {
-    sync = (fair)? new FairSync() : new NonfairSync();
-}
-
-public void lock() {
-    sync.lock();
-}
-
-public void lockInterruptibly() throws InterruptedException {
-    sync.acquireInterruptibly(1);
-}
-
-public boolean tryLock() {
-    return sync.nonfairTryAcquire(1);
-}
-
-public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
-    return sync.tryAcquireNanos(1, unit.toNanos(timeout));
-}
-
-public void unlock() {
-    sync.release(1);
-}
-public Condition newCondition() {
-    return sync.newCondition();
-}
-</code></pre><p>所有try方法，相当于非阻塞的方式获取锁。</p>
-<p>synchronized获得的内部锁存在一定的局限</p>
-<ol>
-<li><p>不能中断一个正在试图获得锁的线程 </p>
-</li>
-<li><p>试图获得锁时不能像trylock那样设定超时时间 </p>
-</li>
-<li><p>每个锁只有单一的条件，不像condition那样可以设置多个</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/02/redis/persistence/" itemprop="url">
-                  持久化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-02T10:40:30+08:00" content="2016-06-02">
-              2016-06-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/02/redis/persistence/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/02/redis/persistence/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h2><p>通过快照（snapshotting）完成，当出现以下几种情况时，进行快照：</p>
-<ol>
-<li>根据配置自动进行，在redis.conf中save部分</li>
-<li>用户执行save（同步快照，会阻塞所有客户端请求）或bgsave（异步快照）</li>
-<li>执行flushall（前提是必须定义自动快照条件，否则即使执行，也不会进行快照）</li>
-<li>执行复制（replication），主从模式，在复制初始化时进行。</li>
-</ol>
-<h3 id="快照原理"><a href="#快照原理" class="headerlink" title="快照原理"></a>快照原理</h3><p>默认快照文件存储在redis当前进程的工作目录中的dump.rdb文件中，通过redis-cli启动客户端时，文件在redis-cli所在的文件夹中。<br>使用fork函数赋值一份当前进程（父进程）的副本（子进程）。父进程继续接受并处理客户端的请求，而子进程开始将内存中的数据写入硬盘中的临时文件。写入所有数据后会用改临时文件替换旧的RDB文件，至此完成一次快照操作。</p>
-<p>fork的时候，会使用写时赋值策略（copy-on-write），开始时共享内存，当父进程需要更改数据时，操作系统会将该数据复制一份保证子进程的数据不受影响，所以RDB文件存储的是执行fork时刻的内存数据。</p>
-<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><p>append only file，默认情况下不开启，可通过appendonly yes参数启用。每执行一条会更改redis数据的命令，redis就会将该命令写入磁盘中的aof文件。aof文件的位置和rdb文件的位置相同。</p>
-<p>以纯文本形式记录了redis执行的写命令。每当达到一定条件时redis就会自动重写aof文件，去除文件中冗余的数据。</p>
-<h3 id="同步硬盘数据"><a href="#同步硬盘数据" class="headerlink" title="同步硬盘数据"></a>同步硬盘数据</h3><p>由于操作系统缓存机制，数据并没有真正地写入硬盘，而是进入系统的硬盘缓存。默认情况下每30s执行一次同步操作，将缓存中的内容真正写入硬盘。</p>
-<pre><code>appendfsync always    每次操作都同步
-appendfsync everysec    没个若干秒同步；这是兼顾性能和安全的考虑。
-appendfsync no    不同步，由操作系统决定，即30s
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/01/redis/getDeeper/" itemprop="url">
-                  redis进阶
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-01T10:12:03+08:00" content="2016-06-01">
-              2016-06-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/01/redis/getDeeper/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/01/redis/getDeeper/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>multi
-...
-exec
-
-watch
-</code></pre><h2 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h2><p>在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。</p>
-<pre><code>set key value
-expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败
-ttl key    返回键的剩余时间，单位是秒。当键不存在时，返回-2。-1表示永久键。
-persist key 取消过期时间，将键改为永久键。使用set和getset赋值的同时也可以清楚过期时间。
-
-对应的还有另外一组设置毫秒时间的
-pexpire
-pttl
-</code></pre><p>过期时间实现访问频率限制</p>
-<ol>
-<li>利用过期时间，每分钟设置一个key，incr到指定数量时，拒绝。过期后重新计数。</li>
-<li>用列表存储，每个新请求，判断列表是否到达最大长度，若未到达，直接加入；否则，与最早的时间比较，看时间间隔是否大于1分钟，若大于，将最早的时间删除，新时间插入；否则拒绝。</li>
-</ol>
-<p>过期时间实现缓存。限制redis占用的最大内存，不设置过期时间，而让redis通过一定的规则淘汰不需要的缓存键。修改maxmemory参数，设置maxmemory-policy。eg. allkeys-lru</p>
-<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>127.0.0.1:6379&gt; sadd posts 2 6 12 26
-(integer) 4
-127.0.0.1:6379&gt; smember posts
-(error) ERR unknown command &apos;smember&apos;
-127.0.0.1:6379&gt; smembers posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-127.0.0.1:6379&gt; hset post:2 time 1352619200
-(integer) 1
-127.0.0.1:6379&gt; hset post:6 time 1352619600
-(integer) 1
-127.0.0.1:6379&gt; hset post:12 time 1352610100
-(integer) 1
-127.0.0.1:6379&gt; hset post:26 time 1352612000
-(integer) 1
-127.0.0.1:6379&gt; sort posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-## 这里by的感觉很像是表连接
-127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc
-1) &quot;6&quot;
-2) &quot;2&quot;
-3) &quot;26&quot;
-4) &quot;12&quot;
-</code></pre><p>通过sort命令的get参数，该参数不影响排序，作用是似的sort命令的返回结果不再是元素自身的值，而是get参数中指定的键值。</p>
-<pre><code>127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc get post:*-&gt;title
-1) &quot;66666&quot;
-2) &quot;windows 8&quot;
-3) &quot;262626&quot;
-4) &quot;121212&quot;
-## 一个sort也可以带有多个get参数（但by只能有一个）
-sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get #
-1) &quot;66666&quot;
-2) &quot;1352619600&quot;
-3) &quot;windows 8&quot;
-4) &quot;1352619200&quot;
-5) &quot;262626&quot;
-6) &quot;1352612000&quot;
-7) &quot;121212&quot;
-8) &quot;1352610100&quot;
-
-get # 会返回元素本身。
-</code></pre><p>store参数保存排序结果</p>
-<pre><code>sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get # store sort.result  
-(integer) 12   ## 保存的键类型是列表类型，返回值为结果个数
-127.0.0.1:6379&gt; lrange sort.result 0 -1
- 1) &quot;66666&quot;
- 2) &quot;1352619600&quot;
- 3) &quot;6&quot;
- 4) &quot;windows 8&quot;
- 5) &quot;1352619200&quot;
- 6) &quot;2&quot;
- 7) &quot;262626&quot;
- 8) &quot;1352612000&quot;
- 9) &quot;26&quot;
-10) &quot;121212&quot;
-11) &quot;1352610100&quot;
-12) &quot;12&quot;
-</code></pre><p>sort对性能的影响<br>O(n+mlog(m))，n为待排序列表中元素个数，m为排序结果返回的个数。</p>
-<ol>
-<li>尽量减少待排序键中元素的数量（减少n）</li>
-<li>使用limit只获取需要的数据（减少m）</li>
-<li>尽量使用store参数缓存</li>
-</ol>
-<h2 id="消息通知"><a href="#消息通知" class="headerlink" title="消息通知"></a>消息通知</h2><p>订阅功能，将用户邮箱存储在集合中，当新增文章后，就向集合中的邮箱地址发送通知邮件。</p>
-<p>当页面需要进行如发送邮件、复杂数据运算等耗时较长的操作时会阻塞页面的渲染，为了避免用户等待太久，应该使用独立的线程来完成。</p>
-<p>松耦合，生产者和消费者无需知道彼此的实现细节。易于扩展，消费者可以有多个，分布在不同机器中，轻松降低单台服务器的负载。</p>
-<p>结合lpush和rpop，往列表左侧添加，右侧取出，模拟消息队列。同时redis提供brpop命令，当没有元素可以取出时，brpop命令将会阻塞，直到油新元素加入。</p>
-<pre><code>brpop key timeout
-其中time为超时时间，0表示不限制等待时间，即将一直等待下去。
-
-brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列表都有数据可以取出的时候，按从左到右的列表顺序
-</code></pre><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出，从简降低往返时延累计值。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/31/redis/begin/" itemprop="url">
-                  redis入门
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-31T15:04:03+08:00" content="2016-05-31">
-              2016-05-31
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/31/redis/begin/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/31/redis/begin/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="几个基础命令"><a href="#几个基础命令" class="headerlink" title="几个基础命令"></a>几个基础命令</h2><pre><code>keys *
-exists key
-del key 由于del不支持通配符，所以可以结合管道和xargs，redis-cli keys &quot;user:*&quot; | xargs redis-cli del
-type key 获取键值的数据类型
-</code></pre><h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h3><pre><code>set key value 赋值
-get key 取值
-incr key 递增数字
-
-incrby key increment 增加指定整数
-decr key
-decrby key decrement
-incrbyfloat key increment
-
-append key value 向尾部追加
-strlen key 获取字符串长度
-mget key [key ...] 同时获取多个键值
-mset key value [key value ...] 同时设置多个键值
-</code></pre><p>最好使用“对象类型：对象ID：对象属性”来命名一个键，eg，user:1:friends</p>
-<ul>
-<li>文章访问量统计</li>
-<li>生成自增ID（作用同关系型数据库的auto_increment）</li>
-<li>存储文章数据</li>
-</ul>
-<h2 id="散列"><a href="#散列" class="headerlink" title="散列"></a>散列</h2><pre><code>hset
-hget
-hmset
-hmget
-hgetall
-hexists
-hsetnx key field value 如果字段存在命令不执行任何操作
-hincrby key field increment
-hdel key field [field ...]
-hkeys key 获取key对应的所有字段
-hvals key 获取key对应的所有字段对应的值
-hlen key 获取字段数量
-</code></pre><ul>
-<li>存储文章数据</li>
-<li>存储文章缩略名</li>
-</ul>
-<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>list可以向两端添加元素，或者获得列表的某一片段</p>
-<pre><code>lpush key value [value ...]
-rpush key value [value ...]
-lpop key
-rpop key
-llen key
-lrange key start stop
-lrem key count value
-lindex key index
-lset key index value
-ltrim key start end
-linsert key before|after pivot value
-rpoplpush source destination
-</code></pre><ul>
-<li>存储文章ID列表</li>
-<li>存储品论列表</li>
-</ul>
-<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><pre><code>sadd key number [number ...]
-srem key number [number ...]
-smembers key
-sismember key member
-sdiff key [key ...]
-sinter key [key ...]
-sunion key [key ...]
-</code></pre><ul>
-<li>存储文章标签</li>
-<li>通过标签搜索文章</li>
-</ul>
-<h2 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a>有序集合</h2><pre><code>zadd key score member [member ...]
-zscore key member
-zrange key star stop [withscores] 按分数从小到大
-zrevrange key start stop [withscores] 
-zrangebyscore key min max [withscores] [limit offset count]
-zincrby key increment member
-zcard key 获取集合中元素的数量
-zcount key min max
-zrem key member [member ...]
-zremrangebyrank key start stop 按排名范围删除元素
-zremrangebyscore key min max 按照分数范围删除元素
-zrank key member 获取元素排名
-zrevrank key member 
-</code></pre><ul>
-<li>实现按点击量排序</li>
-<li>改进按时间排序</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2565,7 +1764,7 @@ zrevrank key member
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -2573,7 +1772,7 @@ zrevrank key member
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2582,7 +1781,7 @@ zrevrank key member
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

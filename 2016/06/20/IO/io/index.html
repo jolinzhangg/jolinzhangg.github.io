@@ -64,7 +64,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="article," />
+  <meta name="keywords" content="帮助文档,IO," />
 
 
 
@@ -80,19 +80,31 @@
 
 
 
-<meta name="description" content="并发
-http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
+<meta name="description" content="操作系统的发展过程无操作系统时代1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。
+
+用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。
+CPU等待人工操作。
+
+为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量">
 <meta property="og:type" content="article">
-<meta property="og:title" content="好文章列表（不断更新）">
+<meta property="og:title" content="从操作系统的角度聊聊CPU和IO设备">
 <meta property="og:url" content="http://yoursite.com/2016/06/20/IO/io/index.html">
 <meta property="og:site_name" content="凤凰花开芙蓉畔">
-<meta property="og:description" content="并发
-http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
-<meta property="og:updated_time" content="2016-06-20T02:22:38.106Z">
+<meta property="og:description" content="操作系统的发展过程无操作系统时代1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。
+
+用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。
+CPU等待人工操作。
+
+为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量">
+<meta property="og:updated_time" content="2016-08-04T06:33:10.748Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="好文章列表（不断更新）">
-<meta name="twitter:description" content="并发
-http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
+<meta name="twitter:title" content="从操作系统的角度聊聊CPU和IO设备">
+<meta name="twitter:description" content="操作系统的发展过程无操作系统时代1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。
+
+用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。
+CPU等待人工操作。
+
+为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量">
 
 
 
@@ -110,7 +122,7 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
   };
 </script>
 
-  <title> 好文章列表（不断更新） | 凤凰花开芙蓉畔 </title>
+  <title> 从操作系统的角度聊聊CPU和IO设备 | 凤凰花开芙蓉畔 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -240,7 +252,7 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
             
             
               
-                好文章列表（不断更新）
+                从操作系统的角度聊聊CPU和IO设备
               
             
           </h1>
@@ -266,8 +278,8 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/article/" itemprop="url" rel="index">
-                    <span itemprop="name">article</span>
+                  <a href="/categories/IO/" itemprop="url" rel="index">
+                    <span itemprop="name">IO</span>
                   </a>
                 </span>
 
@@ -306,9 +318,21 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
       
 
       
-        <h4 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h4><blockquote>
-<p><a href="http://ifeve.com/java-synchronized/" target="_blank" rel="external">http://ifeve.com/java-synchronized/</a>  方腾飞老师的聊聊并发系列</p>
-</blockquote>
+        <h2 id="操作系统的发展过程"><a href="#操作系统的发展过程" class="headerlink" title="操作系统的发展过程"></a>操作系统的发展过程</h2><h3 id="无操作系统时代"><a href="#无操作系统时代" class="headerlink" title="无操作系统时代"></a>无操作系统时代</h3><p>1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。</p>
+<ol>
+<li>用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。</li>
+<li>CPU等待人工操作。</li>
+</ol>
+<p>为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量大，CPU等待时间长，引入外围机作中转，将数据通过外围机输入到磁带上，主机在需要的时候直接读取磁带，解决CPU在等待时，资源的浪费为。</p>
+<h3 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h3><p>由监控程序，每次保着将磁带上的一个作业装入内存，旨在提高资源的利用率和系统的吞吐量。系统中始终只保持一道程序。具备：自动性、顺序性、单道性。</p>
+<h3 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h3><p>CPU等待IO设备结果时，可以被系统调度出去，暂时中断其对CPU的占用，是其他程序可以使用CPU，待IO处理完成后再由系统调度回来。具备：多道性、无序性（先进入内存的作业可能较后完成）、调度性。</p>
+<p>内存中驻留躲到程序，可保持资源处于忙碌状态，资源充分利用。CPU和其他资源保持“忙碌”状态，挡作业运行完成或运行不下去的时候才进行切换，开销小。</p>
+<p>批处理系统推动了多任务操作系统的发展。</p>
+<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多用户样子的系统，一台主机上，连接了多个带有显示器和键盘的终端，允许同时多个用户通过自己的终端，以交互的方式使用计算机，共享主机中的资源。</p>
+<p>及时接收：多路卡连接终端，缓冲区暂存键入的命令或数据。</p>
+<p>及时处理：作业不能先存于磁盘再调入内容，因为磁盘中的作业不能运行，也不能进行交互；不允许一个作业长期占用cpu，只在运行完毕或出现IO请求才被调度是不合适的。采用时间片轮转的方式，让每个作业都能运行一小段时间，这样，在一个不长的时间内会感觉所有用户所有作业都在得到响应。</p>
+<h3 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h3><p>及时响应外部事件的请求。</p>
+<h2 id="操作系统的特性"><a href="#操作系统的特性" class="headerlink" title="操作系统的特性"></a>操作系统的特性</h2><p>并发、共享、虚拟、异步。其中并发是其他三个的前提。<br>并发和并行的差别。并行指同一时刻发生；并发指同一时间间隔内发生。</p>
 
       
     </div>
@@ -330,7 +354,9 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
       
         <div class="post-tags">
           
-            <a href="/tags/article/" rel="tag">#article</a>
+            <a href="/tags/帮助文档/" rel="tag">#帮助文档</a>
+          
+            <a href="/tags/IO/" rel="tag">#IO</a>
           
         </div>
       
@@ -376,7 +402,7 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/06/20/IO/io/"
-           data-title="好文章列表（不断更新）" data-url="http://yoursite.com/2016/06/20/IO/io/">
+           data-title="从操作系统的角度聊聊CPU和IO设备" data-url="http://yoursite.com/2016/06/20/IO/io/">
       </div>
     
   </div>
@@ -421,7 +447,7 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -429,7 +455,7 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -438,7 +464,7 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -467,7 +493,7 @@ http://ifeve.com/java-synchronized/  方腾飞老师的聊聊并发系列">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#并发"><span class="nav-number">1.</span> <span class="nav-text">并发</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#操作系统的发展过程"><span class="nav-number">1.</span> <span class="nav-text">操作系统的发展过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无操作系统时代"><span class="nav-number">1.1.</span> <span class="nav-text">无操作系统时代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单道批处理系统"><span class="nav-number">1.2.</span> <span class="nav-text">单道批处理系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多道批处理系统"><span class="nav-number">1.3.</span> <span class="nav-text">多道批处理系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分时系统"><span class="nav-number">1.4.</span> <span class="nav-text">分时系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实时系统"><span class="nav-number">1.5.</span> <span class="nav-text">实时系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作系统的特性"><span class="nav-number">2.</span> <span class="nav-text">操作系统的特性</span></a></li></ol></div>
             
           </div>
         </section>

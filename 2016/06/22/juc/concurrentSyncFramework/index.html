@@ -98,7 +98,7 @@ AQS需满足的三要素
 <meta property="og:image" content="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/11.jpg">
 <meta property="og:image" content="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/22.jpg">
 <meta property="og:image" content="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/33.jpg">
-<meta property="og:updated_time" content="2016-06-23T09:57:53.614Z">
+<meta property="og:updated_time" content="2016-06-23T10:05:35.134Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Concurrent Synchronizer Framework">
 <meta name="twitter:description" content="同步框架AQS作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。
@@ -335,6 +335,7 @@ AQS需满足的三要素
 <p>Doug Lea, The java.util.concurrent Synchronizer Framework, Science of Computer Programming, 2005, 58(3):293-309</p>
 </blockquote>
 <h3 id="AQS应用"><a href="#AQS应用" class="headerlink" title="AQS应用"></a>AQS应用</h3><p>一般是声明私有内部类去继承AQS，并代理AQS的全部或者部分方法。后面将会看到ReentrantLock，闭锁、信号量、屏障、读写锁，都是这样实现的。</p>
+<a id="more"></a> 
 <h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h3><p>提供和synchronized关键字类似的同步功能，只是使用的时候需要显示地获取和释放锁。但是可以解决synchronized关键字不太容易解决的内置锁交叉的情况。同时，<strong>具备尝试非阻塞地获取锁；能被中断地获取锁，超时获取锁。</strong></p>
 <pre><code>如:     lock A
     lock B
@@ -664,6 +665,10 @@ private void doAcquireShared(int arg) {
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2016/07/07/juc/threadPoolExecutor/" rel="prev" title="ThreadPoolExecutor">
+                ThreadPoolExecutor <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -734,7 +739,7 @@ private void doAcquireShared(int arg) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -742,7 +747,7 @@ private void doAcquireShared(int arg) {
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -751,7 +756,7 @@ private void doAcquireShared(int arg) {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

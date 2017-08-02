@@ -240,6 +240,140 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/20/IO/io/" itemprop="url">
+                  从操作系统的角度聊聊CPU和IO设备
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
+              2016-06-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/IO/" itemprop="url" rel="index">
+                    <span itemprop="name">IO</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/20/IO/io/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/IO/io/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="操作系统的发展过程"><a href="#操作系统的发展过程" class="headerlink" title="操作系统的发展过程"></a>操作系统的发展过程</h2><h3 id="无操作系统时代"><a href="#无操作系统时代" class="headerlink" title="无操作系统时代"></a>无操作系统时代</h3><p>1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。</p>
+<ol>
+<li>用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。</li>
+<li>CPU等待人工操作。</li>
+</ol>
+<p>为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量大，CPU等待时间长，引入外围机作中转，将数据通过外围机输入到磁带上，主机在需要的时候直接读取磁带，解决CPU在等待时，资源的浪费为。</p>
+<h3 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h3><p>由监控程序，每次保着将磁带上的一个作业装入内存，旨在提高资源的利用率和系统的吞吐量。系统中始终只保持一道程序。具备：自动性、顺序性、单道性。</p>
+<h3 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h3><p>CPU等待IO设备结果时，可以被系统调度出去，暂时中断其对CPU的占用，是其他程序可以使用CPU，待IO处理完成后再由系统调度回来。具备：多道性、无序性（先进入内存的作业可能较后完成）、调度性。</p>
+<p>内存中驻留躲到程序，可保持资源处于忙碌状态，资源充分利用。CPU和其他资源保持“忙碌”状态，挡作业运行完成或运行不下去的时候才进行切换，开销小。</p>
+<p>批处理系统推动了多任务操作系统的发展。</p>
+<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多用户样子的系统，一台主机上，连接了多个带有显示器和键盘的终端，允许同时多个用户通过自己的终端，以交互的方式使用计算机，共享主机中的资源。</p>
+<p>及时接收：多路卡连接终端，缓冲区暂存键入的命令或数据。</p>
+<p>及时处理：作业不能先存于磁盘再调入内容，因为磁盘中的作业不能运行，也不能进行交互；不允许一个作业长期占用cpu，只在运行完毕或出现IO请求才被调度是不合适的。采用时间片轮转的方式，让每个作业都能运行一小段时间，这样，在一个不长的时间内会感觉所有用户所有作业都在得到响应。</p>
+<h3 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h3><p>及时响应外部事件的请求。</p>
+<h2 id="操作系统的特性"><a href="#操作系统的特性" class="headerlink" title="操作系统的特性"></a>操作系统的特性</h2><p>并发、共享、虚拟、异步。其中并发是其他三个的前提。<br>并发和并行的差别。并行指同一时刻发生；并发指同一时间间隔内发生。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/20/java/serialize/" itemprop="url">
                   序列化和readObject/writeObject
                 </a>
@@ -387,140 +521,6 @@ public class SerializeTester implements Serializable {
     }
 }
 </code></pre><p>两个方法都是private的，并且它们既不存在于java.lang.Object，也没有在Serializable中声明。那么ObjectOutputStream如何使用它们的呢？这个吗，ObjectOutputStream使用了反射来寻找是否声明了这两个方法。因为ObjectOutputStream使用getPrivateMethod，所以这些方法不得不被声明为priate以至于供ObjectOutputStream来使用。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/20/IO/io/" itemprop="url">
-                  从操作系统的角度聊聊CPU和IO设备
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
-              2016-06-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/IO/" itemprop="url" rel="index">
-                    <span itemprop="name">IO</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/20/IO/io/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/IO/io/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="操作系统的发展过程"><a href="#操作系统的发展过程" class="headerlink" title="操作系统的发展过程"></a>操作系统的发展过程</h2><h3 id="无操作系统时代"><a href="#无操作系统时代" class="headerlink" title="无操作系统时代"></a>无操作系统时代</h3><p>1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。</p>
-<ol>
-<li>用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。</li>
-<li>CPU等待人工操作。</li>
-</ol>
-<p>为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量大，CPU等待时间长，引入外围机作中转，将数据通过外围机输入到磁带上，主机在需要的时候直接读取磁带，解决CPU在等待时，资源的浪费为。</p>
-<h3 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h3><p>由监控程序，每次保着将磁带上的一个作业装入内存，旨在提高资源的利用率和系统的吞吐量。系统中始终只保持一道程序。具备：自动性、顺序性、单道性。</p>
-<h3 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h3><p>CPU等待IO设备结果时，可以被系统调度出去，暂时中断其对CPU的占用，是其他程序可以使用CPU，待IO处理完成后再由系统调度回来。具备：多道性、无序性（先进入内存的作业可能较后完成）、调度性。</p>
-<p>内存中驻留躲到程序，可保持资源处于忙碌状态，资源充分利用。CPU和其他资源保持“忙碌”状态，挡作业运行完成或运行不下去的时候才进行切换，开销小。</p>
-<p>批处理系统推动了多任务操作系统的发展。</p>
-<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多用户样子的系统，一台主机上，连接了多个带有显示器和键盘的终端，允许同时多个用户通过自己的终端，以交互的方式使用计算机，共享主机中的资源。</p>
-<p>及时接收：多路卡连接终端，缓冲区暂存键入的命令或数据。</p>
-<p>及时处理：作业不能先存于磁盘再调入内容，因为磁盘中的作业不能运行，也不能进行交互；不允许一个作业长期占用cpu，只在运行完毕或出现IO请求才被调度是不合适的。采用时间片轮转的方式，让每个作业都能运行一小段时间，这样，在一个不长的时间内会感觉所有用户所有作业都在得到响应。</p>
-<h3 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h3><p>及时响应外部事件的请求。</p>
-<h2 id="操作系统的特性"><a href="#操作系统的特性" class="headerlink" title="操作系统的特性"></a>操作系统的特性</h2><p>并发、共享、虚拟、异步。其中并发是其他三个的前提。<br>并发和并行的差别。并行指同一时刻发生；并发指同一时间间隔内发生。</p>
 
           
         

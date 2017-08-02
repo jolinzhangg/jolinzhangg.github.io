@@ -88,17 +88,17 @@
 <meta property="og:site_name" content="凤凰花开芙蓉畔">
 <meta property="og:description" content="今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。 但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。 于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter1.png">
-<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter2.png">
-<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter3.png">
-<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter4.png">
-<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter5.png">
-<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter6.png">
-<meta property="og:updated_time" content="2017-07-31T11:46:00.000Z">
+<meta property="og:image" content="http://yoursite.com/image/open-falcon/counter1.png">
+<meta property="og:image" content="http://yoursite.com/image/open-falcon/counter2.png">
+<meta property="og:image" content="http://yoursite.com/image/open-falcon/counter3.png">
+<meta property="og:image" content="http://yoursite.com/image/open-falcon/counter4.png">
+<meta property="og:image" content="http://yoursite.com/image/open-falcon/counter5.png">
+<meta property="og:image" content="http://yoursite.com/image/open-falcon/counter6.png">
+<meta property="og:updated_time" content="2017-08-02T02:31:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="counter类型数据的统计">
 <meta name="twitter:description" content="今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。 但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。 于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric">
-<meta name="twitter:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter1.png">
+<meta name="twitter:image" content="http://yoursite.com/image/open-falcon/counter1.png">
 
 
 
@@ -313,8 +313,8 @@
 
       
         <p>今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。</p>
-<p><img src="./img/counter1.png" alt="图1，select_scan监控项是小数"><br>但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。</p>
-<p><img src="./img/counter2.png" alt=""><br>于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric的值的获取是否正确。</p>
+<p><img src="/image/open-falcon/counter1.png" alt="图1，select_scan监控项是小数"><br>但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。</p>
+<p><img src="/image/open-falcon/counter2.png" alt=""><br>于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric的值的获取是否正确。</p>
 <a id="more"></a> 
 <h1 id="mymon"><a href="#mymon" class="headerlink" title="mymon"></a>mymon</h1><p>mymon是用golang写的，编译后部署到crontab中实现监控指标的定时获取，在通过插件的处理，将处理结果push到agent中，由agent统一上报。</p>
 <p>核心是通过mysql的命令完成信息的收集的。在插件中有metrics.txt文件，里面记述了400多个统计项。</p>
@@ -323,19 +323,19 @@ show global variables;
 show innodb status;
 show slave status;
 ...
-</code></pre><h1 id="插件数据收集"><a href="#插件数据收集" class="headerlink" title="插件数据收集"></a>插件数据收集</h1><p>在server.go中，mysqlState函数，是收集status和variables的入口。在这里为了确认收集到的数据是否准确，我加入了两条log记录每一项数据，并与mysql命令行的运行结果比对，发现并无异常。<br><img src="./img/counter3.png" alt=""><br>数据获取完后就要通过sendData.go中的sendData函数push数据。刚函数主要就是讲上一步收集来的数据转换成json，然后push到agent。在这个位置同样加入了log，发现json无误。可以坊间传言这个插件统计有误并不准确。</p>
+</code></pre><h1 id="插件数据收集"><a href="#插件数据收集" class="headerlink" title="插件数据收集"></a>插件数据收集</h1><p>在server.go中，mysqlState函数，是收集status和variables的入口。在这里为了确认收集到的数据是否准确，我加入了两条log记录每一项数据，并与mysql命令行的运行结果比对，发现并无异常。<br><img src="/image/open-falcon/counter3.png" alt=""><br>数据获取完后就要通过sendData.go中的sendData函数push数据。刚函数主要就是讲上一步收集来的数据转换成json，然后push到agent。在这个位置同样加入了log，发现json无误。可以坊间传言这个插件统计有误并不准确。</p>
 <p>那既然数据收集没问题，那数据与理想不符，必然出现在后续操作中。想来也是，如果没有bug的，这些监控插件只不过是执行下相应的info命令，也不会有出入。</p>
 <h3 id="counter类型"><a href="#counter类型" class="headerlink" title="counter类型"></a>counter类型</h3><p>open-falcon的数据主要分为两种类型：gauge（原始数值）和counter（计数器）。其中gauge就是统计项的瞬时数值，而counter是该数据的累加值。想来open-falcon必然对这种类型的数据做了相应的处理。</p>
 <h1 id="dashboard中的数据显示"><a href="#dashboard中的数据显示" class="headerlink" title="dashboard中的数据显示"></a>dashboard中的数据显示</h1><p>通过firebug，发现图表在显示过程中有两个请求和获取图表数据密切相关。其中第一个请求是获取页面显示的html，也就是python的控制器跳转（这个是我自己的理解，也不知道是不是应该这么说）；第二个是图中具体数据的获取，可以在response中看到如下所示的数据结果，其中的data就是具体的二维坐标系中的点，二元组分别是横坐标时间和纵坐标select_scan的值。</p>
-<p><img src="./img/counter4.png" alt=""></p>
+<p><img src="/image/open-falcon/counter4.png" alt=""></p>
 <p>根据open-falcon的架构，我们知道，agent将数据push到transfer，然后经过一致性hash，数据到达graph组件后并存储在graph组件配置的rrd文件路径中。    </p>
 <pre><code>http://****/chart/big?id=2085
 http://****/chart/h?cf=AVERAGE&amp;end=1501500422&amp;graph_type=h&amp;id=2085&amp;start=1501496882&amp;sum=off&amp;sumonly=off
 </code></pre><p>进一步分析上面的请求和dashboard代码对应，终于发现，经由chart.py文件调用rrdgraph.py中的graph_history函数，其中最终需要把参数请求发送的api_addr这个“环境变量”中，而它是在dashboard的配置文件中配置的，指向的是api组件。</p>
-<p><img src="./img/counter5.png" alt=""></p>
+<p><img src="/image/open-falcon/counter5.png" alt=""></p>
 <p>但是继续跟踪发现无非也就是一些获取，突然意识到，其实知道了数据发送没有问题，直接在数据存储就好了。于是找到了graph组件。</p>
 <h1 id="graph中的数据存储"><a href="#graph中的数据存储" class="headerlink" title="graph中的数据存储"></a>graph中的数据存储</h1><p>通过main函数中的rpc协程，很快可以定位到graph.go这个文件。在其中发现counter类型数据的处理。是两次数据值的差除以step，也就是数据收集的时间间隔。恍然大悟，这些指标都是定时收集的，对于counter的话，自然需要计算的是一定时间间隔的增量，而open-falcon正是采用这样理所当然的处理方式。</p>
-<p><img src="./img/counter6.png" alt=""></p>
+<p><img src="/image/open-falcon/counter6.png" alt=""></p>
 <p>这就可以解释为什么有些机器上收集到的数据是小数了，因为select_scan的值很小的时候，除以step=60，有可能就是小说。所以open-falcon和mymon组件均没有问题。</p>
 <blockquote>
 <p><a href="https://github.com/open-falcon/mymon" target="_blank" rel="external">https://github.com/open-falcon/mymon</a></p>

@@ -310,8 +310,8 @@
       
         
           <p>今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。</p>
-<p><img src="./img/counter1.png" alt="图1，select_scan监控项是小数"><br>但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。</p>
-<p><img src="./img/counter2.png" alt=""><br>于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric的值的获取是否正确。</p>
+<p><img src="/image/open-falcon/counter1.png" alt="图1，select_scan监控项是小数"><br>但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。</p>
+<p><img src="/image/open-falcon/counter2.png" alt=""><br>于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric的值的获取是否正确。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2017/07/31/open-falcon/counter数据的统计/#more" rel="contents">
               阅读全文 &raquo;
@@ -566,7 +566,7 @@ GraphQueues = make(map[string]*nlist.SafeListLimited)// map后面的string是key
       
         
           
-            <p><img src="./img/agent1.png" alt=""></p>
+            <p><img src="/image/open-falcon/agent1.png" alt=""></p>
 <p>agent包含两部分上报信息：其一是上报心跳到HBS，其二是上报metrics到transfer。</p>
 <p>main.go在根目录下，是程序的入口。主函数依次创建一系列协程。除了在main中显示通过go创建的外，其他均在cron包中创建。</p>
 <h2 id="main函数"><a href="#main函数" class="headerlink" title="main函数"></a>main函数</h2><ol>
@@ -1014,6 +1014,135 @@ brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列�
             
               
                 
+                <a class="post-title-link" href="/2017/04/05/java/java-memory/" itemprop="url">
+                  Java内存区域
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
+              2017-04-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/04/05/java/java-memory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/java/java-memory/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>当前线程执行字节码的行号指示器。在虚拟机的概念模型里，通过这个行号指示下一条要执行的指令，分支、循环、跳转、异常处理、线程恢复等。线程独立。当执行java方法的时候，指示的是虚拟机字节码指令的地址；执行native方法是，这个值为空。</p>
+<p>唯一一个没有在虚拟机规范中规定任何OutOfMemoryError的区域。</p>
+<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>线程私有。栈帧的入栈和出栈过程。每个栈帧存储局部变量表、操作数栈、动态链接库、方法出口等信息。可以抛出StackOverflowError异常，栈本身不够用；OutOfMemoryError，扩充栈的时候没有申请到足够的空间。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>运行native方法服务。也会抛出上述两个异常。</p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>虚拟机管理的最大一块内存。虚拟机规范要求，所有对象实例以及数组都要在堆上分配。分代：新生代和老年代；新生代分为Eden区和两个Survivor区。规范规定，堆可以处于物理上不连续的内存空间中，只要逻辑上连续即可，就像磁盘一样。当堆中没有足够的内存分配，且堆无法扩展的时候，将会跑出OutOfMemoryError异常。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>线程共享，存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。HotSpot将其称为永久代，是因为GC分代收集扩展至方法区。回收目标针对常量池的回收和类型的卸载。也会跑出OutOfMemoryError异常。</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>方法区的一部分，存放各种字面量和符号引用。String类的intern()返回这里的值。同意可能返回OutOfMemoryError异常。</p>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>Direct Memory并不是虚机运行时数据区的一部分，也不是虚拟机规范定义的内存区域。堆内的DirectByteBuffer对象对堆外内存引用进行操作，避免在java堆和native堆间来回复制数据，一些场景可以提高性能。</p>
+<h2 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h2><p>对象类型信息存储在方法区。</p>
+<p>栈和堆之间的访问方式一般两种：1.使用句柄，reference中存储的是稳定的句柄地址，对象移动时只会改变句柄中的实例数据指针；2.使用之间指针，节省一次指针寻址。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/05/redis/begin/" itemprop="url">
                   redis入门
                 </a>
@@ -1217,164 +1346,6 @@ zrevrank key member
             
               
                 
-                <a class="post-title-link" href="/2017/04/05/elk/elk-start/" itemprop="url">
-                  LogStash入门
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
-              2017-04-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/LogStash/" itemprop="url" rel="index">
-                    <span itemprop="name">LogStash</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/04/05/elk/elk-start/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/elk/elk-start/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>Logstash is a tool for managing events and logs. You can use it to collect logs, parse them, and store them for later use (like, for searching).</p>
-</blockquote>
-<p>什么是 Logstash？为什么要用 Logstash？怎么用 Logstash？</p>
-<p>安装</p>
-<ol>
-<li><p>使用软件仓库的配置</p>
-<p> rpm –import <a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> cat &gt; /etc/yum.repos.d/logstash.repo &lt;&lt;EOF<br> [logstash-5.0]<br> name=logstash repository for 5.0.x packages<br> baseurl=<a href="http://packages.elasticsearch.org/logstash/5.0/centos" target="_blank" rel="external">http://packages.elasticsearch.org/logstash/5.0/centos</a><br> gpgcheck=1<br> gpgkey=<a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> enabled=1<br> EOF<br> yum clean all<br> yum install logstash</p>
-</li>
-<li><p>可以访问 <a href="https://www.elastic.co/downloads/logstash" target="_blank" rel="external">https://www.elastic.co/downloads/logstash</a> 页面找对应操作系统和版本</p>
-</li>
-</ol>
-<p>运行</p>
-<pre><code>bin/logstash -e &apos;input{stdin{}}output{stdout{codec=&gt;rubydebug}}&apos;
-</code></pre><p>结果</p>
-<pre><code>{
-    &quot;message&quot; =&gt; &quot;Hello World&quot;,
-     &quot;@version&quot; =&gt; &quot;1&quot;,
-    &quot;@timestamp&quot; =&gt; &quot;2014-08-07T10:30:59.937Z&quot;,
-    &quot;host&quot; =&gt; &quot;raochenlindeMacBook-Air.local&quot;,
-}
-</code></pre><p><img src="https://www.elastic.co/guide/en/logstash/current/static/images/basic_logstash_pipeline.png" alt=""></p>
-<p>plugin</p>
-<pre><code>Usage:
-        bin/plugin [OPTIONS] SUBCOMMAND [ARG] ...
-
-Parameters:
-    SUBCOMMAND                    subcommand
-    [ARG] ...                     subcommand arguments
-
-Subcommands:
-    install                       Install a plugin
-    uninstall                     Uninstall a plugin
-    update                        Install a plugin
-    list                          List all installed plugins
-
-Options:
-    -h, --help                    print help
-</code></pre><p>Filebeat client可以在服务端收集log文件，并传送到logstash实例。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2017/04/05/redis/persistence/" itemprop="url">
                   持久化
                 </a>
@@ -1509,8 +1480,8 @@ appendfsync no    不同步，由操作系统决定，即30s
             
               
                 
-                <a class="post-title-link" href="/2017/04/05/java/java-memory/" itemprop="url">
-                  Java内存区域
+                <a class="post-title-link" href="/2017/04/05/elk/elk-start/" itemprop="url">
+                  LogStash入门
                 </a>
               
             
@@ -1537,8 +1508,8 @@ appendfsync no    不同步，由操作系统决定，即30s
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
+                  <a href="/categories/LogStash/" itemprop="url" rel="index">
+                    <span itemprop="name">LogStash</span>
                   </a>
                 </span>
 
@@ -1553,8 +1524,8 @@ appendfsync no    不同步，由操作系统决定，即30s
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/04/05/java/java-memory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/java/java-memory/" itemprop="commentsCount"></span>
+                <a href="/2017/04/05/elk/elk-start/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/elk/elk-start/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1579,16 +1550,45 @@ appendfsync no    不同步，由操作系统决定，即30s
       
         
           
-            <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>当前线程执行字节码的行号指示器。在虚拟机的概念模型里，通过这个行号指示下一条要执行的指令，分支、循环、跳转、异常处理、线程恢复等。线程独立。当执行java方法的时候，指示的是虚拟机字节码指令的地址；执行native方法是，这个值为空。</p>
-<p>唯一一个没有在虚拟机规范中规定任何OutOfMemoryError的区域。</p>
-<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>线程私有。栈帧的入栈和出栈过程。每个栈帧存储局部变量表、操作数栈、动态链接库、方法出口等信息。可以抛出StackOverflowError异常，栈本身不够用；OutOfMemoryError，扩充栈的时候没有申请到足够的空间。</p>
-<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>运行native方法服务。也会抛出上述两个异常。</p>
-<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>虚拟机管理的最大一块内存。虚拟机规范要求，所有对象实例以及数组都要在堆上分配。分代：新生代和老年代；新生代分为Eden区和两个Survivor区。规范规定，堆可以处于物理上不连续的内存空间中，只要逻辑上连续即可，就像磁盘一样。当堆中没有足够的内存分配，且堆无法扩展的时候，将会跑出OutOfMemoryError异常。</p>
-<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>线程共享，存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。HotSpot将其称为永久代，是因为GC分代收集扩展至方法区。回收目标针对常量池的回收和类型的卸载。也会跑出OutOfMemoryError异常。</p>
-<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>方法区的一部分，存放各种字面量和符号引用。String类的intern()返回这里的值。同意可能返回OutOfMemoryError异常。</p>
-<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>Direct Memory并不是虚机运行时数据区的一部分，也不是虚拟机规范定义的内存区域。堆内的DirectByteBuffer对象对堆外内存引用进行操作，避免在java堆和native堆间来回复制数据，一些场景可以提高性能。</p>
-<h2 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h2><p>对象类型信息存储在方法区。</p>
-<p>栈和堆之间的访问方式一般两种：1.使用句柄，reference中存储的是稳定的句柄地址，对象移动时只会改变句柄中的实例数据指针；2.使用之间指针，节省一次指针寻址。</p>
+            <blockquote>
+<p>Logstash is a tool for managing events and logs. You can use it to collect logs, parse them, and store them for later use (like, for searching).</p>
+</blockquote>
+<p>什么是 Logstash？为什么要用 Logstash？怎么用 Logstash？</p>
+<p>安装</p>
+<ol>
+<li><p>使用软件仓库的配置</p>
+<p> rpm –import <a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> cat &gt; /etc/yum.repos.d/logstash.repo &lt;&lt;EOF<br> [logstash-5.0]<br> name=logstash repository for 5.0.x packages<br> baseurl=<a href="http://packages.elasticsearch.org/logstash/5.0/centos" target="_blank" rel="external">http://packages.elasticsearch.org/logstash/5.0/centos</a><br> gpgcheck=1<br> gpgkey=<a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> enabled=1<br> EOF<br> yum clean all<br> yum install logstash</p>
+</li>
+<li><p>可以访问 <a href="https://www.elastic.co/downloads/logstash" target="_blank" rel="external">https://www.elastic.co/downloads/logstash</a> 页面找对应操作系统和版本</p>
+</li>
+</ol>
+<p>运行</p>
+<pre><code>bin/logstash -e &apos;input{stdin{}}output{stdout{codec=&gt;rubydebug}}&apos;
+</code></pre><p>结果</p>
+<pre><code>{
+    &quot;message&quot; =&gt; &quot;Hello World&quot;,
+     &quot;@version&quot; =&gt; &quot;1&quot;,
+    &quot;@timestamp&quot; =&gt; &quot;2014-08-07T10:30:59.937Z&quot;,
+    &quot;host&quot; =&gt; &quot;raochenlindeMacBook-Air.local&quot;,
+}
+</code></pre><p><img src="https://www.elastic.co/guide/en/logstash/current/static/images/basic_logstash_pipeline.png" alt=""></p>
+<p>plugin</p>
+<pre><code>Usage:
+        bin/plugin [OPTIONS] SUBCOMMAND [ARG] ...
+
+Parameters:
+    SUBCOMMAND                    subcommand
+    [ARG] ...                     subcommand arguments
+
+Subcommands:
+    install                       Install a plugin
+    uninstall                     Uninstall a plugin
+    update                        Install a plugin
+    list                          List all installed plugins
+
+Options:
+    -h, --help                    print help
+</code></pre><p>Filebeat client可以在服务端收集log文件，并传送到logstash实例。</p>
 
           
         

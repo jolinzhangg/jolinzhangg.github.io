@@ -374,8 +374,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/06/20/java/serialize/" itemprop="url">
-                  序列化和readObject/writeObject
+                <a class="post-title-link" href="/2016/06/20/goodarticle/" itemprop="url">
+                  好文章列表（不断更新）
                 </a>
               
             
@@ -402,8 +402,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/article/" itemprop="url" rel="index">
+                    <span itemprop="name">article</span>
                   </a>
                 </span>
 
@@ -418,8 +418,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/06/20/java/serialize/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/java/serialize/" itemprop="commentsCount"></span>
+                <a href="/2016/06/20/goodarticle/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/goodarticle/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -444,83 +444,9 @@
       
         
           
-            <p>Java中需要序列化的类，只需实现Serializable接口，具体的实现由虚拟机负责调用相关实现方式去实现。所有的non-transient和non-static都将被序列化。</p>
-<pre><code>class SessionDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private int data; // Stores session data
-
-    // Session activation time (creation, deserialization)
-    private long activationTime; 
-
-    public SessionDTO(int data) {
-        this.data = data;
-        this.activationTime = System.currentTimeMillis();
-    }
-
-    public int getData() {
-        return data;
-    }
-
-    public long getActivationTime() {
-        return activationTime;
-    }
-}
-
-public class SerializeTester implements Serializable {
-    public static void main(String... strings) throws Exception {
-        File file = new File(&quot;out.ser&quot;);
-
-        ObjectOutputStream oos = new ObjectOutputStream(
-            new FileOutputStream(file));
-        SessionDTO dto = new SessionDTO(1);
-        oos.writeObject(dto);
-        oos.close();
-
-        ObjectInputStream ois = new ObjectInputStream(
-            new FileInputStream(file));
-        SessionDTO dto = (SessionDTO) ois.readObject();
-
-        System.out.println(&quot;data : &quot; + dto.getData()
-            + &quot; activation time : &quot; + dto.getActivationTime());
-        ois.close();
-    }
-}
-</code></pre><p>某些情况下，如果某些字段不需要进行序列化，可以将其设置为transient，这样这些字段就不会进行序列化，以减轻对网络带宽的占用。某些值，如果需要在反序列化的时候重新赋值，可以设置为transient，并且重写readObject方法，在其中为该属性赋值。如果希望序列化的时候对某些值做自定义的处理，可以重写writeObject方法，添加相应逻辑。</p>
-<pre><code>class SessionDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private transient int data; // Stores session data
-
-    //Session activation time (creation, deserialization)
-    private transient long activationTime; 
-
-    public SessionDTO(int data) {
-        this.data = data;
-        this.activationTime = System.currentTimeMillis();
-    }
-
-    private void writeObject(ObjectOutputStream oos) throws IOException {
-        oos.defaultWriteObject();
-        oos.writeInt(data);
-        System.out.println(&quot;session serialized&quot;);
-    }
-
-    private void readObject(ObjectInputStream ois) throws IOException,
-            ClassNotFoundException {
-        ois.defaultReadObject();
-        data = ois.readInt();
-        activationTime = System.currentTimeMillis();
-        System.out.println(&quot;session deserialized&quot;);
-    }
-
-    public int getData() {
-        return data;
-    }
-
-    public long getActivationTime() {
-        return activationTime;
-    }
-}
-</code></pre><p>两个方法都是private的，并且它们既不存在于java.lang.Object，也没有在Serializable中声明。那么ObjectOutputStream如何使用它们的呢？这个吗，ObjectOutputStream使用了反射来寻找是否声明了这两个方法。因为ObjectOutputStream使用getPrivateMethod，所以这些方法不得不被声明为priate以至于供ObjectOutputStream来使用。</p>
+            <h4 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h4><blockquote>
+<p><a href="http://ifeve.com/java-synchronized/" target="_blank" rel="external">http://ifeve.com/java-synchronized/</a>  方腾飞老师的聊聊并发系列</p>
+</blockquote>
 
           
         
@@ -1460,132 +1386,6 @@ public class Semaphore implements java.io.Serializable {
             
               
                 
-                <a class="post-title-link" href="/2016/05/30/linux/管理命令汇总/" itemprop="url">
-                  linux管理维护命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-30T15:00:00+08:00" content="2016-05-30">
-              2016-05-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/30/linux/管理命令汇总/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/管理命令汇总/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h3><p>nc localhost 20000 与 telnet localhost 20000相同</p>
-<p>激活一个20000端口来监听连接</p>
-<pre><code>nc -l localhost 20000 &amp;
-netstat -tlunp | grep nc
-nc localhost 20000
-</code></pre><p>这里localhost为只开启本机测试，如果想通过其他机器连接，可以使用ip或域名。</p>
-<p>linux命令中的&amp;，强制命令在后台执行。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/05/30/linux/xinetd/" itemprop="url">
                   xinetd
                 </a>
@@ -1745,6 +1545,132 @@ includedir /etc/xinetd.d
 <p>六 Service命令</p>
 <p>Linux的service命令就是查看和控制所有的独立启动的守护进程。 这个命令不是在所有的linux发行版本中都有。主要是在redhat系linux中。service此命令位于/sbin/service，用file命令查看此命令会发现它是一个脚本命令。分析脚本可知此命令的作用是去/etc/init.d目录下寻找相应的服务，进行开启和关闭等操作。例如service mysqld stop等价于/etc/init.d/mysqld stop。</p>
 <p>七 xinetd本身也是一个独立的守护进程，在/etc/init.d/xinetd。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/30/linux/管理命令汇总/" itemprop="url">
+                  linux管理维护命令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-30T15:00:00+08:00" content="2016-05-30">
+              2016-05-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/30/linux/管理命令汇总/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/管理命令汇总/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h3><p>nc localhost 20000 与 telnet localhost 20000相同</p>
+<p>激活一个20000端口来监听连接</p>
+<pre><code>nc -l localhost 20000 &amp;
+netstat -tlunp | grep nc
+nc localhost 20000
+</code></pre><p>这里localhost为只开启本机测试，如果想通过其他机器连接，可以使用ip或域名。</p>
+<p>linux命令中的&amp;，强制命令在后台执行。</p>
 
           
         

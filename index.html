@@ -798,222 +798,6 @@ func main() {
             
               
                 
-                <a class="post-title-link" href="/2017/04/05/redis/getDeeper/" itemprop="url">
-                  redis进阶
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
-              2017-04-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/04/05/redis/getDeeper/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/redis/getDeeper/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>multi
-...
-exec
-
-watch
-</code></pre><h2 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h2><p>在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。</p>
-<pre><code>set key value
-expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败
-ttl key    返回键的剩余时间，单位是秒。当键不存在时，返回-2。-1表示永久键。
-persist key 取消过期时间，将键改为永久键。使用set和getset赋值的同时也可以清楚过期时间。
-
-对应的还有另外一组设置毫秒时间的
-pexpire
-pttl
-</code></pre><p>过期时间实现访问频率限制</p>
-<ol>
-<li>利用过期时间，每分钟设置一个key，incr到指定数量时，拒绝。过期后重新计数。</li>
-<li>用列表存储，每个新请求，判断列表是否到达最大长度，若未到达，直接加入；否则，与最早的时间比较，看时间间隔是否大于1分钟，若大于，将最早的时间删除，新时间插入；否则拒绝。</li>
-</ol>
-<p>过期时间实现缓存。限制redis占用的最大内存，不设置过期时间，而让redis通过一定的规则淘汰不需要的缓存键。修改maxmemory参数，设置maxmemory-policy。eg. allkeys-lru</p>
-<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>127.0.0.1:6379&gt; sadd posts 2 6 12 26
-(integer) 4
-127.0.0.1:6379&gt; smember posts
-(error) ERR unknown command &apos;smember&apos;
-127.0.0.1:6379&gt; smembers posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-127.0.0.1:6379&gt; hset post:2 time 1352619200
-(integer) 1
-127.0.0.1:6379&gt; hset post:6 time 1352619600
-(integer) 1
-127.0.0.1:6379&gt; hset post:12 time 1352610100
-(integer) 1
-127.0.0.1:6379&gt; hset post:26 time 1352612000
-(integer) 1
-127.0.0.1:6379&gt; sort posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-## 这里by的感觉很像是表连接
-127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc
-1) &quot;6&quot;
-2) &quot;2&quot;
-3) &quot;26&quot;
-4) &quot;12&quot;
-</code></pre><p>通过sort命令的get参数，该参数不影响排序，作用是似的sort命令的返回结果不再是元素自身的值，而是get参数中指定的键值。</p>
-<pre><code>127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc get post:*-&gt;title
-1) &quot;66666&quot;
-2) &quot;windows 8&quot;
-3) &quot;262626&quot;
-4) &quot;121212&quot;
-## 一个sort也可以带有多个get参数（但by只能有一个）
-sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get #
-1) &quot;66666&quot;
-2) &quot;1352619600&quot;
-3) &quot;windows 8&quot;
-4) &quot;1352619200&quot;
-5) &quot;262626&quot;
-6) &quot;1352612000&quot;
-7) &quot;121212&quot;
-8) &quot;1352610100&quot;
-
-get # 会返回元素本身。
-</code></pre><p>store参数保存排序结果</p>
-<pre><code>sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get # store sort.result  
-(integer) 12   ## 保存的键类型是列表类型，返回值为结果个数
-127.0.0.1:6379&gt; lrange sort.result 0 -1
- 1) &quot;66666&quot;
- 2) &quot;1352619600&quot;
- 3) &quot;6&quot;
- 4) &quot;windows 8&quot;
- 5) &quot;1352619200&quot;
- 6) &quot;2&quot;
- 7) &quot;262626&quot;
- 8) &quot;1352612000&quot;
- 9) &quot;26&quot;
-10) &quot;121212&quot;
-11) &quot;1352610100&quot;
-12) &quot;12&quot;
-</code></pre><p>sort对性能的影响<br>O(n+mlog(m))，n为待排序列表中元素个数，m为排序结果返回的个数。</p>
-<ol>
-<li>尽量减少待排序键中元素的数量（减少n）</li>
-<li>使用limit只获取需要的数据（减少m）</li>
-<li>尽量使用store参数缓存</li>
-</ol>
-<h2 id="消息通知"><a href="#消息通知" class="headerlink" title="消息通知"></a>消息通知</h2><p>订阅功能，将用户邮箱存储在集合中，当新增文章后，就向集合中的邮箱地址发送通知邮件。</p>
-<p>当页面需要进行如发送邮件、复杂数据运算等耗时较长的操作时会阻塞页面的渲染，为了避免用户等待太久，应该使用独立的线程来完成。</p>
-<p>松耦合，生产者和消费者无需知道彼此的实现细节。易于扩展，消费者可以有多个，分布在不同机器中，轻松降低单台服务器的负载。</p>
-<p>结合lpush和rpop，往列表左侧添加，右侧取出，模拟消息队列。同时redis提供brpop命令，当没有元素可以取出时，brpop命令将会阻塞，直到油新元素加入。</p>
-<pre><code>brpop key timeout
-其中time为超时时间，0表示不限制等待时间，即将一直等待下去。
-
-brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列表都有数据可以取出的时候，按从左到右的列表顺序
-</code></pre><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出，从简降低往返时延累计值。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2017/04/05/java/java-memory/" itemprop="url">
                   Java内存区域
                 </a>
@@ -1094,6 +878,164 @@ brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列�
 <h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>Direct Memory并不是虚机运行时数据区的一部分，也不是虚拟机规范定义的内存区域。堆内的DirectByteBuffer对象对堆外内存引用进行操作，避免在java堆和native堆间来回复制数据，一些场景可以提高性能。</p>
 <h2 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h2><p>对象类型信息存储在方法区。</p>
 <p>栈和堆之间的访问方式一般两种：1.使用句柄，reference中存储的是稳定的句柄地址，对象移动时只会改变句柄中的实例数据指针；2.使用之间指针，节省一次指针寻址。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/05/elk/elk-start/" itemprop="url">
+                  LogStash入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
+              2017-04-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/LogStash/" itemprop="url" rel="index">
+                    <span itemprop="name">LogStash</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/04/05/elk/elk-start/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/elk/elk-start/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>Logstash is a tool for managing events and logs. You can use it to collect logs, parse them, and store them for later use (like, for searching).</p>
+</blockquote>
+<p>什么是 Logstash？为什么要用 Logstash？怎么用 Logstash？</p>
+<p>安装</p>
+<ol>
+<li><p>使用软件仓库的配置</p>
+<p> rpm –import <a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> cat &gt; /etc/yum.repos.d/logstash.repo &lt;&lt;EOF<br> [logstash-5.0]<br> name=logstash repository for 5.0.x packages<br> baseurl=<a href="http://packages.elasticsearch.org/logstash/5.0/centos" target="_blank" rel="external">http://packages.elasticsearch.org/logstash/5.0/centos</a><br> gpgcheck=1<br> gpgkey=<a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> enabled=1<br> EOF<br> yum clean all<br> yum install logstash</p>
+</li>
+<li><p>可以访问 <a href="https://www.elastic.co/downloads/logstash" target="_blank" rel="external">https://www.elastic.co/downloads/logstash</a> 页面找对应操作系统和版本</p>
+</li>
+</ol>
+<p>运行</p>
+<pre><code>bin/logstash -e &apos;input{stdin{}}output{stdout{codec=&gt;rubydebug}}&apos;
+</code></pre><p>结果</p>
+<pre><code>{
+    &quot;message&quot; =&gt; &quot;Hello World&quot;,
+     &quot;@version&quot; =&gt; &quot;1&quot;,
+    &quot;@timestamp&quot; =&gt; &quot;2014-08-07T10:30:59.937Z&quot;,
+    &quot;host&quot; =&gt; &quot;raochenlindeMacBook-Air.local&quot;,
+}
+</code></pre><p><img src="https://www.elastic.co/guide/en/logstash/current/static/images/basic_logstash_pipeline.png" alt=""></p>
+<p>plugin</p>
+<pre><code>Usage:
+        bin/plugin [OPTIONS] SUBCOMMAND [ARG] ...
+
+Parameters:
+    SUBCOMMAND                    subcommand
+    [ARG] ...                     subcommand arguments
+
+Subcommands:
+    install                       Install a plugin
+    uninstall                     Uninstall a plugin
+    update                        Install a plugin
+    list                          List all installed plugins
+
+Options:
+    -h, --help                    print help
+</code></pre><p>Filebeat client可以在服务端收集log文件，并传送到logstash实例。</p>
 
           
         
@@ -1346,6 +1288,222 @@ zrevrank key member
             
               
                 
+                <a class="post-title-link" href="/2017/04/05/redis/getDeeper/" itemprop="url">
+                  redis进阶
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
+              2017-04-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/04/05/redis/getDeeper/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/redis/getDeeper/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>multi
+...
+exec
+
+watch
+</code></pre><h2 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h2><p>在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。</p>
+<pre><code>set key value
+expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败
+ttl key    返回键的剩余时间，单位是秒。当键不存在时，返回-2。-1表示永久键。
+persist key 取消过期时间，将键改为永久键。使用set和getset赋值的同时也可以清楚过期时间。
+
+对应的还有另外一组设置毫秒时间的
+pexpire
+pttl
+</code></pre><p>过期时间实现访问频率限制</p>
+<ol>
+<li>利用过期时间，每分钟设置一个key，incr到指定数量时，拒绝。过期后重新计数。</li>
+<li>用列表存储，每个新请求，判断列表是否到达最大长度，若未到达，直接加入；否则，与最早的时间比较，看时间间隔是否大于1分钟，若大于，将最早的时间删除，新时间插入；否则拒绝。</li>
+</ol>
+<p>过期时间实现缓存。限制redis占用的最大内存，不设置过期时间，而让redis通过一定的规则淘汰不需要的缓存键。修改maxmemory参数，设置maxmemory-policy。eg. allkeys-lru</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>127.0.0.1:6379&gt; sadd posts 2 6 12 26
+(integer) 4
+127.0.0.1:6379&gt; smember posts
+(error) ERR unknown command &apos;smember&apos;
+127.0.0.1:6379&gt; smembers posts
+1) &quot;2&quot;
+2) &quot;6&quot;
+3) &quot;12&quot;
+4) &quot;26&quot;
+127.0.0.1:6379&gt; hset post:2 time 1352619200
+(integer) 1
+127.0.0.1:6379&gt; hset post:6 time 1352619600
+(integer) 1
+127.0.0.1:6379&gt; hset post:12 time 1352610100
+(integer) 1
+127.0.0.1:6379&gt; hset post:26 time 1352612000
+(integer) 1
+127.0.0.1:6379&gt; sort posts
+1) &quot;2&quot;
+2) &quot;6&quot;
+3) &quot;12&quot;
+4) &quot;26&quot;
+## 这里by的感觉很像是表连接
+127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc
+1) &quot;6&quot;
+2) &quot;2&quot;
+3) &quot;26&quot;
+4) &quot;12&quot;
+</code></pre><p>通过sort命令的get参数，该参数不影响排序，作用是似的sort命令的返回结果不再是元素自身的值，而是get参数中指定的键值。</p>
+<pre><code>127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc get post:*-&gt;title
+1) &quot;66666&quot;
+2) &quot;windows 8&quot;
+3) &quot;262626&quot;
+4) &quot;121212&quot;
+## 一个sort也可以带有多个get参数（但by只能有一个）
+sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get #
+1) &quot;66666&quot;
+2) &quot;1352619600&quot;
+3) &quot;windows 8&quot;
+4) &quot;1352619200&quot;
+5) &quot;262626&quot;
+6) &quot;1352612000&quot;
+7) &quot;121212&quot;
+8) &quot;1352610100&quot;
+
+get # 会返回元素本身。
+</code></pre><p>store参数保存排序结果</p>
+<pre><code>sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get # store sort.result  
+(integer) 12   ## 保存的键类型是列表类型，返回值为结果个数
+127.0.0.1:6379&gt; lrange sort.result 0 -1
+ 1) &quot;66666&quot;
+ 2) &quot;1352619600&quot;
+ 3) &quot;6&quot;
+ 4) &quot;windows 8&quot;
+ 5) &quot;1352619200&quot;
+ 6) &quot;2&quot;
+ 7) &quot;262626&quot;
+ 8) &quot;1352612000&quot;
+ 9) &quot;26&quot;
+10) &quot;121212&quot;
+11) &quot;1352610100&quot;
+12) &quot;12&quot;
+</code></pre><p>sort对性能的影响<br>O(n+mlog(m))，n为待排序列表中元素个数，m为排序结果返回的个数。</p>
+<ol>
+<li>尽量减少待排序键中元素的数量（减少n）</li>
+<li>使用limit只获取需要的数据（减少m）</li>
+<li>尽量使用store参数缓存</li>
+</ol>
+<h2 id="消息通知"><a href="#消息通知" class="headerlink" title="消息通知"></a>消息通知</h2><p>订阅功能，将用户邮箱存储在集合中，当新增文章后，就向集合中的邮箱地址发送通知邮件。</p>
+<p>当页面需要进行如发送邮件、复杂数据运算等耗时较长的操作时会阻塞页面的渲染，为了避免用户等待太久，应该使用独立的线程来完成。</p>
+<p>松耦合，生产者和消费者无需知道彼此的实现细节。易于扩展，消费者可以有多个，分布在不同机器中，轻松降低单台服务器的负载。</p>
+<p>结合lpush和rpop，往列表左侧添加，右侧取出，模拟消息队列。同时redis提供brpop命令，当没有元素可以取出时，brpop命令将会阻塞，直到油新元素加入。</p>
+<pre><code>brpop key timeout
+其中time为超时时间，0表示不限制等待时间，即将一直等待下去。
+
+brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列表都有数据可以取出的时候，按从左到右的列表顺序
+</code></pre><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出，从简降低往返时延累计值。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/05/redis/persistence/" itemprop="url">
                   持久化
                 </a>
@@ -1432,164 +1590,6 @@ zrevrank key member
 appendfsync everysec    没个若干秒同步；这是兼顾性能和安全的考虑。
 appendfsync no    不同步，由操作系统决定，即30s
 </code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/05/elk/elk-start/" itemprop="url">
-                  LogStash入门
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
-              2017-04-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/LogStash/" itemprop="url" rel="index">
-                    <span itemprop="name">LogStash</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/04/05/elk/elk-start/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/elk/elk-start/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>Logstash is a tool for managing events and logs. You can use it to collect logs, parse them, and store them for later use (like, for searching).</p>
-</blockquote>
-<p>什么是 Logstash？为什么要用 Logstash？怎么用 Logstash？</p>
-<p>安装</p>
-<ol>
-<li><p>使用软件仓库的配置</p>
-<p> rpm –import <a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> cat &gt; /etc/yum.repos.d/logstash.repo &lt;&lt;EOF<br> [logstash-5.0]<br> name=logstash repository for 5.0.x packages<br> baseurl=<a href="http://packages.elasticsearch.org/logstash/5.0/centos" target="_blank" rel="external">http://packages.elasticsearch.org/logstash/5.0/centos</a><br> gpgcheck=1<br> gpgkey=<a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" target="_blank" rel="external">http://packages.elasticsearch.org/GPG-KEY-elasticsearch</a><br> enabled=1<br> EOF<br> yum clean all<br> yum install logstash</p>
-</li>
-<li><p>可以访问 <a href="https://www.elastic.co/downloads/logstash" target="_blank" rel="external">https://www.elastic.co/downloads/logstash</a> 页面找对应操作系统和版本</p>
-</li>
-</ol>
-<p>运行</p>
-<pre><code>bin/logstash -e &apos;input{stdin{}}output{stdout{codec=&gt;rubydebug}}&apos;
-</code></pre><p>结果</p>
-<pre><code>{
-    &quot;message&quot; =&gt; &quot;Hello World&quot;,
-     &quot;@version&quot; =&gt; &quot;1&quot;,
-    &quot;@timestamp&quot; =&gt; &quot;2014-08-07T10:30:59.937Z&quot;,
-    &quot;host&quot; =&gt; &quot;raochenlindeMacBook-Air.local&quot;,
-}
-</code></pre><p><img src="https://www.elastic.co/guide/en/logstash/current/static/images/basic_logstash_pipeline.png" alt=""></p>
-<p>plugin</p>
-<pre><code>Usage:
-        bin/plugin [OPTIONS] SUBCOMMAND [ARG] ...
-
-Parameters:
-    SUBCOMMAND                    subcommand
-    [ARG] ...                     subcommand arguments
-
-Subcommands:
-    install                       Install a plugin
-    uninstall                     Uninstall a plugin
-    update                        Install a plugin
-    list                          List all installed plugins
-
-Options:
-    -h, --help                    print help
-</code></pre><p>Filebeat client可以在服务端收集log文件，并传送到logstash实例。</p>
-
           
         
       

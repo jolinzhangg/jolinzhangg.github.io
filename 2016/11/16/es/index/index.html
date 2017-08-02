@@ -1,0 +1,1020 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="elasticsearch,索引," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="创建索引curl -XPUT http://localhost:9200/blog/article/1 -d &amp;apos;{   &amp;quot;title&amp;quot;: &amp;quot;New version of es!&amp;quot;,   &amp;quot;content&amp;quot;: &amp;quot;...&amp;quot;,   &amp;quot;tags&amp;quot;: [     &amp;quot;announce&amp;quo">
+<meta name="keywords" content="elasticsearch,索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引">
+<meta property="og:url" content="http://yoursite.com/2016/11/16/es/index/index.html">
+<meta property="og:site_name" content="凤凰花开芙蓉畔">
+<meta property="og:description" content="创建索引curl -XPUT http://localhost:9200/blog/article/1 -d &amp;apos;{   &amp;quot;title&amp;quot;: &amp;quot;New version of es!&amp;quot;,   &amp;quot;content&amp;quot;: &amp;quot;...&amp;quot;,   &amp;quot;tags&amp;quot;: [     &amp;quot;announce&amp;quo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2016-11-16T10:07:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="索引">
+<meta name="twitter:description" content="创建索引curl -XPUT http://localhost:9200/blog/article/1 -d &amp;apos;{   &amp;quot;title&amp;quot;: &amp;quot;New version of es!&amp;quot;,   &amp;quot;content&amp;quot;: &amp;quot;...&amp;quot;,   &amp;quot;tags&amp;quot;: [     &amp;quot;announce&amp;quo">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 索引 | 凤凰花开芙蓉畔 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">凤凰花开芙蓉畔</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                索引
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-16T00:00:00+08:00" content="2016-11-16">
+              2016-11-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/16/es/index/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/16/es/index/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h2><pre><code>curl -XPUT http://localhost:9200/blog/article/1 -d &apos;{
+  &quot;title&quot;: &quot;New version of es!&quot;,
+  &quot;content&quot;: &quot;...&quot;,
+  &quot;tags&quot;: [
+    &quot;announce&quot;,
+    &quot;es&quot;,
+    &quot;release&quot;
+  ]
+}&apos;
+</code></pre><p>当然也可以通过如下命令创建</p>
+<pre><code>curl -XPUT http://localhost:9200/blog/
+</code></pre><p>当索引存在的时候，结果会提示</p>
+<pre><code>{
+    &quot;error&quot;: {
+        &quot;root_cause&quot;: [
+            {
+                &quot;type&quot;: &quot;index_already_exists_exception&quot;,
+                &quot;reason&quot;: &quot;index [blog/mwdQFFt9QTydOWX2V_0d8Q] already exists&quot;,
+                &quot;index_uuid&quot;: &quot;mwdQFFt9QTydOWX2V_0d8Q&quot;,
+                &quot;index&quot;: &quot;blog&quot;
+            }
+        ],
+        &quot;type&quot;: &quot;index_already_exists_exception&quot;,
+        &quot;reason&quot;: &quot;index [blog/mwdQFFt9QTydOWX2V_0d8Q] already exists&quot;,
+        &quot;index_uuid&quot;: &quot;mwdQFFt9QTydOWX2V_0d8Q&quot;,
+        &quot;index&quot;: &quot;blog&quot;
+    },
+    &quot;status&quot;: 400
+}
+</code></pre><p>es的结果也是以json显示的，相关字段会有提示index already exists</p>
+<p>在创建第一个文档的时候可能并不关心索引，如果索引blog不存在，es会默认自动创建该索引。</p>
+<pre><code>action.auto_create_index: -an*, +a*, -*
+可以配置是否自动创建索引，eg，对于a开头的自动创建，an开头的不创建，其他索引也必须手动创建。
+</code></pre><p>在创建索引的时候，可以通过settings指定相关参数，如</p>
+<pre><code>&quot;settings&quot;: {
+    &quot;number_of_shards&quot;：
+    &quot;number_of_replicas&quot;：
+}
+</code></pre><h2 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h2><pre><code>curl -XDELETE http://10.10.193.203:9200/blog2/
+</code></pre><p>es对索引字段的类型存在自动检测，同时会对索引中未包含的字段自动加入到索引字段中，有时候这样是我们不想看到的。可以通过”dynamic”：”false”来关闭自动添加字段。</p>
+<p>es中使用模式映射（schema mapping）定义索引结构。</p>
+<h2 id="索引文档index"><a href="#索引文档index" class="headerlink" title="索引文档index"></a>索引文档index</h2><pre><code>PUT twitter/tweet/1
+{
+    &quot;user&quot; : &quot;kimchy&quot;,
+    &quot;post_date&quot; : &quot;2009-11-15T14:12:12&quot;,
+    &quot;message&quot; : &quot;trying out Elasticsearch&quot;
+}
+# 修改某一版本文档
+PUT twitter/tweet/1?version=1
+{
+    &quot;message&quot; : &quot;elasticsearch now has versioning support, double cool!&quot;
+}
+</code></pre><p>接受op_type参数，以下两者等价。</p>
+<pre><code>PUT twitter/tweet/1?op_type=create
+{
+    &quot;user&quot; : &quot;kimchy&quot;,
+    &quot;post_date&quot; : &quot;2009-11-15T14:12:12&quot;,
+    &quot;message&quot; : &quot;trying out Elasticsearch&quot;
+}
+PUT twitter/tweet/1/_create
+{
+    &quot;user&quot; : &quot;kimchy&quot;,
+    &quot;post_date&quot; : &quot;2009-11-15T14:12:12&quot;,
+    &quot;message&quot; : &quot;trying out Elasticsearch&quot;
+}
+</code></pre><p>当不传入id时，默认生成id，并索引文档</p>
+<pre><code>POST twitter/tweet/
+{
+    &quot;user&quot; : &quot;kimchy&quot;,
+    &quot;post_date&quot; : &quot;2009-11-15T14:12:12&quot;,
+    &quot;message&quot; : &quot;trying out Elasticsearch&quot;
+}
+</code></pre><p>可以通过routing参数，设置路由，这样，可以让多个文档路由到相同的分片；依次，查询时也要设置路由参数，否则无法查询到。Note, issuing a get without the correct routing, will cause the document not to be fetched.</p>
+<p>获取文档get</p>
+<pre><code>GET /twitter/tweet/1
+curl -XGET &quot;http://10.10.193.203:9200/twitter/tweet/1&quot;
+</code></pre><p>get默认会返回文档的source字段，除非增加参数_source=false</p>
+<pre><code>curl -XGET &apos;http://localhost:9200/twitter/tweet/1?_source=false&apos;
+</code></pre><p>从source字段中包含或删除</p>
+<pre><code>GET /twitter/tweet/2?_source_include=user&amp;_source_exclude=message
+GET /twitter/tweet/2?_source_include=user,message
+</code></pre><p>Stored Field</p>
+<pre><code>PUT twitter
+{
+   &quot;mappings&quot;: {
+      &quot;tweet&quot;: {
+         &quot;properties&quot;: {
+            &quot;counter&quot;: {
+               &quot;type&quot;: &quot;integer&quot;,
+               &quot;store&quot;: false    #不存储类型
+            },
+            &quot;tags&quot;: {
+               &quot;type&quot;: &quot;keyword&quot;,
+               &quot;store&quot;: true    #存储类型
+            }
+         }
+      }
+   }
+}
+PUT twitter/tweet/1        #索引一个文档
+{
+    &quot;counter&quot; : 1,
+    &quot;tags&quot; : [&quot;red&quot;]
+}
+GET twitter/tweet/1?stored_fields=tags,counter        #查询两个存储字段
+# 结果只有tags字段返回，非stored字段将被查询忽略
+{
+   &quot;_index&quot;: &quot;twitter&quot;,
+   &quot;_type&quot;: &quot;tweet&quot;,
+   &quot;_id&quot;: &quot;1&quot;,
+   &quot;_version&quot;: 1,
+   &quot;found&quot;: true,
+   &quot;fields&quot;: {
+      &quot;tags&quot;: [
+         &quot;red&quot;
+      ]
+   }
+}
+</code></pre><p>通过/{index}/{type}/{id}/_source直接获取source字段</p>
+<pre><code>GET /twitter/tweet/2/_source
+# 也可以增加参数
+GET /twitter/tweet/2/_source?_source_include=*.id&amp;_source_exclude=entities&apos;
+</code></pre><h2 id="文档删除"><a href="#文档删除" class="headerlink" title="文档删除"></a>文档删除</h2><pre><code>curl -XDELETE &apos;http://localhost:9200/twitter/tweet/1&apos;
+DELETE /twitter/tweet/1
+</code></pre><p>同样受routing参数影响</p>
+<h2 id="文档更新"><a href="#文档更新" class="headerlink" title="文档更新"></a>文档更新</h2><pre><code>PUT test/type1/1
+{
+    &quot;counter&quot; : 1,
+    &quot;tags&quot; : [&quot;red&quot;]
+}
+POST test/type1/1/_update
+{
+    &quot;script&quot; : {
+        &quot;inline&quot;: &quot;ctx._source.counter += params.count&quot;,
+        &quot;lang&quot;: &quot;painless&quot;,
+        &quot;params&quot; : {
+            &quot;count&quot; : 4
+        }
+    }
+}
+结果
+{
+  &quot;_index&quot;: &quot;test&quot;,
+  &quot;_type&quot;: &quot;type1&quot;,
+  &quot;_id&quot;: &quot;1&quot;,
+  &quot;_version&quot;: 2,
+  &quot;found&quot;: true,
+  &quot;_source&quot;: {
+    &quot;counter&quot;: 5,
+    &quot;tags&quot;: [
+      &quot;red&quot;
+    ]
+  }
+}
+POST test/type1/1/_update
+{
+    &quot;script&quot; : {
+        &quot;inline&quot;: &quot;ctx._source.tags.add(params.tag)&quot;,
+        &quot;lang&quot;: &quot;painless&quot;,
+        &quot;params&quot; : {
+            &quot;tag&quot; : &quot;blue&quot;
+        }
+    }
+}
+结果
+{
+  &quot;_index&quot;: &quot;test&quot;,
+  &quot;_type&quot;: &quot;type1&quot;,
+  &quot;_id&quot;: &quot;1&quot;,
+  &quot;_version&quot;: 3,
+  &quot;found&quot;: true,
+  &quot;_source&quot;: {
+    &quot;counter&quot;: 5,
+    &quot;tags&quot;: [
+      &quot;red&quot;,
+      &quot;blue&quot;
+    ]
+  }
+}
+</code></pre><p>增加新字段</p>
+<pre><code>POST test/type1/1/_update
+{
+    &quot;script&quot; : &quot;ctx._source.new_field = \&quot;value_of_new_field\&quot;&quot;
+}
+</code></pre><p>删除字段</p>
+<pre><code>POST test/type1/1/_update
+{
+    &quot;script&quot; : &quot;ctx._source.remove(\&quot;new_field\&quot;)&quot;
+}
+</code></pre><p>将doc参数merge到文档1中</p>
+<pre><code>POST test/type1/1/_update
+{
+    &quot;doc&quot; : {
+        &quot;name&quot; : &quot;new_name&quot;
+    }
+}
+</code></pre><p>如果更新的文档不存在，可以插入</p>
+<pre><code>POST test/type1/1/_update
+{
+    &quot;doc&quot; : {
+        &quot;name&quot; : &quot;new_name&quot;
+    },
+    &quot;doc_as_upsert&quot; : true
+}
+</code></pre><p>mget</p>
+<pre><code>GET /_mget
+{
+    &quot;docs&quot; : [
+        {
+            &quot;_index&quot; : &quot;test&quot;,
+            &quot;_type&quot; : &quot;type1&quot;,
+            &quot;_id&quot; : &quot;1&quot;
+        },
+        {
+            &quot;_index&quot; : &quot;test&quot;,
+            &quot;_type&quot; : &quot;type1&quot;,
+            &quot;_id&quot; : &quot;2&quot;
+        }
+    ]
+}
+合并index参数
+curl &apos;localhost:9200/test/_mget&apos; -d &apos;{
+    &quot;docs&quot; : [
+        {
+            &quot;_type&quot; : &quot;type1&quot;,
+            &quot;_id&quot; : &quot;1&quot;
+        },
+        {
+            &quot;_type&quot; : &quot;type1&quot;,
+            &quot;_id&quot; : &quot;2&quot;
+        }
+    ]
+}&apos;
+合并type参数
+curl &apos;localhost:9200/test/type1/_mget&apos; -d &apos;{
+    &quot;docs&quot; : [
+        {
+            &quot;_id&quot; : &quot;1&quot;
+        },
+        {
+            &quot;_id&quot; : &quot;2&quot;
+        }
+    ]
+}&apos;
+合并id参数
+curl &apos;localhost:9200/test/type/_mget&apos; -d &apos;{
+    &quot;ids&quot; : [&quot;1&quot;, &quot;2&quot;]
+}&apos;
+</code></pre><p>当type参数为空，或者设置为_all的时候，将会返回满足id的第一条文档记录</p>
+<p>mget和get类似，也可以设置_source字段的过滤</p>
+<pre><code>GET /_mget
+{
+    &quot;docs&quot; : [
+        {
+            &quot;_index&quot; : &quot;test&quot;,
+            &quot;_type&quot; : &quot;type1&quot;,
+            &quot;_id&quot; : &quot;1&quot;,
+            &quot;_source&quot; : true
+        },
+        {
+            &quot;_index&quot; : &quot;test&quot;,
+            &quot;_type&quot; : &quot;type1&quot;,
+            &quot;_id&quot; : &quot;1&quot;,
+            &quot;_source&quot; : [&quot;tags&quot;, &quot;counter&quot;]
+        },
+        {
+            &quot;_index&quot; : &quot;test&quot;,
+            &quot;_type&quot; : &quot;type1&quot;,
+            &quot;_id&quot; : &quot;1&quot;,
+            &quot;_source&quot; : {
+                &quot;include&quot;: [&quot;tags&quot;],
+                &quot;exclude&quot;: [&quot;name&quot;]
+            }
+        }
+    ]
+}
+</code></pre><h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><h3 id="简单查询"><a href="#简单查询" class="headerlink" title="简单查询"></a>简单查询</h3><p>query_string</p>
+<pre><code>GET bank/account/_search
+{
+  &quot;query&quot;:{
+  &quot;query_string&quot;:{&quot;query&quot;:&quot;state:PA&quot;}
+  }
+}
+</code></pre><h3 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h3><p>在上述DSL中增加</p>
+<pre><code>&quot;from&quot;: 1
+  , &quot;size&quot;: 3
+</code></pre><h3 id="返回字段"><a href="#返回字段" class="headerlink" title="返回字段"></a>返回字段</h3><p>es5之前的版本stored_fields就叫做fields。如果未指定stored_fields，返回结果将返回_source字段。</p>
+<pre><code>&quot;stored_fields&quot;:[&quot;account_number&quot;, &quot;age&quot;, &quot;state&quot;]
+</code></pre><h2 id="查询DSL"><a href="#查询DSL" class="headerlink" title="查询DSL"></a>查询DSL</h2><h3 id="match-all"><a href="#match-all" class="headerlink" title="match_all"></a>match_all</h3><pre><code>GET bank/account/_search
+{
+  &quot;query&quot;: {
+    &quot;match_all&quot;: {}
+  }
+}
+</code></pre><h3 id="全文查询-full-text-queries"><a href="#全文查询-full-text-queries" class="headerlink" title="全文查询 full text queries"></a>全文查询 full text queries</h3><p>在查询字符串执行操作前需要分析。</p>
+<h3 id="词项查询-term-level-queries"><a href="#词项查询-term-level-queries" class="headerlink" title="词项查询 term level queries"></a>词项查询 term level queries</h3><p>只针对倒排索引中的确切词（term）进行操作。经常被用在结构化数据结构，包括数字、日期、枚举等。</p>
+<h4 id="词条查询"><a href="#词条查询" class="headerlink" title="词条查询"></a>词条查询</h4><p>包含改词条的文档，确切的、未经分析的词条。这里的包含，对于英文来说是空格分隔的自然词。address字段，包含avenue的。<strong><em>avenue在建立索引的时候已经变成了小写。</em></strong></p>
+<pre><code>GET bank/account/_search
+{
+  &quot;query&quot;: {
+    &quot;term&quot;: {
+      &quot;address&quot;: &quot;avenue&quot;
+    }
+  }
+}
+Java API
+    QueryBuilder qb = termQuery(
+        &quot;address&quot;,    
+        &quot;avenue&quot;   
+    );
+</code></pre><p>在term中可以增加boost，调节权重。在此例子中由于参与搜索的只有address一个匹配字段，所以跳转address的权重为10，相当于调整得分为原来的10倍。</p>
+<pre><code>&quot;term&quot;: {
+  &quot;address&quot;: {
+    &quot;value&quot;: &quot;avenue&quot;,
+    &quot;boost&quot;: 10
+  }
+}
+</code></pre><h4 id="多词条查询"><a href="#多词条查询" class="headerlink" title="多词条查询"></a>多词条查询</h4><p>在5.0后，不再支持terms直接查询以及terms下的注入minimum_match等参数，需要使用filter。</p>
+<pre><code>GET bank/account/_search
+{
+  &quot;query&quot;: {
+    &quot;constant_score&quot;: {
+      &quot;filter&quot;: {
+        &quot;terms&quot;: {
+          &quot;address&quot;: [
+            &quot;avenue&quot;,
+            &quot;street&quot;
+          ]
+        }
+      }
+    }
+  }
+}
+</code></pre><h4 id="范围查询-Rang-Query"><a href="#范围查询-Rang-Query" class="headerlink" title="范围查询 Rang Query"></a>范围查询 Rang Query</h4><pre><code>GET _search
+{
+    &quot;query&quot;: {
+        &quot;range&quot; : {
+            &quot;age&quot; : {
+                &quot;gte&quot; : 10,
+                &quot;lte&quot; : 20,
+                &quot;boost&quot; : 2.0
+            }
+        }
+    }
+}
+</code></pre><p>对于日期类型可以使用Date Math</p>
+<pre><code>&quot;gte&quot; : &quot;now-1d/d&quot;,
+&quot;lt&quot; :  &quot;now/d&quot;
+</code></pre><h4 id="存在查询-Exits-Query"><a href="#存在查询-Exits-Query" class="headerlink" title="存在查询 Exits Query"></a>存在查询 Exits Query</h4><pre><code>GET /_search
+{
+    &quot;query&quot;: {
+        &quot;exists&quot; : { &quot;field&quot; : &quot;user&quot; }
+    }
+}
+</code></pre><h4 id="前缀查询-Prefix-Query"><a href="#前缀查询-Prefix-Query" class="headerlink" title="前缀查询 Prefix Query"></a>前缀查询 Prefix Query</h4><pre><code>GET /_search
+{ &quot;query&quot;: {
+    &quot;prefix&quot; : { &quot;state&quot; : &quot;p&quot; }
+  }
+}
+</code></pre><h4 id="通配符查询-Wildcard-Query"><a href="#通配符查询-Wildcard-Query" class="headerlink" title="通配符查询 Wildcard Query"></a>通配符查询 Wildcard Query</h4><pre><code>GET /_search
+{
+    &quot;query&quot;: {
+        &quot;wildcard&quot; : { &quot;city&quot; : &quot;*i*ey&quot; }
+    }
+}
+</code></pre><h4 id="正则匹配-Regexp-Query"><a href="#正则匹配-Regexp-Query" class="headerlink" title="正则匹配 Regexp Query"></a>正则匹配 Regexp Query</h4><p>详见官方文档</p>
+<h4 id="模糊查询-Fuzzy-Query"><a href="#模糊查询-Fuzzy-Query" class="headerlink" title="模糊查询 Fuzzy Query"></a>模糊查询 Fuzzy Query</h4><p>将在接下来的版本中删除，使用match queries with fuzziness替代。<br>匹配方式，是使用编辑距离Levenstein distance</p>
+<h4 id="类型查询-Type-Query"><a href="#类型查询-Type-Query" class="headerlink" title="类型查询 Type Query"></a>类型查询 Type Query</h4><pre><code>GET /_search
+{
+    &quot;query&quot;: {
+        &quot;type&quot; : {
+            &quot;value&quot; : &quot;account&quot;
+        }
+    }
+}
+</code></pre><h4 id="ID查询"><a href="#ID查询" class="headerlink" title="ID查询"></a>ID查询</h4><pre><code>GET /_search
+{
+    &quot;query&quot;: {
+        &quot;ids&quot; : {
+            &quot;type&quot; : &quot;account&quot;,
+            &quot;values&quot; : [&quot;1&quot;, &quot;4&quot;, &quot;100&quot;]
+        }
+    }
+}
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elasticsearch/" rel="tag">#elasticsearch</a>
+          
+            <a href="/tags/索引/" rel="tag">#索引</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/04/elk/elk-setup/" rel="next" title="elk安装">
+                <i class="fa fa-chevron-left"></i> elk安装
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/05/generic/" rel="prev" title="泛型">
+                泛型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/16/es/index/"
+           data-title="索引" data-url="http://yoursite.com/2016/11/16/es/index/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/image/avatar.jpg"
+               alt="Sunwind" />
+          <p class="site-author-name" itemprop="name">Sunwind</p>
+          <p class="site-description motion-element" itemprop="description">含英咀华，凤凰于飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建索引"><span class="nav-number">1.</span> <span class="nav-text">创建索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除索引"><span class="nav-number">2.</span> <span class="nav-text">删除索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引文档index"><span class="nav-number">3.</span> <span class="nav-text">索引文档index</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文档删除"><span class="nav-number">4.</span> <span class="nav-text">文档删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文档更新"><span class="nav-number">5.</span> <span class="nav-text">文档更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询"><span class="nav-number">6.</span> <span class="nav-text">查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单查询"><span class="nav-number">6.1.</span> <span class="nav-text">简单查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分页"><span class="nav-number">6.2.</span> <span class="nav-text">分页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#返回字段"><span class="nav-number">6.3.</span> <span class="nav-text">返回字段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询DSL"><span class="nav-number">7.</span> <span class="nav-text">查询DSL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#match-all"><span class="nav-number">7.1.</span> <span class="nav-text">match_all</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全文查询-full-text-queries"><span class="nav-number">7.2.</span> <span class="nav-text">全文查询 full text queries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#词项查询-term-level-queries"><span class="nav-number">7.3.</span> <span class="nav-text">词项查询 term level queries</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#词条查询"><span class="nav-number">7.3.1.</span> <span class="nav-text">词条查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多词条查询"><span class="nav-number">7.3.2.</span> <span class="nav-text">多词条查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#范围查询-Rang-Query"><span class="nav-number">7.3.3.</span> <span class="nav-text">范围查询 Rang Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存在查询-Exits-Query"><span class="nav-number">7.3.4.</span> <span class="nav-text">存在查询 Exits Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前缀查询-Prefix-Query"><span class="nav-number">7.3.5.</span> <span class="nav-text">前缀查询 Prefix Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通配符查询-Wildcard-Query"><span class="nav-number">7.3.6.</span> <span class="nav-text">通配符查询 Wildcard Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则匹配-Regexp-Query"><span class="nav-number">7.3.7.</span> <span class="nav-text">正则匹配 Regexp Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模糊查询-Fuzzy-Query"><span class="nav-number">7.3.8.</span> <span class="nav-text">模糊查询 Fuzzy Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型查询-Type-Query"><span class="nav-number">7.3.9.</span> <span class="nav-text">类型查询 Type Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ID查询"><span class="nav-number">7.3.10.</span> <span class="nav-text">ID查询</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sunwind</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jolinzhangg"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

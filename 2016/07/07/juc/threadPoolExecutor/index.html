@@ -80,28 +80,18 @@
 
 
 
-<meta name="description" content="execute线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。
-如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。
-后续的执行步骤是三种情况
-
-如果运行的线程数小于corePoolSize，则尝试新建一个线">
+<meta name="description" content="execute线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。 如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。 后续的执行步骤是三种情况  如果运行的线程数小于corePoolSize，则尝试新建一个线">
+<meta name="keywords" content="juc,ThreadPool">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ThreadPoolExecutor">
 <meta property="og:url" content="http://yoursite.com/2016/07/07/juc/threadPoolExecutor/index.html">
 <meta property="og:site_name" content="凤凰花开芙蓉畔">
-<meta property="og:description" content="execute线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。
-如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。
-后续的执行步骤是三种情况
-
-如果运行的线程数小于corePoolSize，则尝试新建一个线">
-<meta property="og:updated_time" content="2016-07-07T10:14:38.120Z">
+<meta property="og:description" content="execute线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。 如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。 后续的执行步骤是三种情况  如果运行的线程数小于corePoolSize，则尝试新建一个线">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-07-21T11:06:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ThreadPoolExecutor">
-<meta name="twitter:description" content="execute线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。
-如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。
-后续的执行步骤是三种情况
-
-如果运行的线程数小于corePoolSize，则尝试新建一个线">
+<meta name="twitter:description" content="execute线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。 如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。 后续的执行步骤是三种情况  如果运行的线程数小于corePoolSize，则尝试新建一个线">
 
 
 
@@ -261,7 +251,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-07T11:03:41+08:00" content="2016-07-07">
+            <time itemprop="dateCreated" datetime="2016-07-07T15:00:00+08:00" content="2016-07-07">
               2016-07-07
             </time>
           </span>
@@ -462,8 +452,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/11/spring/spring-basic/" rel="prev" title="spring模块">
-                spring模块 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/11/elk/kibana/" rel="prev" title="kibana入门">
+                kibana入门 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -536,7 +526,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -544,7 +534,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -553,7 +543,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -564,6 +554,26 @@
         
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
           
         </div>
 
@@ -601,7 +611,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

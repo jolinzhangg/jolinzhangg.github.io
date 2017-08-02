@@ -80,32 +80,22 @@
 
 
 
-<meta name="description" content="同步框架AQS作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。
-在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。
-conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。
-AQS需满足的三要素
-自">
+<meta name="description" content="同步框架AQS作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。 在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。 conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。 AQS需满足的三要素 自">
+<meta name="keywords" content="java,juc,aqs,concurrent">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Concurrent Synchronizer Framework">
 <meta property="og:url" content="http://yoursite.com/2016/06/22/juc/concurrentSyncFramework/index.html">
 <meta property="og:site_name" content="凤凰花开芙蓉畔">
-<meta property="og:description" content="同步框架AQS作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。
-在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。
-conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。
-AQS需满足的三要素
-自">
+<meta property="og:description" content="同步框架AQS作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。 在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。 conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。 AQS需满足的三要素 自">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ifeve.com/wp-content/uploads/2012/12/ConcurrentHashMap%E7%BB%93%E6%9E%84%E5%9B%BE.jpg">
 <meta property="og:image" content="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/11.jpg">
 <meta property="og:image" content="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/22.jpg">
 <meta property="og:image" content="http://cdn3.infoqstatic.com/statics_s1_20160614-0102u2/resource/articles/ConcurrentLinkedQueue/zh/resources/33.jpg">
-<meta property="og:updated_time" content="2016-06-23T10:05:35.134Z">
+<meta property="og:updated_time" content="2017-07-21T11:07:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Concurrent Synchronizer Framework">
-<meta name="twitter:description" content="同步框架AQS作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。
-在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。
-conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。
-AQS需满足的三要素
-自">
+<meta name="twitter:description" content="同步框架AQS作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。 在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。 conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。 AQS需满足的三要素 自">
 <meta name="twitter:image" content="http://ifeve.com/wp-content/uploads/2012/12/ConcurrentHashMap%E7%BB%93%E6%9E%84%E5%9B%BE.jpg">
 
 
@@ -266,7 +256,7 @@ AQS需满足的三要素
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-22T09:54:28+08:00" content="2016-06-22">
+            <time itemprop="dateCreated" datetime="2016-06-22T15:00:00+08:00" content="2016-06-22">
               2016-06-22
             </time>
           </span>
@@ -657,8 +647,8 @@ private void doAcquireShared(int arg) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/06/20/java/serialize/" rel="next" title="序列化和readObject/writeObject">
-                <i class="fa fa-chevron-left"></i> 序列化和readObject/writeObject
+              <a href="/2016/06/20/goodarticle/" rel="next" title="好文章列表（不断更新）">
+                <i class="fa fa-chevron-left"></i> 好文章列表（不断更新）
               </a>
             
           </div>
@@ -739,7 +729,7 @@ private void doAcquireShared(int arg) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -747,7 +737,7 @@ private void doAcquireShared(int arg) {
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -756,7 +746,7 @@ private void doAcquireShared(int arg) {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -767,6 +757,26 @@ private void doAcquireShared(int arg) {
         
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
           
         </div>
 
@@ -804,7 +814,7 @@ private void doAcquireShared(int arg) {
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

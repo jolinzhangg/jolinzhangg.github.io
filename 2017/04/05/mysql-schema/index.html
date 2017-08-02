@@ -1,0 +1,685 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql,schema,data type," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="选择优化的数据类型选择数据类型设计schema通常有以下几个简单的原则：
+
+更小的通常更好。例如如果只需要存0~200，那么tinyint unsigned更好。因为更小的数据类型，占用的更少的磁盘、内存和cpu缓存，处理所需的cpu周期也更少。
+简单就好。简单的数据类型操作通常需要更少的cpu周期。如，整形比字符操作代价更低，因为字符集和排序校对规则使字符比较比整形复杂。例子：日期应该使用dat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Schema">
+<meta property="og:url" content="http://yoursite.com/2017/04/05/mysql-schema/index.html">
+<meta property="og:site_name" content="凤凰花开芙蓉畔">
+<meta property="og:description" content="选择优化的数据类型选择数据类型设计schema通常有以下几个简单的原则：
+
+更小的通常更好。例如如果只需要存0~200，那么tinyint unsigned更好。因为更小的数据类型，占用的更少的磁盘、内存和cpu缓存，处理所需的cpu周期也更少。
+简单就好。简单的数据类型操作通常需要更少的cpu周期。如，整形比字符操作代价更低，因为字符集和排序校对规则使字符比较比整形复杂。例子：日期应该使用dat">
+<meta property="og:updated_time" content="2016-05-16T02:05:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Schema">
+<meta name="twitter:description" content="选择优化的数据类型选择数据类型设计schema通常有以下几个简单的原则：
+
+更小的通常更好。例如如果只需要存0~200，那么tinyint unsigned更好。因为更小的数据类型，占用的更少的磁盘、内存和cpu缓存，处理所需的cpu周期也更少。
+简单就好。简单的数据类型操作通常需要更少的cpu周期。如，整形比字符操作代价更低，因为字符集和排序校对规则使字符比较比整形复杂。例子：日期应该使用dat">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Schema | 凤凰花开芙蓉畔 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">凤凰花开芙蓉畔</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Schema
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
+              2017-04-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/04/05/mysql-schema/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/mysql-schema/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="选择优化的数据类型"><a href="#选择优化的数据类型" class="headerlink" title="选择优化的数据类型"></a>选择优化的数据类型</h2><p>选择数据类型设计schema通常有以下几个简单的原则：</p>
+<ol>
+<li>更小的通常更好。<br>例如如果只需要存0~200，那么tinyint unsigned更好。因为更小的数据类型，占用的更少的磁盘、内存和cpu缓存，处理所需的cpu周期也更少。</li>
+<li>简单就好。<br>简单的数据类型操作通常需要更少的cpu周期。如，整形比字符操作代价更低，因为字符集和排序校对规则使字符比较比整形复杂。<br>例子：日期应该使用date,time,datetime而不是字符串；IP地址应该使用整形。</li>
+<li>尽量避免NULL。<br>可为null的列使得索引、索引统计和值比较更复杂。这样的列需要占据额外的存储空间，每个索引记录需要一个额外的字节。因此如果打算在列上建索引，最好加上not null限制。</li>
+</ol>
+<p>第一步需要确定大类型：数字、字符串、时间等；第二步，确定存储范围精度等。eg. TIMESTAMP（4B）比DATETIME（8B）少一半存储空间，可以根据时区变化，具有自动更新的能力；但同时允许的时间范围也小的多。</p>
+<a id="more"></a> 
+<h3 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h3><p>TINYINT(8b),SMALLINT(16b),MEDIUMINT(24b),INT(32b),BIGINT(63b)，有可选的UNSIGNED属性，表示不允许负值，该属性不影响性能和存储空间。</p>
+<p>INT(11)括号中的11表示字符的显示宽度，并不是实际存储的范围，对大多数程序这个设置并没有太大的意义。</p>
+<h3 id="实数"><a href="#实数" class="headerlink" title="实数"></a>实数</h3><p>浮点数，FLOAT（4B）和DOUBLE（8B）由cpu直接支持原生浮点计算；但cpu不支持DECIMAL的直接计算，所以由mysql服务器自身实现其高精度的精确计算。因此速度更慢。应尽量在对小数进行精确计算时才使用DECIMAL——例如存储财务数据。当数据量较大的时候可选择替代方案，将小数乘以相应的倍数，使用BIGINT存储，就可以避免浮点数存储和计算不精确和DECIMAL计算代价高的问题。</p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>VARCHAR和CHAR在不同的存储引擎中存储在磁盘和内存中的实现方式是不同的。</p>
+<h4 id="VARCHAR"><a href="#VARCHAR" class="headerlink" title="VARCHAR"></a>VARCHAR</h4><p>变长比定长更节省空间，除非设置了ROW_FORMAT=FIXED。varchar需要1~2个字节存储字符串长度，当长度小于255时，使用1B，否则使用2B。所以varchar(10)占11个字节，varchar(1000)占1002个字节，其中多出来的1和2个字节用来存储长度。</p>
+<p>varchar的更新可能使行变长，导致页内没有更多的存储空间存储，这是InnoDB需要分裂页使行可以存储进来。</p>
+<p>有一些场景适合使用varchar：最大长度比平均长度大很多（节约空间）；列更新少；是用UTF-8这种变长字符集等。</p>
+<h4 id="CHAR"><a href="#CHAR" class="headerlink" title="CHAR"></a>CHAR</h4><p>定长的，存储时会删除末尾的空格，然后根据需要采用空格进行填充以便比较。</p>
+<p>适合存储很短的字符或者所有字符长度接近的。例如非常适合存储MD5，因为它是定长的。更适合存储经常变更的数据，不易产生碎片。</p>
+<p>与char和varchar类似的还有BINARY和VARBINARY，用来存储二进制字符串，存储的是字节码而不是字符。</p>
+<h4 id="BLOB和TEXT"><a href="#BLOB和TEXT" class="headerlink" title="BLOB和TEXT"></a>BLOB和TEXT</h4><p>存储很大的数据，采用二进制和字符方式存储。当值太大的时候，InnoDB会使用外部存储区域，每个值内部存储1~4个字节的指针，指向外部的实际存储区域。两者的区别仅在于，BLOB是二进制，没有排序规则和字符集。</p>
+<h3 id="日期和时间"><a href="#日期和时间" class="headerlink" title="日期和时间"></a>日期和时间</h3><h4 id="DATETIME"><a href="#DATETIME" class="headerlink" title="DATETIME"></a>DATETIME</h4><p>从1001到9999，精度是秒。把日期和时间封装到YYYMMDDHHMMSS的整数中，与时区无关，占8字节。</p>
+<h4 id="TIMESTAMP"><a href="#TIMESTAMP" class="headerlink" title="TIMESTAMP"></a>TIMESTAMP</h4><p>保存从1970年1月1日午夜依赖的秒数，和UNIX时间戳相同。从1970~2038，占4个字节。每行数据的第一个TIMESTAMP值会被mysql自动更新。通常比DATETIME效率更高。</p>
+<pre><code>ipv4地址
+    10.10.132.11存储在表中，将字段设置为int unsigned
+    update table set ipv4=INET_ATON(&apos;10.10.132.11&apos;) where id=1;  #存储结果是168461323
+    select INET_NTOA(ipv4) from table where id=1;    #查询结果为10.10.132.11
+</code></pre><h2 id="MySQL-schema设计中的陷阱"><a href="#MySQL-schema设计中的陷阱" class="headerlink" title="MySQL schema设计中的陷阱"></a>MySQL schema设计中的陷阱</h2><p><strong>太多的列</strong></p>
+<p>服务器层和存储引擎层需要通过行缓冲格式拷贝数据，再在服务器层将缓冲内容解码成各个列。解码过程的操作代价是非常高的。MyISAM变长行结构和InnoDB行结构总是需要这种转换，并且依赖于列的数量。</p>
+<p><strong>太多的关联</strong></p>
+<p>最多关联61张表，但最好在12个表以内做关联。</p>
+<p><strong>过渡的枚举</strong></p>
+<p>当枚举数量讲多，且容易变更时，可以使用整数外键关联到字典表。</p>
+<p><strong>尽量不适用NULL，但有些时候使用NULL比奇怪的数字更好</strong></p>
+<p>比如当时间为空的时候，不必存入0000-00-00 00:00:00。</p>
+<h2 id="关于ALTER-TABLE"><a href="#关于ALTER-TABLE" class="headerlink" title="关于ALTER TABLE"></a>关于ALTER TABLE</h2><p>alter table对大表来说，性能是个大问题。mysql执行大部分修改表结构的操作方法是用心的结构创建一个空表，从就表中查出所有数据插入新表，然后删除旧表。一般而言，大部分alter bable操作将导致mysql服务中断。常用的技巧有两种：</p>
+<ol>
+<li><p>现在一台不提供服务的机器上执行alter table操作，然后和提供服务的主库进行切换；</p>
+</li>
+<li><p>“影子拷贝”。创建新表，通过重命名和删表操作交换两张表。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag">#mysql</a>
+          
+            <a href="/tags/schema/" rel="tag">#schema</a>
+          
+            <a href="/tags/data-type/" rel="tag">#data type</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/05/IO/io/" rel="next" title="从操作系统的角度聊聊CPU和IO设备">
+                <i class="fa fa-chevron-left"></i> 从操作系统的角度聊聊CPU和IO设备
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/05/mysql-transaction/" rel="prev" title="Transaction">
+                Transaction <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/04/05/mysql-schema/"
+           data-title="Schema" data-url="http://yoursite.com/2017/04/05/mysql-schema/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/image/avatar.jpg"
+               alt="Sunwind" />
+          <p class="site-author-name" itemprop="name">Sunwind</p>
+          <p class="site-description motion-element" itemprop="description">含英咀华，凤凰于飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#选择优化的数据类型"><span class="nav-number">1.</span> <span class="nav-text">选择优化的数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整数"><span class="nav-number">1.1.</span> <span class="nav-text">整数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实数"><span class="nav-number">1.2.</span> <span class="nav-text">实数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串"><span class="nav-number">1.3.</span> <span class="nav-text">字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VARCHAR"><span class="nav-number">1.3.1.</span> <span class="nav-text">VARCHAR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CHAR"><span class="nav-number">1.3.2.</span> <span class="nav-text">CHAR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BLOB和TEXT"><span class="nav-number">1.3.3.</span> <span class="nav-text">BLOB和TEXT</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日期和时间"><span class="nav-number">1.4.</span> <span class="nav-text">日期和时间</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DATETIME"><span class="nav-number">1.4.1.</span> <span class="nav-text">DATETIME</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIMESTAMP"><span class="nav-number">1.4.2.</span> <span class="nav-text">TIMESTAMP</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-schema设计中的陷阱"><span class="nav-number">2.</span> <span class="nav-text">MySQL schema设计中的陷阱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于ALTER-TABLE"><span class="nav-number">3.</span> <span class="nav-text">关于ALTER TABLE</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sunwind</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jolinzhangg"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

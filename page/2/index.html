@@ -86,6 +86,7 @@
 <meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="凤凰花开芙蓉畔">
 <meta property="og:description" content="含英咀华，凤凰于飞">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="凤凰花开芙蓉畔">
 <meta name="twitter:description" content="含英咀华，凤凰于飞">
@@ -239,8 +240,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/06/15/juc/semaphore/" itemprop="url">
-                  Semaphore
+                <a class="post-title-link" href="/2016/07/26/es/setup/" itemprop="url">
+                  elasticsearch setup
                 </a>
               
             
@@ -253,8 +254,528 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-15T16:58:17+08:00" content="2016-06-15">
-              2016-06-15
+            <time itemprop="dateCreated" datetime="2016-07-26T15:00:00+08:00" content="2016-07-26">
+              2016-07-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/26/es/setup/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/26/es/setup/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <pre><code>$ bin/elasticsearch
+</code></pre><p>这条命令在*nix系统中，会在前台启动elasticsearch。如果需要后台启动，请添加-d参数。</p>
+<pre><code>$ bin/elasticsearch -d -p pid 
+$ kill `cat pid` 
+</code></pre><p>es可以将自己的PID打印到文件中，-p参数，指定pid存储的文件（pid文件中）</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/25/es/es-basic/" itemprop="url">
+                  elasticsearch入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-25T15:00:00+08:00" content="2016-07-25">
+              2016-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/25/es/es-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/25/es/es-basic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ol>
+<li>下载：curl -L -O <a href="https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.4/elasticsearch-2.3.4.tar.gz" target="_blank" rel="external">https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.4/elasticsearch-2.3.4.tar.gz</a></li>
+<li>解压：tar -xvf elasticsearch-2.3.4.tar.gz</li>
+<li>cd elasticsearch-2.3.4/bin</li>
+<li>运行：./elasticsearch</li>
+</ol>
+<p>在此，运行es必须在非root用户下，否则会报错：不能在root用户下启动elasticsearch，所以通过以下步骤增加es用户，并修改拥有和组策略。</p>
+<pre><code>1. adduser es  #添加es用户
+2. chown -R es elasticsearch-2.3.4
+3. chgrp -R es elasticsearch-2.3.4
+</code></pre><p>可以指定cluster和node的名称：</p>
+<pre><code>./elasticsearch --cluster.name my_cluster_name --node.name my_node_name
+</code></pre>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/25/es/es-basic/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/11/spring/spring-basic/" itemprop="url">
+                  spring模块
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-11T15:00:00+08:00" content="2016-07-11">
+              2016-07-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/11/spring/spring-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/11/spring/spring-basic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>org.springframework</p>
+<h3 id="核心容器"><a href="#核心容器" class="headerlink" title="核心容器"></a>核心容器</h3><p>Spring-Core<br>Spring-Beans<br>Spring-Context<br>Spring-Context-Support<br>Spring-Expression</p>
+<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>Spring-AOP<br>Spring-Aspects</p>
+<h3 id="Messaging"><a href="#Messaging" class="headerlink" title="Messaging"></a>Messaging</h3><p>Spring-Messaging</p>
+<h3 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h3><p>Spring-Web<br>Spring-Webmvc<br>Spring-WebSocket<br>Spring-Webmvc-Portlet</p>
+<h3 id="Data-Access-Integration"><a href="#Data-Access-Integration" class="headerlink" title="Data Access / Integration"></a>Data Access / Integration</h3><p>Spring-JDBC<br>Spring-TX<br>Spring-ORM<br>Spring-OXM<br>Spring-JMS</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/11/elk/kibana/" itemprop="url">
+                  kibana入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-11T11:20:00+08:00" content="2016-07-11">
+              2016-07-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/kibana入门/" itemprop="url" rel="index">
+                    <span itemprop="name">kibana入门</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/11/elk/kibana/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/11/elk/kibana/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p><a href="https://www.elastic.co/downloads/kibana" target="_blank" rel="external">https://www.elastic.co/downloads/kibana</a></p>
+</blockquote>
+<p>首先安转配置启动kibana</p>
+<ol>
+<li>wget <a href="https://artifacts.elastic.co/downloads/kibana/kibana-5.0.0-linux-x86_64.tar.gz" target="_blank" rel="external">https://artifacts.elastic.co/downloads/kibana/kibana-5.0.0-linux-x86_64.tar.gz</a></li>
+<li>修改config/kibana.yml，elasticsearch.url修改为es的地址，server.host修改为kibana对我暴露的访问地址</li>
+<li>bin/kibana</li>
+<li>通过浏览器  <a href="http://host:5601" target="_blank" rel="external">http://host:5601</a> 访问</li>
+</ol>
+<p>接下来将讨论以下问题：</p>
+<ol>
+<li>加载es中的样本数据</li>
+<li>定义index pattern</li>
+<li>通过discover展示数据</li>
+<li>为样本数据启动可视化</li>
+<li>将可视化图表组装成dashboard</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/07/juc/threadPoolExecutor/" itemprop="url">
+                  ThreadPoolExecutor
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-07T15:00:00+08:00" content="2016-07-07">
+              2016-07-07
             </time>
           </span>
 
@@ -283,8 +804,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/06/15/juc/semaphore/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/15/juc/semaphore/" itemprop="commentsCount"></span>
+                <a href="/2016/07/07/juc/threadPoolExecutor/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/07/juc/threadPoolExecutor/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -309,356 +830,702 @@
       
         
           
-            <ol>
-<li>建立一个包含n个许可的信号量(内部的计数为n)，当一个线程从信号量中请求一个许可(调用acquire())，如果信号量中有许可的话(n大于0)，那么线程成功获取许可，信号量内部许可数量减1(n减1)；如果信号量中没有许可(n等于0)，那么当前线程阻塞。</li>
-<li>当一个线程归还许可(调用release()，内部计数加1)，其他在acquire()方法处等待的线程便有可能被唤醒来竞争许可。</li>
-<li>公平模式下，如果有线程在acquire()处等待，新来的请求线程会排在这些等待线程后面；非公平模式下，新来的请求线程可能会插队，比在acquire()处等待的线程提前申请到许可。</li>
+            <h3 id="execute"><a href="#execute" class="headerlink" title="execute"></a>execute</h3><p>线程池是通过execute方法，添加任务（task）的。方法保证在将来的某一时间，执行给定的任务。任务可能在新的线程中被执行，也可能在已经存在于池子中的线程中被执行。</p>
+<p>如果任务因为线程池关闭，或者容量满，而不能被提交执行，任务将被当前设置的RejectedExecutionHandler处理。</p>
+<p>后续的执行步骤是三种情况</p>
+<ol>
+<li>如果运行的线程数小于corePoolSize，则尝试新建一个线程，并设置当前的任务为该线程第一个需要处理的任务。</li>
+<li>如果运行的线程数大于等于corePoolSize，则将该任务添加到阻塞队列workQueue中，池子中的空闲线程就会去队列汇总取任务之心。</li>
+<li>当队列满了后，添加队列会失败，这是尝试直接创建一个线程，如果失败，可以得知，要么线程池已经关闭，要么是达到了饱和状态，不能在接受新任务，则该任务将被拒绝。</li>
 </ol>
-<p>代码分析</p>
-<pre><code>/*
- * 基于计数信号量，可用来管理一组许可
- */
-public class Semaphore implements java.io.Serializable {
-    private static final long serialVersionUID = -3222578661600680210L;
-    /** All mechanics via AbstractQueuedSynchronizer subclass */
-    private final Sync sync;
+<p>execute代码</p>
+<pre><code>public void execute(Runnable command) {
+    if (command == null)
+        throw new NullPointerException();
+    int c = ctl.get();
+    // 上面的step1
+    if (workerCountOf(c) &lt; corePoolSize) {
+        if (addWorker(command, true))
+            return;
+        c = ctl.get();
+    }
+    // 上面的step2，workQueue.offer可以把command添加到阻塞队列中，这个地方有双检测
+    if (isRunning(c) &amp;&amp; workQueue.offer(command)) {
+        int recheck = ctl.get();
+        // double-checked，如果线程池关闭，还要remove
+        if (! isRunning(recheck) &amp;&amp; remove(command))
+            reject(command);
+        // 如果是running状态 c &amp; CAPACITY = e000 0000 &amp; 1000 0000 = 0
+        else if (workerCountOf(recheck) == 0)
+            addWorker(null, false);
+    }
+    else if (!addWorker(command, false))
+        reject(command);
+}
+</code></pre><h3 id="addWorker"><a href="#addWorker" class="headerlink" title="addWorker"></a>addWorker</h3><p>该方法用于创建一个新线程，即上面第一种情况。addWorker(firstTask,true)</p>
+<p>addWorker代码</p>
+<pre><code>private boolean addWorker(Runnable firstTask, boolean core) {
+    retry:
+    for (;;) {
+        int c = ctl.get();
+        int rs = runStateOf(c);
 
-    /**
-     * 通过AQS的state表示许可的数量，包含公平和非公平的实现
-     */
-    abstract static class Sync extends AbstractQueuedSynchronizer {
-        private static final long serialVersionUID = 1192457210091910933L;
+        // Check if queue empty only if necessary.
+        // api说明中的解释是，如果线程池关闭或适合关闭，则方法返回false
+        if (rs &gt;= SHUTDOWN &amp;&amp;
+            ! (rs == SHUTDOWN &amp;&amp;
+               firstTask == null &amp;&amp;
+               ! workQueue.isEmpty()))
+            return false;
 
-        Sync(int permits) {
-            setState(permits);
+        for (;;) {
+            int wc = workerCountOf(c);
+            // 如果worker数量比coresize大，或者比maxsize大，就不需要添加了
+            if (wc &gt;= CAPACITY ||
+                wc &gt;= (core ? corePoolSize : maximumPoolSize))
+                return false;
+            // 对clt做cas自增，成功后跳出外层循环retry；失败的话，说明有其他线程修改了clt，继续后续代码逻辑    
+            if (compareAndIncrementWorkerCount(c))
+                break retry;
+            c = ctl.get();  // Re-read ctl 重新获取ctl
+            if (runStateOf(c) != rs) // 不同，说明ctl变化，continue外层retry循环
+                continue retry;
+            // 否则，说明cas更新失败，应该重新内存循环，尝试再一次cas自增
         }
+    }
 
-        final int getPermits() {
-            return getState();
-        }
-        // 共享模式非公平的请求
-        final int nonfairTryAcquireShared(int acquires) {
-            for (;;) {
-                // 获取当前许可数量
-                int available = getState();
-                // 计算申请后剩余数量
-                int remaining = available - acquires;
-                /*
-                 * 如果申请后剩余&gt;=0，则通过CAS修改，修改成功后返回剩余数量；
-                 * 如果申请后剩余&lt;0，则直接返回数量
-                 */
-                if (remaining &lt; 0 ||
-                    compareAndSetState(available, remaining))
-                    return remaining;
+    // works是个存有work对象的hashset，为了保证线程安全，需要通过mainlock加锁，保证同步访问,当调用方，传入形参addWorker(null,false)的时候，是不会触发后面的加锁同步逻辑的
+    boolean workerStarted = false;
+    boolean workerAdded = false;
+    Worker w = null;
+    try {
+        final ReentrantLock mainLock = this.mainLock;
+        w = new Worker(firstTask);
+        final Thread t = w.thread;
+        if (t != null) {
+            mainLock.lock();
+            try {
+                // Recheck while holding lock.
+                // Back out on ThreadFactory failure or if
+                // shut down before lock acquired.
+                int c = ctl.get();
+                int rs = runStateOf(c);
+
+                if (rs &lt; SHUTDOWN ||
+                    (rs == SHUTDOWN &amp;&amp; firstTask == null)) {
+                    if (t.isAlive()) // precheck that t is startable
+                        throw new IllegalThreadStateException();
+                    workers.add(w);
+                    int s = workers.size();
+                    if (s &gt; largestPoolSize)
+                        largestPoolSize = s;
+                    workerAdded = true;
+                }
+            } finally {
+                mainLock.unlock();
+            }
+            if (workerAdded) {
+                t.start();
+                workerStarted = true;
             }
         }
-        /*
-         * 释放所，CAS，有int越界判断
-         */
-        protected final boolean tryReleaseShared(int releases) {
-            for (;;) {
-                int current = getState();
-                int next = current + releases;
-                if (next &lt; current) // overflow
-                    throw new Error(&quot;Maximum permit count exceeded&quot;);
-                if (compareAndSetState(current, next))
-                    return true;
-            }
-        }
-        /*
-         * 相当于release的逆操作
-         */
-        final void reducePermits(int reductions) {
-            for (;;) {
-                int current = getState();
-                int next = current - reductions;
-                if (next &gt; current) // underflow
-                    throw new Error(&quot;Permit count underflow&quot;);
-                if (compareAndSetState(current, next))
-                    return;
-            }
-        }
+    } finally {
+        if (! workerStarted)
+            addWorkerFailed(w);
+    }
+    return workerStarted;
+}
+</code></pre><p>任务通过execute方法加入到线程池后，调用链是：</p>
+<p>execute –&gt; addWorker –&gt; t.start –&gt; 内部类worker.run() –&gt; runWorker –&gt; getTask() –&gt; workQueue.take 到这里就可以完成从队列中取任务执行，并且可以阻塞。具体何时getTask由上层方法调用决定，即step1，2，3。</p>
 
-        /*
-         * 将count置为0并返回
-         */
-        final int drainPermits() {
-            for (;;) {
-                int current = getState();
-                if (current == 0 || compareAndSetState(current, 0))
-                    return current;
-            }
-        }
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/22/juc/concurrentSyncFramework/" itemprop="url">
+                  Concurrent Synchronizer Framework
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-22T15:00:00+08:00" content="2016-06-22">
+              2016-06-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/juc/" itemprop="url" rel="index">
+                    <span itemprop="name">juc</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/22/juc/concurrentSyncFramework/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/22/juc/concurrentSyncFramework/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="同步框架AQS"><a href="#同步框架AQS" class="headerlink" title="同步框架AQS"></a>同步框架AQS</h2><p>作为同步基础框架，需要提供：维护一个同步状态（表示锁被锁定或释放），包含对状态的更新和检查操作，包含能够阻塞当前线程的方法，其他线程修改同步状态后能恢复。</p>
+<p>在AQS中Lock和Condition的组合，约等于Synchronized和wait/notify的组合。</p>
+<p>conditiong的作用是维护等待信号队列，并在适当的时机加入到AQS等待队列中以实现唤醒。</p>
+<h3 id="AQS需满足的三要素"><a href="#AQS需满足的三要素" class="headerlink" title="AQS需满足的三要素"></a>AQS需满足的三要素</h3><ul>
+<li>自动维护同步状态</li>
+<li>阻塞和唤醒线程</li>
+<li>维护队列</li>
+</ul>
+<p>Synchronization State，是32位的int，使用volatile保证state在线程间可见，并通过CAS操作完成更新，保证变量的同步。compareAndSetState与期望值对比，相同才更新。</p>
+<p>Blocking，提供独占（ReentrantLock）和共享模式（Semaphore），以及同时包含两种模式的ReentrantReadWriteLock。</p>
+<p>Queue，框架的核心就是维护的这个包含阻塞线程的队列。队列的结构可以参考：</p>
+<blockquote>
+<p>Doug Lea, The java.util.concurrent Synchronizer Framework, Science of Computer Programming, 2005, 58(3):293-309</p>
+</blockquote>
+<h3 id="AQS应用"><a href="#AQS应用" class="headerlink" title="AQS应用"></a>AQS应用</h3><p>一般是声明私有内部类去继承AQS，并代理AQS的全部或者部分方法。后面将会看到ReentrantLock，闭锁、信号量、屏障、读写锁，都是这样实现的。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/06/22/juc/concurrentSyncFramework/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/20/goodarticle/" itemprop="url">
+                  好文章列表（不断更新）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
+              2016-06-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/article/" itemprop="url" rel="index">
+                    <span itemprop="name">article</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/20/goodarticle/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/goodarticle/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h4><blockquote>
+<p><a href="http://ifeve.com/java-synchronized/" target="_blank" rel="external">http://ifeve.com/java-synchronized/</a>  方腾飞老师的聊聊并发系列</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/20/java/serialize/" itemprop="url">
+                  序列化和readObject/writeObject
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
+              2016-06-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/20/java/serialize/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/java/serialize/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Java中需要序列化的类，只需实现Serializable接口，具体的实现由虚拟机负责调用相关实现方式去实现。所有的non-transient和non-static都将被序列化。</p>
+<pre><code>class SessionDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int data; // Stores session data
+
+    // Session activation time (creation, deserialization)
+    private long activationTime; 
+
+    public SessionDTO(int data) {
+        this.data = data;
+        this.activationTime = System.currentTimeMillis();
     }
 
-    /**
-     * 非公平
-     */
-    static final class NonfairSync extends Sync {
-        private static final long serialVersionUID = -2694183684443567898L;
-
-        NonfairSync(int permits) {
-            super(permits);
-        }
-
-        protected int tryAcquireShared(int acquires) {
-            return nonfairTryAcquireShared(acquires);
-        }
+    public int getData() {
+        return data;
     }
 
-    /**
-     * 公平
-     */
-    static final class FairSync extends Sync {
-        private static final long serialVersionUID = 2014338818796000944L;
-
-        FairSync(int permits) {
-            super(permits);
-        }
-
-        protected int tryAcquireShared(int acquires) {
-            for (;;) {
-                // 公平版的请求，需要先检查同步队列里有没有比当前线程更早的线程在等待。  
-                if (hasQueuedPredecessors())
-                    return -1;
-                int available = getState();
-                int remaining = available - acquires;
-                if (remaining &lt; 0 ||
-                    compareAndSetState(available, remaining))
-                    return remaining;
-            }
-        }
-    }
-
-    public Semaphore(int permits) {
-        sync = new NonfairSync(permits);
-    }
-
-    public Semaphore(int permits, boolean fair) {
-        sync = fair ? new FairSync(permits) : new NonfairSync(permits);
-    }
-
-    /**
-     * Acquires a permit from this semaphore, blocking until one is
-     * available, or the thread is {@linkplain Thread#interrupt interrupted}.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * one of two things happens:
-     * &lt;ul&gt;
-     * &lt;li&gt;Some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit; or
-     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}
-     * the current thread.
-     * &lt;/ul&gt;
-     *
-     * &lt;p&gt;If the current thread:
-     * &lt;ul&gt;
-     * &lt;li&gt;has its interrupted status set on entry to this method; or
-     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting
-     * for a permit,
-     * &lt;/ul&gt;
-     * then {@link InterruptedException} is thrown and the current thread&apos;s
-     * interrupted status is cleared.
-     *
-     * @throws InterruptedException if the current thread is interrupted
-     */
-    public void acquire() throws InterruptedException {
-        sync.acquireSharedInterruptibly(1);
-    }
-
-    /**
-     * Acquires a permit from this semaphore, blocking until one is
-     * available.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit.
-     *
-     * &lt;p&gt;If the current thread is {@linkplain Thread#interrupt interrupted}
-     * while waiting for a permit then it will continue to wait, but the
-     * time at which the thread is assigned a permit may change compared to
-     * the time it would have received the permit had no interruption
-     * occurred.  When the thread does return from this method its interrupt
-     * status will be set.
-     */
-    public void acquireUninterruptibly() {
-        sync.acquireShared(1);
-    }
-
-    /**
-     * Acquires a permit from this semaphore, only if one is available at the
-     * time of invocation.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * with the value {@code true},
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then this method will return
-     * immediately with the value {@code false}.
-     *
-     * &lt;p&gt;Even when this semaphore has been set to use a
-     * fair ordering policy, a call to {@code tryAcquire()} &lt;em&gt;will&lt;/em&gt;
-     * immediately acquire a permit if one is available, whether or not
-     * other threads are currently waiting.
-     * This &amp;quot;barging&amp;quot; behavior can be useful in certain
-     * circumstances, even though it breaks fairness. If you want to honor
-     * the fairness setting, then use
-     * {@link #tryAcquire(long, TimeUnit) tryAcquire(0, TimeUnit.SECONDS) }
-     * which is almost equivalent (it also detects interruption).
-     *
-     * @return {@code true} if a permit was acquired and {@code false}
-     *         otherwise
-     */
-    public boolean tryAcquire() {
-        return sync.nonfairTryAcquireShared(1) &gt;= 0;
-    }
-
-    /**
-     * Acquires a permit from this semaphore, if one becomes available
-     * within the given waiting time and the current thread has not
-     * been {@linkplain Thread#interrupt interrupted}.
-     *
-     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
-     * with the value {@code true},
-     * reducing the number of available permits by one.
-     *
-     * &lt;p&gt;If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * one of three things happens:
-     * &lt;ul&gt;
-     * &lt;li&gt;Some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit; or
-     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}
-     * the current thread; or
-     * &lt;li&gt;The specified waiting time elapses.
-     * &lt;/ul&gt;
-     *
-     * &lt;p&gt;If a permit is acquired then the value {@code true} is returned.
-     *
-     * &lt;p&gt;If the current thread:
-     * &lt;ul&gt;
-     * &lt;li&gt;has its interrupted status set on entry to this method; or
-     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting
-     * to acquire a permit,
-     * &lt;/ul&gt;
-     * then {@link InterruptedException} is thrown and the current thread&apos;s
-     * interrupted status is cleared.
-     *
-     * &lt;p&gt;If the specified waiting time elapses then the value {@code false}
-     * is returned.  If the time is less than or equal to zero, the method
-     * will not wait at all.
-     *
-     * @param timeout the maximum time to wait for a permit
-     * @param unit the time unit of the {@code timeout} argument
-     * @return {@code true} if a permit was acquired and {@code false}
-     *         if the waiting time elapsed before a permit was acquired
-     * @throws InterruptedException if the current thread is interrupted
-     */
-    public boolean tryAcquire(long timeout, TimeUnit unit)
-        throws InterruptedException {
-        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
-    }
-
-    /**
-     * Releases a permit, returning it to the semaphore.
-     *
-     * &lt;p&gt;Releases a permit, increasing the number of available permits by
-     * one.  If any threads are trying to acquire a permit, then one is
-     * selected and given the permit that was just released.  That thread
-     * is (re)enabled for thread scheduling purposes.
-     *
-     * &lt;p&gt;There is no requirement that a thread that releases a permit must
-     * have acquired that permit by calling {@link #acquire}.
-     * Correct usage of a semaphore is established by programming convention
-     * in the application.
-     */
-    public void release() {
-        sync.releaseShared(1);
-    }
-
-    /**
-     * Acquires the given number of permits from this semaphore,
-     * blocking until all are available,
-     * or the thread is {@linkplain Thread#interrupt interrupted}.
-     */
-    public void acquire(int permits) throws InterruptedException {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        sync.acquireSharedInterruptibly(permits);
-    }
-
-    public void acquireUninterruptibly(int permits) {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        sync.acquireShared(permits);
-    }
-
-    public boolean tryAcquire(int permits) {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        return sync.nonfairTryAcquireShared(permits) &gt;= 0;
-    }
-
-    public boolean tryAcquire(int permits, long timeout, TimeUnit unit)
-        throws InterruptedException {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        return sync.tryAcquireSharedNanos(permits, unit.toNanos(timeout));
-    }
-
-    public void release(int permits) {
-        if (permits &lt; 0) throw new IllegalArgumentException();
-        sync.releaseShared(permits);
-    }
-
-    public int availablePermits() {
-        return sync.getPermits();
-    }
-
-    public int drainPermits() {
-        return sync.drainPermits();
-    }
-
-    protected void reducePermits(int reduction) {
-        if (reduction &lt; 0) throw new IllegalArgumentException();
-        sync.reducePermits(reduction);
-    }
-
-    public boolean isFair() {
-        return sync instanceof FairSync;
-    }
-
-    /**
-     * Queries whether any threads are waiting to acquire. Note that
-     * because cancellations may occur at any time, a {@code true}
-     * return does not guarantee that any other thread will ever
-     * acquire.  This method is designed primarily for use in
-     * monitoring of the system state.
-     *
-     * @return {@code true} if there may be other threads waiting to
-     *         acquire the lock
-     */
-    public final boolean hasQueuedThreads() {
-        return sync.hasQueuedThreads();
-    }
-
-    public final int getQueueLength() {
-        return sync.getQueueLength();
-    }
-
-    protected Collection&lt;Thread&gt; getQueuedThreads() {
-        return sync.getQueuedThreads();
-    }
-
-    public String toString() {
-        return super.toString() + &quot;[Permits = &quot; + sync.getPermits() + &quot;]&quot;;
+    public long getActivationTime() {
+        return activationTime;
     }
 }
-</code></pre>
+
+public class SerializeTester implements Serializable {
+    public static void main(String... strings) throws Exception {
+        File file = new File(&quot;out.ser&quot;);
+
+        ObjectOutputStream oos = new ObjectOutputStream(
+            new FileOutputStream(file));
+        SessionDTO dto = new SessionDTO(1);
+        oos.writeObject(dto);
+        oos.close();
+
+        ObjectInputStream ois = new ObjectInputStream(
+            new FileInputStream(file));
+        SessionDTO dto = (SessionDTO) ois.readObject();
+
+        System.out.println(&quot;data : &quot; + dto.getData()
+            + &quot; activation time : &quot; + dto.getActivationTime());
+        ois.close();
+    }
+}
+</code></pre><p>某些情况下，如果某些字段不需要进行序列化，可以将其设置为transient，这样这些字段就不会进行序列化，以减轻对网络带宽的占用。某些值，如果需要在反序列化的时候重新赋值，可以设置为transient，并且重写readObject方法，在其中为该属性赋值。如果希望序列化的时候对某些值做自定义的处理，可以重写writeObject方法，添加相应逻辑。</p>
+<pre><code>class SessionDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private transient int data; // Stores session data
+
+    //Session activation time (creation, deserialization)
+    private transient long activationTime; 
+
+    public SessionDTO(int data) {
+        this.data = data;
+        this.activationTime = System.currentTimeMillis();
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+        oos.writeInt(data);
+        System.out.println(&quot;session serialized&quot;);
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException,
+            ClassNotFoundException {
+        ois.defaultReadObject();
+        data = ois.readInt();
+        activationTime = System.currentTimeMillis();
+        System.out.println(&quot;session deserialized&quot;);
+    }
+
+    public int getData() {
+        return data;
+    }
+
+    public long getActivationTime() {
+        return activationTime;
+    }
+}
+</code></pre><p>两个方法都是private的，并且它们既不存在于java.lang.Object，也没有在Serializable中声明。那么ObjectOutputStream如何使用它们的呢？这个吗，ObjectOutputStream使用了反射来寻找是否声明了这两个方法。因为ObjectOutputStream使用getPrivateMethod，所以这些方法不得不被声明为priate以至于供ObjectOutputStream来使用。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/20/IO/io/" itemprop="url">
+                  从操作系统的角度聊聊CPU和IO设备
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
+              2016-06-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/IO/" itemprop="url" rel="index">
+                    <span itemprop="name">IO</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/20/IO/io/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/IO/io/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="操作系统的发展过程"><a href="#操作系统的发展过程" class="headerlink" title="操作系统的发展过程"></a>操作系统的发展过程</h2><h3 id="无操作系统时代"><a href="#无操作系统时代" class="headerlink" title="无操作系统时代"></a>无操作系统时代</h3><p>1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。</p>
+<ol>
+<li>用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。</li>
+<li>CPU等待人工操作。</li>
+</ol>
+<p>为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量大，CPU等待时间长，引入外围机作中转，将数据通过外围机输入到磁带上，主机在需要的时候直接读取磁带，解决CPU在等待时，资源的浪费为。</p>
+<h3 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h3><p>由监控程序，每次保着将磁带上的一个作业装入内存，旨在提高资源的利用率和系统的吞吐量。系统中始终只保持一道程序。具备：自动性、顺序性、单道性。</p>
+<h3 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h3><p>CPU等待IO设备结果时，可以被系统调度出去，暂时中断其对CPU的占用，是其他程序可以使用CPU，待IO处理完成后再由系统调度回来。具备：多道性、无序性（先进入内存的作业可能较后完成）、调度性。</p>
+<p>内存中驻留躲到程序，可保持资源处于忙碌状态，资源充分利用。CPU和其他资源保持“忙碌”状态，挡作业运行完成或运行不下去的时候才进行切换，开销小。</p>
+<p>批处理系统推动了多任务操作系统的发展。</p>
+<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多用户样子的系统，一台主机上，连接了多个带有显示器和键盘的终端，允许同时多个用户通过自己的终端，以交互的方式使用计算机，共享主机中的资源。</p>
+<p>及时接收：多路卡连接终端，缓冲区暂存键入的命令或数据。</p>
+<p>及时处理：作业不能先存于磁盘再调入内容，因为磁盘中的作业不能运行，也不能进行交互；不允许一个作业长期占用cpu，只在运行完毕或出现IO请求才被调度是不合适的。采用时间片轮转的方式，让每个作业都能运行一小段时间，这样，在一个不长的时间内会感觉所有用户所有作业都在得到响应。</p>
+<h3 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h3><p>及时响应外部事件的请求。</p>
+<h2 id="操作系统的特性"><a href="#操作系统的特性" class="headerlink" title="操作系统的特性"></a>操作系统的特性</h2><p>并发、共享、虚拟、异步。其中并发是其他三个的前提。<br>并发和并行的差别。并行指同一时刻发生；并发指同一时间间隔内发生。</p>
+
           
         
       
@@ -721,7 +1588,7 @@ public class Semaphore implements java.io.Serializable {
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-15T15:34:09+08:00" content="2016-06-15">
+            <time itemprop="dateCreated" datetime="2016-06-15T15:00:00+08:00" content="2016-06-15">
               2016-06-15
             </time>
           </span>
@@ -889,1358 +1756,11 @@ public class CountDownLatch {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/14/juc/reentrantlock/" itemprop="url">
-                  ReentrantLock
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-14T15:18:23+08:00" content="2016-06-14">
-              2016-06-14
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/juc/" itemprop="url" rel="index">
-                    <span itemprop="name">juc</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/14/juc/reentrantlock/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/14/juc/reentrantlock/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>和Synchronized一样，ReentrantLock也是可重入的，可作为内置锁的替代物。</p>
-<p>与Synchronized相比较而言，ReentrantLock有以下优势：支持公平/非公平锁、支持可中断的锁、支持非阻塞的tryLock(可超时)、支持锁条件、可跨代码块使用(一个地方加锁，另一个地方解锁)，总之比Synchronized更加灵活。但也有缺点，比如锁需要显示解锁、无法充分享用JVM内部性能提升带来的好处等等。</p>
-<pre><code>public interface Lock {
-    /**
-     * 获取锁，若无法获取到，则当前线程被阻塞。直到获取成功为止。
-     */
-    void lock();
-    /**
-     * 获取锁，若无法获取到，则当前线程被阻塞。直到发生以下两种情况：
-     * 获取成功；或者
-     * 其他线程中断当前线程 
-     */
-    void lockInterruptibly() throws InterruptedException;
-    /**
-     * 如果当前锁可用，获取成功返回true；否则返回false
-     */
-    boolean tryLock();
-    /**
-     * 与lockInterruptibly相似，还有第三种情况，即达到超时时间。
-     * 如果当前锁可用，获取成功返回true；否则返回false
-     */
-    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
-    /**
-     * 释放锁
-     */
-    void unlock();
-    /**
-     * 返回当前锁相关的条件。在条件等待之前，锁必须被当前线程占有，await方法会在等待前释放锁，在结束等待前重新获取锁
-     */
-    Condition newCondition();
-}
-</code></pre><p>基于AQS机制构建的同步类，内部都会使用相关类继承AQS。ReentrantLock也不例外。</p>
-<pre><code>// 内部协调机制对象
-private final Sync sync;
-// 抽象类继承AQS，具有公平和非公平版本的子类。利用AQS的state来表示锁持有(重入)的次数。. 
-abstract static class Sync extends AbstractQueuedSynchronizer 
-</code></pre><p>非公平锁子类，新来的类之间尝试获取锁，无论等待队列中是否有线程阻塞等待。</p>
-<pre><code>final static class NonfairSync extends Sync
-</code></pre><p>公平锁子类，只有在递归(重入)或者同步队列中没有其他线程或者当前线程是等待队列中的第一个线程时才准许访问</p>
-<pre><code>final static class FairSync extends Sync 
-</code></pre><p>非公平版的锁-加锁操作</p>
-<ol>
-<li>当前线程首先会无条件的执行一个CAS操作来获取锁，如果CAS操作成功，获取锁成功。</li>
-<li>如果第1步没成功，当前会检查锁是否被其他线程持有，也就是锁是否可用。</li>
-<li>如果没有其他线程持有锁，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
-<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。</li>
-<li>根据AQS的分析，上述2、3、4步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
-</ol>
-<p>公平版的锁-加锁操作</p>
-<ol>
-<li>当前线程首先会检查锁是否被其他线程持有，并且当前同步等待队列里有没有其他线程在等待。</li>
-<li>如果没有其他线程持有锁，且同步等待队列里没有其他线程，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
-<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。nonfairTryAcquire方法</li>
-<li>根据AQS的分析，上述1、2、3步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
-</ol>
-<p>非公平版和公平版锁的解锁操作一样</p>
-<ol>
-<li>当前线程首先将锁重入次数减1(AQS的state)，如果减1后结果为0，将当前同步器的线程信息置空，并唤醒同步等待队列中队头的等待线程。</li>
-<li>如果第1步中，重入次数减1后结果不为0(说明当前线程还持有当前锁)，方法结束。</li>
-</ol>
-<p>ReentrantLock实现，整体就是sync的一个代理。</p>
-<pre><code>public ReentrantLock() {
-    sync = new NonfairSync();
-}
-public ReentrantLock(boolean fair) {
-    sync = (fair)? new FairSync() : new NonfairSync();
-}
-
-public void lock() {
-    sync.lock();
-}
-
-public void lockInterruptibly() throws InterruptedException {
-    sync.acquireInterruptibly(1);
-}
-
-public boolean tryLock() {
-    return sync.nonfairTryAcquire(1);
-}
-
-public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
-    return sync.tryAcquireNanos(1, unit.toNanos(timeout));
-}
-
-public void unlock() {
-    sync.release(1);
-}
-public Condition newCondition() {
-    return sync.newCondition();
-}
-</code></pre><p>所有try方法，相当于非阻塞的方式获取锁。</p>
-<p>synchronized获得的内部锁存在一定的局限</p>
-<ol>
-<li><p>不能中断一个正在试图获得锁的线程 </p>
-</li>
-<li><p>试图获得锁时不能像trylock那样设定超时时间 </p>
-</li>
-<li><p>每个锁只有单一的条件，不像condition那样可以设置多个</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/02/redis/persistence/" itemprop="url">
-                  持久化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-02T10:40:30+08:00" content="2016-06-02">
-              2016-06-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/02/redis/persistence/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/02/redis/persistence/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h2><p>通过快照（snapshotting）完成，当出现以下几种情况时，进行快照：</p>
-<ol>
-<li>根据配置自动进行，在redis.conf中save部分</li>
-<li>用户执行save（同步快照，会阻塞所有客户端请求）或bgsave（异步快照）</li>
-<li>执行flushall（前提是必须定义自动快照条件，否则即使执行，也不会进行快照）</li>
-<li>执行复制（replication），主从模式，在复制初始化时进行。</li>
-</ol>
-<h3 id="快照原理"><a href="#快照原理" class="headerlink" title="快照原理"></a>快照原理</h3><p>默认快照文件存储在redis当前进程的工作目录中的dump.rdb文件中，通过redis-cli启动客户端时，文件在redis-cli所在的文件夹中。<br>使用fork函数赋值一份当前进程（父进程）的副本（子进程）。父进程继续接受并处理客户端的请求，而子进程开始将内存中的数据写入硬盘中的临时文件。写入所有数据后会用改临时文件替换旧的RDB文件，至此完成一次快照操作。</p>
-<p>fork的时候，会使用写时赋值策略（copy-on-write），开始时共享内存，当父进程需要更改数据时，操作系统会将该数据复制一份保证子进程的数据不受影响，所以RDB文件存储的是执行fork时刻的内存数据。</p>
-<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><p>append only file，默认情况下不开启，可通过appendonly yes参数启用。每执行一条会更改redis数据的命令，redis就会将该命令写入磁盘中的aof文件。aof文件的位置和rdb文件的位置相同。</p>
-<p>以纯文本形式记录了redis执行的写命令。每当达到一定条件时redis就会自动重写aof文件，去除文件中冗余的数据。</p>
-<h3 id="同步硬盘数据"><a href="#同步硬盘数据" class="headerlink" title="同步硬盘数据"></a>同步硬盘数据</h3><p>由于操作系统缓存机制，数据并没有真正地写入硬盘，而是进入系统的硬盘缓存。默认情况下每30s执行一次同步操作，将缓存中的内容真正写入硬盘。</p>
-<pre><code>appendfsync always    每次操作都同步
-appendfsync everysec    没个若干秒同步；这是兼顾性能和安全的考虑。
-appendfsync no    不同步，由操作系统决定，即30s
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/01/redis/getDeeper/" itemprop="url">
-                  redis进阶
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-01T10:12:03+08:00" content="2016-06-01">
-              2016-06-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/01/redis/getDeeper/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/01/redis/getDeeper/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>multi
-...
-exec
-
-watch
-</code></pre><h2 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h2><p>在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。</p>
-<pre><code>set key value
-expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败
-ttl key    返回键的剩余时间，单位是秒。当键不存在时，返回-2。-1表示永久键。
-persist key 取消过期时间，将键改为永久键。使用set和getset赋值的同时也可以清楚过期时间。
-
-对应的还有另外一组设置毫秒时间的
-pexpire
-pttl
-</code></pre><p>过期时间实现访问频率限制</p>
-<ol>
-<li>利用过期时间，每分钟设置一个key，incr到指定数量时，拒绝。过期后重新计数。</li>
-<li>用列表存储，每个新请求，判断列表是否到达最大长度，若未到达，直接加入；否则，与最早的时间比较，看时间间隔是否大于1分钟，若大于，将最早的时间删除，新时间插入；否则拒绝。</li>
-</ol>
-<p>过期时间实现缓存。限制redis占用的最大内存，不设置过期时间，而让redis通过一定的规则淘汰不需要的缓存键。修改maxmemory参数，设置maxmemory-policy。eg. allkeys-lru</p>
-<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>127.0.0.1:6379&gt; sadd posts 2 6 12 26
-(integer) 4
-127.0.0.1:6379&gt; smember posts
-(error) ERR unknown command &apos;smember&apos;
-127.0.0.1:6379&gt; smembers posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-127.0.0.1:6379&gt; hset post:2 time 1352619200
-(integer) 1
-127.0.0.1:6379&gt; hset post:6 time 1352619600
-(integer) 1
-127.0.0.1:6379&gt; hset post:12 time 1352610100
-(integer) 1
-127.0.0.1:6379&gt; hset post:26 time 1352612000
-(integer) 1
-127.0.0.1:6379&gt; sort posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-## 这里by的感觉很像是表连接
-127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc
-1) &quot;6&quot;
-2) &quot;2&quot;
-3) &quot;26&quot;
-4) &quot;12&quot;
-</code></pre><p>通过sort命令的get参数，该参数不影响排序，作用是似的sort命令的返回结果不再是元素自身的值，而是get参数中指定的键值。</p>
-<pre><code>127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc get post:*-&gt;title
-1) &quot;66666&quot;
-2) &quot;windows 8&quot;
-3) &quot;262626&quot;
-4) &quot;121212&quot;
-## 一个sort也可以带有多个get参数（但by只能有一个）
-sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get #
-1) &quot;66666&quot;
-2) &quot;1352619600&quot;
-3) &quot;windows 8&quot;
-4) &quot;1352619200&quot;
-5) &quot;262626&quot;
-6) &quot;1352612000&quot;
-7) &quot;121212&quot;
-8) &quot;1352610100&quot;
-
-get # 会返回元素本身。
-</code></pre><p>store参数保存排序结果</p>
-<pre><code>sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get # store sort.result  
-(integer) 12   ## 保存的键类型是列表类型，返回值为结果个数
-127.0.0.1:6379&gt; lrange sort.result 0 -1
- 1) &quot;66666&quot;
- 2) &quot;1352619600&quot;
- 3) &quot;6&quot;
- 4) &quot;windows 8&quot;
- 5) &quot;1352619200&quot;
- 6) &quot;2&quot;
- 7) &quot;262626&quot;
- 8) &quot;1352612000&quot;
- 9) &quot;26&quot;
-10) &quot;121212&quot;
-11) &quot;1352610100&quot;
-12) &quot;12&quot;
-</code></pre><p>sort对性能的影响<br>O(n+mlog(m))，n为待排序列表中元素个数，m为排序结果返回的个数。</p>
-<ol>
-<li>尽量减少待排序键中元素的数量（减少n）</li>
-<li>使用limit只获取需要的数据（减少m）</li>
-<li>尽量使用store参数缓存</li>
-</ol>
-<h2 id="消息通知"><a href="#消息通知" class="headerlink" title="消息通知"></a>消息通知</h2><p>订阅功能，将用户邮箱存储在集合中，当新增文章后，就向集合中的邮箱地址发送通知邮件。</p>
-<p>当页面需要进行如发送邮件、复杂数据运算等耗时较长的操作时会阻塞页面的渲染，为了避免用户等待太久，应该使用独立的线程来完成。</p>
-<p>松耦合，生产者和消费者无需知道彼此的实现细节。易于扩展，消费者可以有多个，分布在不同机器中，轻松降低单台服务器的负载。</p>
-<p>结合lpush和rpop，往列表左侧添加，右侧取出，模拟消息队列。同时redis提供brpop命令，当没有元素可以取出时，brpop命令将会阻塞，直到油新元素加入。</p>
-<pre><code>brpop key timeout
-其中time为超时时间，0表示不限制等待时间，即将一直等待下去。
-
-brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列表都有数据可以取出的时候，按从左到右的列表顺序
-</code></pre><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出，从简降低往返时延累计值。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/31/redis/begin/" itemprop="url">
-                  redis入门
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-31T15:04:03+08:00" content="2016-05-31">
-              2016-05-31
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/31/redis/begin/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/31/redis/begin/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="几个基础命令"><a href="#几个基础命令" class="headerlink" title="几个基础命令"></a>几个基础命令</h2><pre><code>keys *
-exists key
-del key 由于del不支持通配符，所以可以结合管道和xargs，redis-cli keys &quot;user:*&quot; | xargs redis-cli del
-type key 获取键值的数据类型
-</code></pre><h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h3><pre><code>set key value 赋值
-get key 取值
-incr key 递增数字
-
-incrby key increment 增加指定整数
-decr key
-decrby key decrement
-incrbyfloat key increment
-
-append key value 向尾部追加
-strlen key 获取字符串长度
-mget key [key ...] 同时获取多个键值
-mset key value [key value ...] 同时设置多个键值
-</code></pre><p>最好使用“对象类型：对象ID：对象属性”来命名一个键，eg，user:1:friends</p>
-<ul>
-<li>文章访问量统计</li>
-<li>生成自增ID（作用同关系型数据库的auto_increment）</li>
-<li>存储文章数据</li>
-</ul>
-<h2 id="散列"><a href="#散列" class="headerlink" title="散列"></a>散列</h2><pre><code>hset
-hget
-hmset
-hmget
-hgetall
-hexists
-hsetnx key field value 如果字段存在命令不执行任何操作
-hincrby key field increment
-hdel key field [field ...]
-hkeys key 获取key对应的所有字段
-hvals key 获取key对应的所有字段对应的值
-hlen key 获取字段数量
-</code></pre><ul>
-<li>存储文章数据</li>
-<li>存储文章缩略名</li>
-</ul>
-<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>list可以向两端添加元素，或者获得列表的某一片段</p>
-<pre><code>lpush key value [value ...]
-rpush key value [value ...]
-lpop key
-rpop key
-llen key
-lrange key start stop
-lrem key count value
-lindex key index
-lset key index value
-ltrim key start end
-linsert key before|after pivot value
-rpoplpush source destination
-</code></pre><ul>
-<li>存储文章ID列表</li>
-<li>存储品论列表</li>
-</ul>
-<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><pre><code>sadd key number [number ...]
-srem key number [number ...]
-smembers key
-sismember key member
-sdiff key [key ...]
-sinter key [key ...]
-sunion key [key ...]
-</code></pre><ul>
-<li>存储文章标签</li>
-<li>通过标签搜索文章</li>
-</ul>
-<h2 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a>有序集合</h2><pre><code>zadd key score member [member ...]
-zscore key member
-zrange key star stop [withscores] 按分数从小到大
-zrevrange key start stop [withscores] 
-zrangebyscore key min max [withscores] [limit offset count]
-zincrby key increment member
-zcard key 获取集合中元素的数量
-zcount key min max
-zrem key member [member ...]
-zremrangebyrank key start stop 按排名范围删除元素
-zremrangebyscore key min max 按照分数范围删除元素
-zrank key member 获取元素排名
-zrevrank key member 
-</code></pre><ul>
-<li>实现按点击量排序</li>
-<li>改进按时间排序</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/30/linux/管理命令汇总/" itemprop="url">
-                  linux管理维护命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-30T10:39:42+08:00" content="2016-05-30">
-              2016-05-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/30/linux/管理命令汇总/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/管理命令汇总/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h3><p>nc localhost 20000 与 telnet localhost 20000相同</p>
-<p>激活一个20000端口来监听连接</p>
-<pre><code>nc -l localhost 20000 &amp;
-netstat -tlunp | grep nc
-nc localhost 20000
-</code></pre><p>这里localhost为只开启本机测试，如果想通过其他机器连接，可以使用ip或域名。</p>
-<p>linux命令中的&amp;，强制命令在后台执行。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/30/linux/xinetd/" itemprop="url">
-                  xinetd
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-30T10:20:16+08:00" content="2016-05-30">
-              2016-05-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/30/linux/xinetd/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/xinetd/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>抄一篇关于xinetd的，mark下。</p>
-<blockquote>
-<p><a href="http://www.cnblogs.com/itech/archive/2010/12/27/1914846.html" target="_blank" rel="external">http://www.cnblogs.com/itech/archive/2010/12/27/1914846.html</a></p>
-</blockquote>
-<h2 id="守护进程分类"><a href="#守护进程分类" class="headerlink" title="守护进程分类"></a>守护进程分类</h2><p><strong>独立启动（stand_alone)</strong>:该类进程启动后就常驻内存，所以会一直占用系统资源。其最大的优点就是它会一直启动，当外界有要求时相应速度较快，像httpd等进程；</p>
-<p><strong>超级守护进程</strong>：系统启动时由一个统一的守护进程xinet来负责管理一些进程，当相应请求到来时需要通过xinet的转接才可以唤醒被xinet管理的进程。这种进程的优点时最初只有xinet这一守护进程占有系统资源，其他的内部服务并不一直占有系统资源，只有数据包到来时才会被xinet管理员来唤醒。并且我们还可以通过xinet来对它所管理的进程设置一些访问权限，相当于多了一层管理机制。</p>
-<h2 id="守护进程管理工具"><a href="#守护进程管理工具" class="headerlink" title="守护进程管理工具"></a>守护进程管理工具</h2><p>redhat－config－services、ntsysv、chkconfig</p>
-<p>service iptables status    #查看相应服务的状态，用service需要服务在/etc/init.d/目录中存在</p>
-<p>netstat -tulp    #会列出相应的服务及其监听的端口号等，若加n参数会列出端口号</p>
-<p>chkconfig –list |grep 服务名 #会列出现在当前服务的各种状态，包括在不同运行级别下的启情况，分为上线两部分，上部分是独立启动的服务，你会看到xinetd也在，下面部分是有inet管理的超级守护进程，没有运行级别可分的。 </p>
-<h2 id="xinetd"><a href="#xinetd" class="headerlink" title="xinetd"></a>xinetd</h2><p>从守护进程的概念可以看出，对于系统所要通过的每一种服务，都必须运行一个监听某个端口连接所发生的守护进程，这通常意味着资源浪费。为了解决这个问题，Linux引进了”网络守护进程服务程序”的概念。Red Hat Linux 9.0使用的网络守护进程是xinted（eXtended InterNET daemon）。xinetd能够同时监听多个指定的端口，在接受用户请求时，它能够根据用户请求的端口的不同，启动不同的网络服务进程来处理这些用户请求。可以把xinetd看做一个管理启动服务的管理服务器，它决定把一个客户请求交给哪个程序处理，然后启动相应的守护进程。xinetd无时不在运行并监听它所管理的所有端口上的服务。当某个要连接它管理的某项服务的请求到达时，xinetd就会为该服务启动合适的服务器。</p>
-<p>xinetd和stand-alone工作模式相比，系统不想要每一个网络服务进程都监听其服务端口，运行单个xinetd就可以同时监听所有服务端口，这样就降低了系统开销，保护系统资源。但是对于访问量大、经常出现并发访问的情况，xinetd则要频繁启动相应的网络服务进程，反而会导致系统性能下降。查看系统为Linux服务提供哪种工作模式，可以在Linux命令行中使用pstree命令，就能看到两种不同模式启动的网络服务。一般来说系统中一些负载高的服务，Sendmail、Apache服务是单独启动的；而其他服务类型都可以使用xinetd超级服务器管理。</p>
-<h3 id="什么是xinetd"><a href="#什么是xinetd" class="headerlink" title="什么是xinetd"></a>什么是xinetd</h3><p>xinetd即extended internet daemon，xinetd是新一代的网络守护进程服务程序，又叫超级Internet服务器。经常用来管理多种轻量级Internet服务。xinetd提供类似于inetd+tcp_wrapper的功能，但是更加强大和安全。</p>
-<h3 id="xinetd的特色"><a href="#xinetd的特色" class="headerlink" title="xinetd的特色"></a>xinetd的特色</h3><h4 id="强大的存取控制功能"><a href="#强大的存取控制功能" class="headerlink" title="强大的存取控制功能"></a>强大的存取控制功能</h4><ul>
-<li>内置对恶意用户和善意用户的差别待遇设定。</li>
-<li>使用libwrap支持，其效能更甚于tcpd。</li>
-<li>可以限制连接的等级，基于主机的连接数和基于服务的连接数。</li>
-<li>设置特定的连接时间。</li>
-<li>将某个服务设置到特定的主机以提供服务。</li>
-</ul>
-<h4 id="有效防止DoS攻击"><a href="#有效防止DoS攻击" class="headerlink" title="有效防止DoS攻击"></a>有效防止DoS攻击</h4><ul>
-<li>可以限制连接的等级。</li>
-<li>可以限制一个主机的最大连接数，从而防止某个主机独占某个服务。</li>
-<li>可以限制日志文件的大小，防止磁盘空间被填满。</li>
-</ul>
-<h4 id="强大的日志功能"><a href="#强大的日志功能" class="headerlink" title="强大的日志功能"></a>强大的日志功能</h4><ul>
-<li>可以为每一个服务就syslog设定日志等级。</li>
-<li>如果不使用syslog，也可以为每个服务建立日志文件。</li>
-<li>可以记录请求的起止时间以决定对方的访问时间。</li>
-<li>可以记录试图非法访问的请求。</li>
-</ul>
-<h4 id="转向功能"><a href="#转向功能" class="headerlink" title="转向功能"></a>转向功能</h4><p>可以将客户端的请求转发到另一台主机去处理。</p>
-<h4 id="支持IPv6"><a href="#支持IPv6" class="headerlink" title="支持IPv6"></a>支持IPv6</h4><p>xinetd自xinetd 2.1.8.8pre*起的版本就支持IPv6，可以通过在./configure脚本中使用with-inet6 capability选项来完成。注意，要使这个生效，核心和网络必须支持IPv6。当然IPv4仍然被支持。</p>
-<h3 id="与客户端的交互功能"><a href="#与客户端的交互功能" class="headerlink" title="与客户端的交互功能"></a>与客户端的交互功能</h3><p>无论客户端请求是否成功，xinetd都会有提示告知连接状态。</p>
-<h3 id="Xinetd的缺点"><a href="#Xinetd的缺点" class="headerlink" title="Xinetd的缺点"></a>Xinetd的缺点</h3><p>当前，它最大的缺点是对RPC支持的不稳定性，但是可以启动protmap，使它与xinetd共存来解决这个问题。</p>
-<h3 id="使用xinetd启动守护进程"><a href="#使用xinetd启动守护进程" class="headerlink" title="使用xinetd启动守护进程"></a>使用xinetd启动守护进程</h3><p>原则上任何系统服务都可以使用xinetd，然而最适合的应该是那些常用的网络服务，同时，这个服务的请求数目和频繁程度不会太高。像DNS和Apache就不适合采用这种方式，而像FTP、Telnet、SSH等就适合使用xinetd模式，系统默认使用xinetd的服务可以分为如下几类。<br>① 标准Internet服务：telnet、ftp。<br>② 信息服务：finger、netstat、systat。<br>③ 邮件服务：imap、imaps、pop2、pop3、pops。<br>④ RPC服务：rquotad、rstatd、rusersd、sprayd、walld。<br>⑤ BSD服务：comsat、exec、login、ntalk、shell、talk。<br>⑥ 内部服务：chargen、daytime、echo、servers、services、time。<br>⑦ 安全服务：irc。<br>⑧ 其他服务：name、tftp、uucp。</p>
-<h3 id="解读xinet的配置文件-etc-services-etc-xinetd-conf和-etc-xinetd-d"><a href="#解读xinet的配置文件-etc-services-etc-xinetd-conf和-etc-xinetd-d" class="headerlink" title="解读xinet的配置文件/etc/services, /etc/xinetd.conf和/etc/xinetd.d/*"></a>解读xinet的配置文件/etc/services, /etc/xinetd.conf和/etc/xinetd.d/*</h3><p>0）/etc/services</p>
-<p>在/etc/services 中设置了xinetd下的service对应的端口，例如：</p>
-<p>$  cat /etc/services | grep rsync<br>rsync           873/tcp                         # rsync<br>rsync           873/udp                         # rsync</p>
-<p>1) /etc/xinetd.conf<br>xinetd的配置文件是/etc/xinetd.conf，但是它只包括几个默认值及/etc/xinetd.d目录中的配置文件。如果要启用或禁用某项xinetd服务，编辑位于/etc/xinetd.d目录中的配置文件。例如，disable属性被设为yes，表示该项服务已禁用；disable属性被设为no，表示该项服务已启用。/etc/xinetd.conf有许多选项，下面是RHEL 4.0的/etc/xinetd.conf。</p>
-<pre><code>Simple configuration file for xinetd
-Some defaults, and include /etc/xinetd.d/
-defaults
-{
-    instances            = 60
-        log_type             = SYSLOG authpriv
-       log_on_success       = HOST PID
-    log_on_failure       = HOST
-    cps                  = 25 30
-}
-includedir /etc/xinetd.d
-</code></pre><ul>
-<li>instances = 60：表示最大连接进程数为60个。</li>
-<li>log_type = SYSLOG authpriv：表示使用syslog进行服务登记。</li>
-<li>log_on_success= HOST PID：表示设置成功后记录客户机的IP地址的进程ID。</li>
-<li>log_on_failure = HOST：表示设置失败后记录客户机的IP地址。</li>
-<li>cps = 25 30：表示每秒25个入站连接，如果超过限制，则等待30秒。主要用于对付拒绝服务攻击。</li>
-<li>includedir /etc/xinetd.d：表示告诉xinetd要包含的文件或目录是/etc/xinetd.d。</li>
-</ul>
-<p>2) /etc/xinetd.d/*</p>
-<p>下面以/etc/xinetd.d/中的一个文件（rsync）为例。<br>    service rsync<br>    {<br>        disable = yes<br>           socket_type      = stream<br>        wait              = no<br>        user              = root<br>        server           = /usr/bin/rsync<br>        log_on_failure += USERID<br>    }</p>
-<p>下面说明每一行选项的含义。</p>
-<ul>
-<li>disable = yes：表示禁用这个服务。</li>
-<li>socket_type = stream：表示服务的数据包类型为stream。</li>
-<li>wait = no：表示不需等待，即服务将以多线程的方式运行。</li>
-<li>user = root：表示执行此服务进程的用户是root。</li>
-<li>server = /usr/bin/rsync：启动脚本的位置。</li>
-<li>log_on_failure += USERID：表示设置失败时，UID添加到系统登记表。</li>
-</ul>
-<h3 id="配置xinetd"><a href="#配置xinetd" class="headerlink" title="配置xinetd"></a>配置xinetd</h3><p>1) 格式<br>/etc/xinetd.conf中的每一项具有下列形式：<br>    service service-name<br>    {<br>        ……<br>    }</p>
-<p>其中service是必需的关键字，且属性表必须用大括号括起来。每一项都定义了由service-name定义的服务。</p>
-<p>service-name是任意的，但通常是标准网络服务名，也可增加其他非标准的服务，只要它们能通过网络请求激活，包括localhost自身发出的网络请求。有很多可以使用的属性，稍后将描述必需的属性和属性的使用规则。</p>
-<p>操作符可以是=、+=或-=。所有属性可以使用=，其作用是分配一个或多个值，某些属性可以使用+=或-=，其作用分别是将其值增加到某个现存的值表中，或将其值从现存值表中删除。</p>
-<p>2) 配置文件<br>相关的配置文件如下：<br>/etc/xinetd.conf<br>/etc/xinetd.d/*                                      //该目录下的所有文件<br>/etc/hosts.allow<br>/etc/hosts.deny</p>
-<p>3)/etc/xinetd.conf中的disabled与enabled<br>前者的参数是禁用的服务列表，后者的参数是启用的服务列表。他们的共同点是格式相同（属性名、服务名列表与服务中间用空格分开，例如disabled = in.tftpd in.rexecd），此外，它们都是作用于全局的。如果在disabled列表中被指定，那么无论包含在列表中的服务是否有配置文件和如何设置，都将被禁用；如果enabled列表被指定，那么只有列表中的服务才可启动，如果enabled没有被指定，那么disabled指定的服务之外的所有服务都可以启动。</p>
-<p>4) 注意问题<br>① 在重新配置的时候，下列的属性不能被改变：socket_type、wait、protocol、type；<br>② 如果only_from和no_access属性没有被指定（无论在服务项中直接指定还是通过默认项指定），那么对该服务的访问IP将没有限制；<br>③ 地址校验是针对IP地址而不是针对域名地址。</p>
-<p>6  xinetd防止拒绝服务攻击（Denial of Services）的原因<br>xinetd能有效地防止拒绝服务攻击（Denial of Services）的原因如下。</p>
-<p>1) 限制同时运行的进程数<br>通过设置instances选项设定同时运行的并发进程数：<br>instances＝20<br>当服务器被请求连接的进程数达到20个时，xinetd将停止接受多出部分的连接请求。直到请求连接数低于设定值为止。</p>
-<p>2) 限制一个IP地址的最大连接数<br>通过限制一个主机的最大连接数，从而防止某个主机独占某个服务。<br>per_source＝5<br>这里每个IP地址的连接数是5个。</p>
-<p>3) 限制日志文件大小，防止磁盘空间被填满<br>许多攻击者知道大多数服务需要写入日志。入侵者可以构造大量的错误信息并发送出来，服务器记录这些错误，可能就造成日志文件非常庞大，甚至会塞满硬盘。同时会让管理员面对大量的日志，而不能发现入侵者真正的入侵途径。因此，限制日志文件大小是防范拒绝服务攻击的一个方法。<br>log_type FILE.1 /var/log/myservice.log 8388608 15728640<br>这里设置的日志文件FILE.1临界值为8MB，到达此值时，syslog文件会出现告警，到达15MB，系统会停止所有使用这个日志系统的服务。</p>
-<p>4) 限制负载</p>
-<p>xinetd还可以使用限制负载的方法防范拒绝服务攻击。用一个浮点数作为负载系数，当负载达到这个数目的时候，该服务将暂停处理后续的连接。<br>max_load = 2.8<br>上面的设定表示当一项系统负载达到2.8时，所有服务将暂时中止，直到系统负载下降到设定值以下。<br>说明  要使用这个选项，编译时应加入“–with-loadavg”，xinetd将处理max-load配置选项，从而在系统负载过重时关闭某些服务进程，来实现防范某些拒绝服务攻击。</p>
-<p>5) 限制所有服务器数目（连接速率）<br>xinetd可以使用cps选项设定连接速率，下面的例子：<br>cps = 25 60<br>上面的设定表示服务器最多启动25个连接，如果达到这个数目将停止启动新服务60秒。在此期间不接受任何请求。</p>
-<p>6) 限制对硬件资源的利用<br>通过rlimit_as和rlimit_cpu两个选项可以有效地限制一种服务对内存、中央处理器的资源占用：<br>rlimit_as = 8M<br>rlimit_cpu=20<br>上面的设定表示对服务器硬件资源占用的限制，最多可用内存为8MB，CPU每秒处理20个进程。</p>
-<p>xinetd的一个重要功能是它能够控制从属服务可以利用的资源量，通过它的以上设置可以达到这个目的，有助于防止某个xinetd服务占用大量资源，从而导致“拒绝服务”情况的出现。 </p>
-<p>六 Service命令</p>
-<p>Linux的service命令就是查看和控制所有的独立启动的守护进程。 这个命令不是在所有的linux发行版本中都有。主要是在redhat系linux中。service此命令位于/sbin/service，用file命令查看此命令会发现它是一个脚本命令。分析脚本可知此命令的作用是去/etc/init.d目录下寻找相应的服务，进行开启和关闭等操作。例如service mysqld stop等价于/etc/init.d/mysqld stop。</p>
-<p>七 xinetd本身也是一个独立的守护进程，在/etc/init.d/xinetd。 </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/27/generic/" itemprop="url">
-                  泛型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-27T11:00:40+08:00" content="2016-05-27">
-              2016-05-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/generic/" itemprop="url" rel="index">
-                    <span itemprop="name">generic</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/27/generic/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/27/generic/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/18/ehcache/ehcache/" itemprop="url">
-                  ehcache是什么
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-18T15:43:39+08:00" content="2016-05-18">
-              2016-05-18
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/ehcache/" itemprop="url" rel="index">
-                    <span itemprop="name">ehcache</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/18/ehcache/ehcache/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/18/ehcache/ehcache/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>转自carlosfu大大的bigmemory系列文章:  <a href="http://carlosfu.iteye.com/blog/2237511" target="_blank" rel="external">http://carlosfu.iteye.com/blog/2237511</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2281,7 +1801,7 @@ includedir /etc/xinetd.d
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -2289,7 +1809,7 @@ includedir /etc/xinetd.d
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2298,7 +1818,7 @@ includedir /etc/xinetd.d
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -2309,6 +1829,26 @@ includedir /etc/xinetd.d
         
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
           
         </div>
 
@@ -2335,7 +1875,7 @@ includedir /etc/xinetd.d
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

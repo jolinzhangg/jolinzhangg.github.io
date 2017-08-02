@@ -1,0 +1,731 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="事务multi ... exec  watch 过期时间在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。 set key value expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败 ttl key    返回键的剩余时间，单位是秒。当键">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis进阶">
+<meta property="og:url" content="http://yoursite.com/2017/04/05/redis/getDeeper/index.html">
+<meta property="og:site_name" content="凤凰花开芙蓉畔">
+<meta property="og:description" content="事务multi ... exec  watch 过期时间在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。 set key value expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败 ttl key    返回键的剩余时间，单位是秒。当键">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2016-06-01T10:32:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis进阶">
+<meta name="twitter:description" content="事务multi ... exec  watch 过期时间在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。 set key value expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败 ttl key    返回键的剩余时间，单位是秒。当键">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> redis进阶 | 凤凰花开芙蓉畔 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">凤凰花开芙蓉畔</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redis进阶
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
+              2017-04-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/04/05/redis/getDeeper/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/redis/getDeeper/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>multi
+...
+exec
+
+watch
+</code></pre><h2 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h2><p>在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。</p>
+<pre><code>set key value
+expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败
+ttl key    返回键的剩余时间，单位是秒。当键不存在时，返回-2。-1表示永久键。
+persist key 取消过期时间，将键改为永久键。使用set和getset赋值的同时也可以清楚过期时间。
+
+对应的还有另外一组设置毫秒时间的
+pexpire
+pttl
+</code></pre><p>过期时间实现访问频率限制</p>
+<ol>
+<li>利用过期时间，每分钟设置一个key，incr到指定数量时，拒绝。过期后重新计数。</li>
+<li>用列表存储，每个新请求，判断列表是否到达最大长度，若未到达，直接加入；否则，与最早的时间比较，看时间间隔是否大于1分钟，若大于，将最早的时间删除，新时间插入；否则拒绝。</li>
+</ol>
+<p>过期时间实现缓存。限制redis占用的最大内存，不设置过期时间，而让redis通过一定的规则淘汰不需要的缓存键。修改maxmemory参数，设置maxmemory-policy。eg. allkeys-lru</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>127.0.0.1:6379&gt; sadd posts 2 6 12 26
+(integer) 4
+127.0.0.1:6379&gt; smember posts
+(error) ERR unknown command &apos;smember&apos;
+127.0.0.1:6379&gt; smembers posts
+1) &quot;2&quot;
+2) &quot;6&quot;
+3) &quot;12&quot;
+4) &quot;26&quot;
+127.0.0.1:6379&gt; hset post:2 time 1352619200
+(integer) 1
+127.0.0.1:6379&gt; hset post:6 time 1352619600
+(integer) 1
+127.0.0.1:6379&gt; hset post:12 time 1352610100
+(integer) 1
+127.0.0.1:6379&gt; hset post:26 time 1352612000
+(integer) 1
+127.0.0.1:6379&gt; sort posts
+1) &quot;2&quot;
+2) &quot;6&quot;
+3) &quot;12&quot;
+4) &quot;26&quot;
+## 这里by的感觉很像是表连接
+127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc
+1) &quot;6&quot;
+2) &quot;2&quot;
+3) &quot;26&quot;
+4) &quot;12&quot;
+</code></pre><p>通过sort命令的get参数，该参数不影响排序，作用是似的sort命令的返回结果不再是元素自身的值，而是get参数中指定的键值。</p>
+<pre><code>127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc get post:*-&gt;title
+1) &quot;66666&quot;
+2) &quot;windows 8&quot;
+3) &quot;262626&quot;
+4) &quot;121212&quot;
+## 一个sort也可以带有多个get参数（但by只能有一个）
+sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get #
+1) &quot;66666&quot;
+2) &quot;1352619600&quot;
+3) &quot;windows 8&quot;
+4) &quot;1352619200&quot;
+5) &quot;262626&quot;
+6) &quot;1352612000&quot;
+7) &quot;121212&quot;
+8) &quot;1352610100&quot;
+
+get # 会返回元素本身。
+</code></pre><p>store参数保存排序结果</p>
+<pre><code>sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get # store sort.result  
+(integer) 12   ## 保存的键类型是列表类型，返回值为结果个数
+127.0.0.1:6379&gt; lrange sort.result 0 -1
+ 1) &quot;66666&quot;
+ 2) &quot;1352619600&quot;
+ 3) &quot;6&quot;
+ 4) &quot;windows 8&quot;
+ 5) &quot;1352619200&quot;
+ 6) &quot;2&quot;
+ 7) &quot;262626&quot;
+ 8) &quot;1352612000&quot;
+ 9) &quot;26&quot;
+10) &quot;121212&quot;
+11) &quot;1352610100&quot;
+12) &quot;12&quot;
+</code></pre><p>sort对性能的影响<br>O(n+mlog(m))，n为待排序列表中元素个数，m为排序结果返回的个数。</p>
+<ol>
+<li>尽量减少待排序键中元素的数量（减少n）</li>
+<li>使用limit只获取需要的数据（减少m）</li>
+<li>尽量使用store参数缓存</li>
+</ol>
+<h2 id="消息通知"><a href="#消息通知" class="headerlink" title="消息通知"></a>消息通知</h2><p>订阅功能，将用户邮箱存储在集合中，当新增文章后，就向集合中的邮箱地址发送通知邮件。</p>
+<p>当页面需要进行如发送邮件、复杂数据运算等耗时较长的操作时会阻塞页面的渲染，为了避免用户等待太久，应该使用独立的线程来完成。</p>
+<p>松耦合，生产者和消费者无需知道彼此的实现细节。易于扩展，消费者可以有多个，分布在不同机器中，轻松降低单台服务器的负载。</p>
+<p>结合lpush和rpop，往列表左侧添加，右侧取出，模拟消息队列。同时redis提供brpop命令，当没有元素可以取出时，brpop命令将会阻塞，直到油新元素加入。</p>
+<pre><code>brpop key timeout
+其中time为超时时间，0表示不限制等待时间，即将一直等待下去。
+
+brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列表都有数据可以取出的时候，按从左到右的列表顺序
+</code></pre><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出，从简降低往返时延累计值。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag">#redis</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/05/java-memory/" rel="next" title="Java内存区域">
+                <i class="fa fa-chevron-left"></i> Java内存区域
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/05/elk/elk-start/" rel="prev" title="LogStash入门">
+                LogStash入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/04/05/redis/getDeeper/"
+           data-title="redis进阶" data-url="http://yoursite.com/2017/04/05/redis/getDeeper/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/image/avatar.jpg"
+               alt="Sunwind" />
+          <p class="site-author-name" itemprop="name">Sunwind</p>
+          <p class="site-description motion-element" itemprop="description">含英咀华，凤凰于飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">1.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#过期时间"><span class="nav-number">2.</span> <span class="nav-text">过期时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排序"><span class="nav-number">3.</span> <span class="nav-text">排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息通知"><span class="nav-number">4.</span> <span class="nav-text">消息通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#管道"><span class="nav-number">5.</span> <span class="nav-text">管道</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sunwind</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jolinzhangg"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

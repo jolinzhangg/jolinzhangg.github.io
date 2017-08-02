@@ -86,6 +86,7 @@
 <meta property="og:url" content="http://yoursite.com/page/3/index.html">
 <meta property="og:site_name" content="凤凰花开芙蓉畔">
 <meta property="og:description" content="含英咀华，凤凰于飞">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="凤凰花开芙蓉畔">
 <meta name="twitter:description" content="含英咀华，凤凰于飞">
@@ -239,6 +240,1149 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/14/juc/reentrantlock/" itemprop="url">
+                  ReentrantLock
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-14T15:00:00+08:00" content="2016-06-14">
+              2016-06-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/juc/" itemprop="url" rel="index">
+                    <span itemprop="name">juc</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/14/juc/reentrantlock/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/14/juc/reentrantlock/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>和Synchronized一样，ReentrantLock也是可重入的，可作为内置锁的替代物。</p>
+<p>与Synchronized相比较而言，ReentrantLock有以下优势：支持公平/非公平锁、支持可中断的锁、支持非阻塞的tryLock(可超时)、支持锁条件、可跨代码块使用(一个地方加锁，另一个地方解锁)，总之比Synchronized更加灵活。但也有缺点，比如锁需要显示解锁、无法充分享用JVM内部性能提升带来的好处等等。</p>
+<pre><code>public interface Lock {
+    /**
+     * 获取锁，若无法获取到，则当前线程被阻塞。直到获取成功为止。
+     */
+    void lock();
+    /**
+     * 获取锁，若无法获取到，则当前线程被阻塞。直到发生以下两种情况：
+     * 获取成功；或者
+     * 其他线程中断当前线程 
+     */
+    void lockInterruptibly() throws InterruptedException;
+    /**
+     * 如果当前锁可用，获取成功返回true；否则返回false
+     */
+    boolean tryLock();
+    /**
+     * 与lockInterruptibly相似，还有第三种情况，即达到超时时间。
+     * 如果当前锁可用，获取成功返回true；否则返回false
+     */
+    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+    /**
+     * 释放锁
+     */
+    void unlock();
+    /**
+     * 返回当前锁相关的条件。在条件等待之前，锁必须被当前线程占有，await方法会在等待前释放锁，在结束等待前重新获取锁
+     */
+    Condition newCondition();
+}
+</code></pre><p>基于AQS机制构建的同步类，内部都会使用相关类继承AQS。ReentrantLock也不例外。</p>
+<pre><code>// 内部协调机制对象
+private final Sync sync;
+// 抽象类继承AQS，具有公平和非公平版本的子类。利用AQS的state来表示锁持有(重入)的次数。. 
+abstract static class Sync extends AbstractQueuedSynchronizer 
+</code></pre><p>非公平锁子类，新来的类之间尝试获取锁，无论等待队列中是否有线程阻塞等待。</p>
+<pre><code>final static class NonfairSync extends Sync
+</code></pre><p>公平锁子类，只有在递归(重入)或者同步队列中没有其他线程或者当前线程是等待队列中的第一个线程时才准许访问</p>
+<pre><code>final static class FairSync extends Sync 
+</code></pre><p>非公平版的锁-加锁操作</p>
+<ol>
+<li>当前线程首先会无条件的执行一个CAS操作来获取锁，如果CAS操作成功，获取锁成功。</li>
+<li>如果第1步没成功，当前会检查锁是否被其他线程持有，也就是锁是否可用。</li>
+<li>如果没有其他线程持有锁，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
+<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。</li>
+<li>根据AQS的分析，上述2、3、4步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
+</ol>
+<p>公平版的锁-加锁操作</p>
+<ol>
+<li>当前线程首先会检查锁是否被其他线程持有，并且当前同步等待队列里有没有其他线程在等待。</li>
+<li>如果没有其他线程持有锁，且同步等待队列里没有其他线程，会以CAS的方式尝试获取锁，如果CAS操作成功，获取锁成功。</li>
+<li>如果有其他线程持有锁，会判断一下持有锁的线程是否为当前线程，如果是当前线程，重入次数+1，获取锁成功。nonfairTryAcquire方法</li>
+<li>根据AQS的分析，上述1、2、3步会执行多次，如果最终获取锁失败，当前线程会被阻塞，等待其他线程执行解锁操作将其唤醒。</li>
+</ol>
+<p>非公平版和公平版锁的解锁操作一样</p>
+<ol>
+<li>当前线程首先将锁重入次数减1(AQS的state)，如果减1后结果为0，将当前同步器的线程信息置空，并唤醒同步等待队列中队头的等待线程。</li>
+<li>如果第1步中，重入次数减1后结果不为0(说明当前线程还持有当前锁)，方法结束。</li>
+</ol>
+<p>ReentrantLock实现，整体就是sync的一个代理。</p>
+<pre><code>public ReentrantLock() {
+    sync = new NonfairSync();
+}
+public ReentrantLock(boolean fair) {
+    sync = (fair)? new FairSync() : new NonfairSync();
+}
+
+public void lock() {
+    sync.lock();
+}
+
+public void lockInterruptibly() throws InterruptedException {
+    sync.acquireInterruptibly(1);
+}
+
+public boolean tryLock() {
+    return sync.nonfairTryAcquire(1);
+}
+
+public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
+    return sync.tryAcquireNanos(1, unit.toNanos(timeout));
+}
+
+public void unlock() {
+    sync.release(1);
+}
+public Condition newCondition() {
+    return sync.newCondition();
+}
+</code></pre><p>所有try方法，相当于非阻塞的方式获取锁。</p>
+<p>synchronized获得的内部锁存在一定的局限</p>
+<ol>
+<li><p>不能中断一个正在试图获得锁的线程 </p>
+</li>
+<li><p>试图获得锁时不能像trylock那样设定超时时间 </p>
+</li>
+<li><p>每个锁只有单一的条件，不像condition那样可以设置多个</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/05/juc/semaphore/" itemprop="url">
+                  Semaphore
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-05T15:00:00+08:00" content="2016-06-05">
+              2016-06-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/juc/" itemprop="url" rel="index">
+                    <span itemprop="name">juc</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/05/juc/semaphore/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/05/juc/semaphore/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>建立一个包含n个许可的信号量(内部的计数为n)，当一个线程从信号量中请求一个许可(调用acquire())，如果信号量中有许可的话(n大于0)，那么线程成功获取许可，信号量内部许可数量减1(n减1)；如果信号量中没有许可(n等于0)，那么当前线程阻塞。</li>
+<li>当一个线程归还许可(调用release()，内部计数加1)，其他在acquire()方法处等待的线程便有可能被唤醒来竞争许可。</li>
+<li>公平模式下，如果有线程在acquire()处等待，新来的请求线程会排在这些等待线程后面；非公平模式下，新来的请求线程可能会插队，比在acquire()处等待的线程提前申请到许可。</li>
+</ol>
+<p>代码分析</p>
+<pre><code>/*
+ * 基于计数信号量，可用来管理一组许可
+ */
+public class Semaphore implements java.io.Serializable {
+    private static final long serialVersionUID = -3222578661600680210L;
+    /** All mechanics via AbstractQueuedSynchronizer subclass */
+    private final Sync sync;
+
+    /**
+     * 通过AQS的state表示许可的数量，包含公平和非公平的实现
+     */
+    abstract static class Sync extends AbstractQueuedSynchronizer {
+        private static final long serialVersionUID = 1192457210091910933L;
+
+        Sync(int permits) {
+            setState(permits);
+        }
+
+        final int getPermits() {
+            return getState();
+        }
+        // 共享模式非公平的请求
+        final int nonfairTryAcquireShared(int acquires) {
+            for (;;) {
+                // 获取当前许可数量
+                int available = getState();
+                // 计算申请后剩余数量
+                int remaining = available - acquires;
+                /*
+                 * 如果申请后剩余&gt;=0，则通过CAS修改，修改成功后返回剩余数量；
+                 * 如果申请后剩余&lt;0，则直接返回数量
+                 */
+                if (remaining &lt; 0 ||
+                    compareAndSetState(available, remaining))
+                    return remaining;
+            }
+        }
+        /*
+         * 释放所，CAS，有int越界判断
+         */
+        protected final boolean tryReleaseShared(int releases) {
+            for (;;) {
+                int current = getState();
+                int next = current + releases;
+                if (next &lt; current) // overflow
+                    throw new Error(&quot;Maximum permit count exceeded&quot;);
+                if (compareAndSetState(current, next))
+                    return true;
+            }
+        }
+        /*
+         * 相当于release的逆操作
+         */
+        final void reducePermits(int reductions) {
+            for (;;) {
+                int current = getState();
+                int next = current - reductions;
+                if (next &gt; current) // underflow
+                    throw new Error(&quot;Permit count underflow&quot;);
+                if (compareAndSetState(current, next))
+                    return;
+            }
+        }
+
+        /*
+         * 将count置为0并返回
+         */
+        final int drainPermits() {
+            for (;;) {
+                int current = getState();
+                if (current == 0 || compareAndSetState(current, 0))
+                    return current;
+            }
+        }
+    }
+
+    /**
+     * 非公平
+     */
+    static final class NonfairSync extends Sync {
+        private static final long serialVersionUID = -2694183684443567898L;
+
+        NonfairSync(int permits) {
+            super(permits);
+        }
+
+        protected int tryAcquireShared(int acquires) {
+            return nonfairTryAcquireShared(acquires);
+        }
+    }
+
+    /**
+     * 公平
+     */
+    static final class FairSync extends Sync {
+        private static final long serialVersionUID = 2014338818796000944L;
+
+        FairSync(int permits) {
+            super(permits);
+        }
+
+        protected int tryAcquireShared(int acquires) {
+            for (;;) {
+                // 公平版的请求，需要先检查同步队列里有没有比当前线程更早的线程在等待。  
+                if (hasQueuedPredecessors())
+                    return -1;
+                int available = getState();
+                int remaining = available - acquires;
+                if (remaining &lt; 0 ||
+                    compareAndSetState(available, remaining))
+                    return remaining;
+            }
+        }
+    }
+
+    public Semaphore(int permits) {
+        sync = new NonfairSync(permits);
+    }
+
+    public Semaphore(int permits, boolean fair) {
+        sync = fair ? new FairSync(permits) : new NonfairSync(permits);
+    }
+
+    /**
+     * Acquires a permit from this semaphore, blocking until one is
+     * available, or the thread is {@linkplain Thread#interrupt interrupted}.
+     *
+     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
+     * reducing the number of available permits by one.
+     *
+     * &lt;p&gt;If no permit is available then the current thread becomes
+     * disabled for thread scheduling purposes and lies dormant until
+     * one of two things happens:
+     * &lt;ul&gt;
+     * &lt;li&gt;Some other thread invokes the {@link #release} method for this
+     * semaphore and the current thread is next to be assigned a permit; or
+     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}
+     * the current thread.
+     * &lt;/ul&gt;
+     *
+     * &lt;p&gt;If the current thread:
+     * &lt;ul&gt;
+     * &lt;li&gt;has its interrupted status set on entry to this method; or
+     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting
+     * for a permit,
+     * &lt;/ul&gt;
+     * then {@link InterruptedException} is thrown and the current thread&apos;s
+     * interrupted status is cleared.
+     *
+     * @throws InterruptedException if the current thread is interrupted
+     */
+    public void acquire() throws InterruptedException {
+        sync.acquireSharedInterruptibly(1);
+    }
+
+    /**
+     * Acquires a permit from this semaphore, blocking until one is
+     * available.
+     *
+     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
+     * reducing the number of available permits by one.
+     *
+     * &lt;p&gt;If no permit is available then the current thread becomes
+     * disabled for thread scheduling purposes and lies dormant until
+     * some other thread invokes the {@link #release} method for this
+     * semaphore and the current thread is next to be assigned a permit.
+     *
+     * &lt;p&gt;If the current thread is {@linkplain Thread#interrupt interrupted}
+     * while waiting for a permit then it will continue to wait, but the
+     * time at which the thread is assigned a permit may change compared to
+     * the time it would have received the permit had no interruption
+     * occurred.  When the thread does return from this method its interrupt
+     * status will be set.
+     */
+    public void acquireUninterruptibly() {
+        sync.acquireShared(1);
+    }
+
+    /**
+     * Acquires a permit from this semaphore, only if one is available at the
+     * time of invocation.
+     *
+     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
+     * with the value {@code true},
+     * reducing the number of available permits by one.
+     *
+     * &lt;p&gt;If no permit is available then this method will return
+     * immediately with the value {@code false}.
+     *
+     * &lt;p&gt;Even when this semaphore has been set to use a
+     * fair ordering policy, a call to {@code tryAcquire()} &lt;em&gt;will&lt;/em&gt;
+     * immediately acquire a permit if one is available, whether or not
+     * other threads are currently waiting.
+     * This &amp;quot;barging&amp;quot; behavior can be useful in certain
+     * circumstances, even though it breaks fairness. If you want to honor
+     * the fairness setting, then use
+     * {@link #tryAcquire(long, TimeUnit) tryAcquire(0, TimeUnit.SECONDS) }
+     * which is almost equivalent (it also detects interruption).
+     *
+     * @return {@code true} if a permit was acquired and {@code false}
+     *         otherwise
+     */
+    public boolean tryAcquire() {
+        return sync.nonfairTryAcquireShared(1) &gt;= 0;
+    }
+
+    /**
+     * Acquires a permit from this semaphore, if one becomes available
+     * within the given waiting time and the current thread has not
+     * been {@linkplain Thread#interrupt interrupted}.
+     *
+     * &lt;p&gt;Acquires a permit, if one is available and returns immediately,
+     * with the value {@code true},
+     * reducing the number of available permits by one.
+     *
+     * &lt;p&gt;If no permit is available then the current thread becomes
+     * disabled for thread scheduling purposes and lies dormant until
+     * one of three things happens:
+     * &lt;ul&gt;
+     * &lt;li&gt;Some other thread invokes the {@link #release} method for this
+     * semaphore and the current thread is next to be assigned a permit; or
+     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}
+     * the current thread; or
+     * &lt;li&gt;The specified waiting time elapses.
+     * &lt;/ul&gt;
+     *
+     * &lt;p&gt;If a permit is acquired then the value {@code true} is returned.
+     *
+     * &lt;p&gt;If the current thread:
+     * &lt;ul&gt;
+     * &lt;li&gt;has its interrupted status set on entry to this method; or
+     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting
+     * to acquire a permit,
+     * &lt;/ul&gt;
+     * then {@link InterruptedException} is thrown and the current thread&apos;s
+     * interrupted status is cleared.
+     *
+     * &lt;p&gt;If the specified waiting time elapses then the value {@code false}
+     * is returned.  If the time is less than or equal to zero, the method
+     * will not wait at all.
+     *
+     * @param timeout the maximum time to wait for a permit
+     * @param unit the time unit of the {@code timeout} argument
+     * @return {@code true} if a permit was acquired and {@code false}
+     *         if the waiting time elapsed before a permit was acquired
+     * @throws InterruptedException if the current thread is interrupted
+     */
+    public boolean tryAcquire(long timeout, TimeUnit unit)
+        throws InterruptedException {
+        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
+    }
+
+    /**
+     * Releases a permit, returning it to the semaphore.
+     *
+     * &lt;p&gt;Releases a permit, increasing the number of available permits by
+     * one.  If any threads are trying to acquire a permit, then one is
+     * selected and given the permit that was just released.  That thread
+     * is (re)enabled for thread scheduling purposes.
+     *
+     * &lt;p&gt;There is no requirement that a thread that releases a permit must
+     * have acquired that permit by calling {@link #acquire}.
+     * Correct usage of a semaphore is established by programming convention
+     * in the application.
+     */
+    public void release() {
+        sync.releaseShared(1);
+    }
+
+    /**
+     * Acquires the given number of permits from this semaphore,
+     * blocking until all are available,
+     * or the thread is {@linkplain Thread#interrupt interrupted}.
+     */
+    public void acquire(int permits) throws InterruptedException {
+        if (permits &lt; 0) throw new IllegalArgumentException();
+        sync.acquireSharedInterruptibly(permits);
+    }
+
+    public void acquireUninterruptibly(int permits) {
+        if (permits &lt; 0) throw new IllegalArgumentException();
+        sync.acquireShared(permits);
+    }
+
+    public boolean tryAcquire(int permits) {
+        if (permits &lt; 0) throw new IllegalArgumentException();
+        return sync.nonfairTryAcquireShared(permits) &gt;= 0;
+    }
+
+    public boolean tryAcquire(int permits, long timeout, TimeUnit unit)
+        throws InterruptedException {
+        if (permits &lt; 0) throw new IllegalArgumentException();
+        return sync.tryAcquireSharedNanos(permits, unit.toNanos(timeout));
+    }
+
+    public void release(int permits) {
+        if (permits &lt; 0) throw new IllegalArgumentException();
+        sync.releaseShared(permits);
+    }
+
+    public int availablePermits() {
+        return sync.getPermits();
+    }
+
+    public int drainPermits() {
+        return sync.drainPermits();
+    }
+
+    protected void reducePermits(int reduction) {
+        if (reduction &lt; 0) throw new IllegalArgumentException();
+        sync.reducePermits(reduction);
+    }
+
+    public boolean isFair() {
+        return sync instanceof FairSync;
+    }
+
+    /**
+     * Queries whether any threads are waiting to acquire. Note that
+     * because cancellations may occur at any time, a {@code true}
+     * return does not guarantee that any other thread will ever
+     * acquire.  This method is designed primarily for use in
+     * monitoring of the system state.
+     *
+     * @return {@code true} if there may be other threads waiting to
+     *         acquire the lock
+     */
+    public final boolean hasQueuedThreads() {
+        return sync.hasQueuedThreads();
+    }
+
+    public final int getQueueLength() {
+        return sync.getQueueLength();
+    }
+
+    protected Collection&lt;Thread&gt; getQueuedThreads() {
+        return sync.getQueuedThreads();
+    }
+
+    public String toString() {
+        return super.toString() + &quot;[Permits = &quot; + sync.getPermits() + &quot;]&quot;;
+    }
+}
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/30/linux/xinetd/" itemprop="url">
+                  xinetd
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-30T15:00:00+08:00" content="2016-05-30">
+              2016-05-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/30/linux/xinetd/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/xinetd/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>抄一篇关于xinetd的，mark下。</p>
+<blockquote>
+<p><a href="http://www.cnblogs.com/itech/archive/2010/12/27/1914846.html" target="_blank" rel="external">http://www.cnblogs.com/itech/archive/2010/12/27/1914846.html</a></p>
+</blockquote>
+<h2 id="守护进程分类"><a href="#守护进程分类" class="headerlink" title="守护进程分类"></a>守护进程分类</h2><p><strong>独立启动（stand_alone)</strong>:该类进程启动后就常驻内存，所以会一直占用系统资源。其最大的优点就是它会一直启动，当外界有要求时相应速度较快，像httpd等进程；</p>
+<p><strong>超级守护进程</strong>：系统启动时由一个统一的守护进程xinet来负责管理一些进程，当相应请求到来时需要通过xinet的转接才可以唤醒被xinet管理的进程。这种进程的优点时最初只有xinet这一守护进程占有系统资源，其他的内部服务并不一直占有系统资源，只有数据包到来时才会被xinet管理员来唤醒。并且我们还可以通过xinet来对它所管理的进程设置一些访问权限，相当于多了一层管理机制。</p>
+<h2 id="守护进程管理工具"><a href="#守护进程管理工具" class="headerlink" title="守护进程管理工具"></a>守护进程管理工具</h2><p>redhat－config－services、ntsysv、chkconfig</p>
+<p>service iptables status    #查看相应服务的状态，用service需要服务在/etc/init.d/目录中存在</p>
+<p>netstat -tulp    #会列出相应的服务及其监听的端口号等，若加n参数会列出端口号</p>
+<p>chkconfig –list |grep 服务名 #会列出现在当前服务的各种状态，包括在不同运行级别下的启情况，分为上线两部分，上部分是独立启动的服务，你会看到xinetd也在，下面部分是有inet管理的超级守护进程，没有运行级别可分的。 </p>
+<h2 id="xinetd"><a href="#xinetd" class="headerlink" title="xinetd"></a>xinetd</h2><p>从守护进程的概念可以看出，对于系统所要通过的每一种服务，都必须运行一个监听某个端口连接所发生的守护进程，这通常意味着资源浪费。为了解决这个问题，Linux引进了”网络守护进程服务程序”的概念。Red Hat Linux 9.0使用的网络守护进程是xinted（eXtended InterNET daemon）。xinetd能够同时监听多个指定的端口，在接受用户请求时，它能够根据用户请求的端口的不同，启动不同的网络服务进程来处理这些用户请求。可以把xinetd看做一个管理启动服务的管理服务器，它决定把一个客户请求交给哪个程序处理，然后启动相应的守护进程。xinetd无时不在运行并监听它所管理的所有端口上的服务。当某个要连接它管理的某项服务的请求到达时，xinetd就会为该服务启动合适的服务器。</p>
+<p>xinetd和stand-alone工作模式相比，系统不想要每一个网络服务进程都监听其服务端口，运行单个xinetd就可以同时监听所有服务端口，这样就降低了系统开销，保护系统资源。但是对于访问量大、经常出现并发访问的情况，xinetd则要频繁启动相应的网络服务进程，反而会导致系统性能下降。查看系统为Linux服务提供哪种工作模式，可以在Linux命令行中使用pstree命令，就能看到两种不同模式启动的网络服务。一般来说系统中一些负载高的服务，Sendmail、Apache服务是单独启动的；而其他服务类型都可以使用xinetd超级服务器管理。</p>
+<h3 id="什么是xinetd"><a href="#什么是xinetd" class="headerlink" title="什么是xinetd"></a>什么是xinetd</h3><p>xinetd即extended internet daemon，xinetd是新一代的网络守护进程服务程序，又叫超级Internet服务器。经常用来管理多种轻量级Internet服务。xinetd提供类似于inetd+tcp_wrapper的功能，但是更加强大和安全。</p>
+<h3 id="xinetd的特色"><a href="#xinetd的特色" class="headerlink" title="xinetd的特色"></a>xinetd的特色</h3><h4 id="强大的存取控制功能"><a href="#强大的存取控制功能" class="headerlink" title="强大的存取控制功能"></a>强大的存取控制功能</h4><ul>
+<li>内置对恶意用户和善意用户的差别待遇设定。</li>
+<li>使用libwrap支持，其效能更甚于tcpd。</li>
+<li>可以限制连接的等级，基于主机的连接数和基于服务的连接数。</li>
+<li>设置特定的连接时间。</li>
+<li>将某个服务设置到特定的主机以提供服务。</li>
+</ul>
+<h4 id="有效防止DoS攻击"><a href="#有效防止DoS攻击" class="headerlink" title="有效防止DoS攻击"></a>有效防止DoS攻击</h4><ul>
+<li>可以限制连接的等级。</li>
+<li>可以限制一个主机的最大连接数，从而防止某个主机独占某个服务。</li>
+<li>可以限制日志文件的大小，防止磁盘空间被填满。</li>
+</ul>
+<h4 id="强大的日志功能"><a href="#强大的日志功能" class="headerlink" title="强大的日志功能"></a>强大的日志功能</h4><ul>
+<li>可以为每一个服务就syslog设定日志等级。</li>
+<li>如果不使用syslog，也可以为每个服务建立日志文件。</li>
+<li>可以记录请求的起止时间以决定对方的访问时间。</li>
+<li>可以记录试图非法访问的请求。</li>
+</ul>
+<h4 id="转向功能"><a href="#转向功能" class="headerlink" title="转向功能"></a>转向功能</h4><p>可以将客户端的请求转发到另一台主机去处理。</p>
+<h4 id="支持IPv6"><a href="#支持IPv6" class="headerlink" title="支持IPv6"></a>支持IPv6</h4><p>xinetd自xinetd 2.1.8.8pre*起的版本就支持IPv6，可以通过在./configure脚本中使用with-inet6 capability选项来完成。注意，要使这个生效，核心和网络必须支持IPv6。当然IPv4仍然被支持。</p>
+<h3 id="与客户端的交互功能"><a href="#与客户端的交互功能" class="headerlink" title="与客户端的交互功能"></a>与客户端的交互功能</h3><p>无论客户端请求是否成功，xinetd都会有提示告知连接状态。</p>
+<h3 id="Xinetd的缺点"><a href="#Xinetd的缺点" class="headerlink" title="Xinetd的缺点"></a>Xinetd的缺点</h3><p>当前，它最大的缺点是对RPC支持的不稳定性，但是可以启动protmap，使它与xinetd共存来解决这个问题。</p>
+<h3 id="使用xinetd启动守护进程"><a href="#使用xinetd启动守护进程" class="headerlink" title="使用xinetd启动守护进程"></a>使用xinetd启动守护进程</h3><p>原则上任何系统服务都可以使用xinetd，然而最适合的应该是那些常用的网络服务，同时，这个服务的请求数目和频繁程度不会太高。像DNS和Apache就不适合采用这种方式，而像FTP、Telnet、SSH等就适合使用xinetd模式，系统默认使用xinetd的服务可以分为如下几类。<br>① 标准Internet服务：telnet、ftp。<br>② 信息服务：finger、netstat、systat。<br>③ 邮件服务：imap、imaps、pop2、pop3、pops。<br>④ RPC服务：rquotad、rstatd、rusersd、sprayd、walld。<br>⑤ BSD服务：comsat、exec、login、ntalk、shell、talk。<br>⑥ 内部服务：chargen、daytime、echo、servers、services、time。<br>⑦ 安全服务：irc。<br>⑧ 其他服务：name、tftp、uucp。</p>
+<h3 id="解读xinet的配置文件-etc-services-etc-xinetd-conf和-etc-xinetd-d"><a href="#解读xinet的配置文件-etc-services-etc-xinetd-conf和-etc-xinetd-d" class="headerlink" title="解读xinet的配置文件/etc/services, /etc/xinetd.conf和/etc/xinetd.d/*"></a>解读xinet的配置文件/etc/services, /etc/xinetd.conf和/etc/xinetd.d/*</h3><p>0）/etc/services</p>
+<p>在/etc/services 中设置了xinetd下的service对应的端口，例如：</p>
+<p>$  cat /etc/services | grep rsync<br>rsync           873/tcp                         # rsync<br>rsync           873/udp                         # rsync</p>
+<p>1) /etc/xinetd.conf<br>xinetd的配置文件是/etc/xinetd.conf，但是它只包括几个默认值及/etc/xinetd.d目录中的配置文件。如果要启用或禁用某项xinetd服务，编辑位于/etc/xinetd.d目录中的配置文件。例如，disable属性被设为yes，表示该项服务已禁用；disable属性被设为no，表示该项服务已启用。/etc/xinetd.conf有许多选项，下面是RHEL 4.0的/etc/xinetd.conf。</p>
+<pre><code>Simple configuration file for xinetd
+Some defaults, and include /etc/xinetd.d/
+defaults
+{
+    instances            = 60
+        log_type             = SYSLOG authpriv
+       log_on_success       = HOST PID
+    log_on_failure       = HOST
+    cps                  = 25 30
+}
+includedir /etc/xinetd.d
+</code></pre><ul>
+<li>instances = 60：表示最大连接进程数为60个。</li>
+<li>log_type = SYSLOG authpriv：表示使用syslog进行服务登记。</li>
+<li>log_on_success= HOST PID：表示设置成功后记录客户机的IP地址的进程ID。</li>
+<li>log_on_failure = HOST：表示设置失败后记录客户机的IP地址。</li>
+<li>cps = 25 30：表示每秒25个入站连接，如果超过限制，则等待30秒。主要用于对付拒绝服务攻击。</li>
+<li>includedir /etc/xinetd.d：表示告诉xinetd要包含的文件或目录是/etc/xinetd.d。</li>
+</ul>
+<p>2) /etc/xinetd.d/*</p>
+<p>下面以/etc/xinetd.d/中的一个文件（rsync）为例。<br>    service rsync<br>    {<br>        disable = yes<br>           socket_type      = stream<br>        wait              = no<br>        user              = root<br>        server           = /usr/bin/rsync<br>        log_on_failure += USERID<br>    }</p>
+<p>下面说明每一行选项的含义。</p>
+<ul>
+<li>disable = yes：表示禁用这个服务。</li>
+<li>socket_type = stream：表示服务的数据包类型为stream。</li>
+<li>wait = no：表示不需等待，即服务将以多线程的方式运行。</li>
+<li>user = root：表示执行此服务进程的用户是root。</li>
+<li>server = /usr/bin/rsync：启动脚本的位置。</li>
+<li>log_on_failure += USERID：表示设置失败时，UID添加到系统登记表。</li>
+</ul>
+<h3 id="配置xinetd"><a href="#配置xinetd" class="headerlink" title="配置xinetd"></a>配置xinetd</h3><p>1) 格式<br>/etc/xinetd.conf中的每一项具有下列形式：<br>    service service-name<br>    {<br>        ……<br>    }</p>
+<p>其中service是必需的关键字，且属性表必须用大括号括起来。每一项都定义了由service-name定义的服务。</p>
+<p>service-name是任意的，但通常是标准网络服务名，也可增加其他非标准的服务，只要它们能通过网络请求激活，包括localhost自身发出的网络请求。有很多可以使用的属性，稍后将描述必需的属性和属性的使用规则。</p>
+<p>操作符可以是=、+=或-=。所有属性可以使用=，其作用是分配一个或多个值，某些属性可以使用+=或-=，其作用分别是将其值增加到某个现存的值表中，或将其值从现存值表中删除。</p>
+<p>2) 配置文件<br>相关的配置文件如下：<br>/etc/xinetd.conf<br>/etc/xinetd.d/*                                      //该目录下的所有文件<br>/etc/hosts.allow<br>/etc/hosts.deny</p>
+<p>3)/etc/xinetd.conf中的disabled与enabled<br>前者的参数是禁用的服务列表，后者的参数是启用的服务列表。他们的共同点是格式相同（属性名、服务名列表与服务中间用空格分开，例如disabled = in.tftpd in.rexecd），此外，它们都是作用于全局的。如果在disabled列表中被指定，那么无论包含在列表中的服务是否有配置文件和如何设置，都将被禁用；如果enabled列表被指定，那么只有列表中的服务才可启动，如果enabled没有被指定，那么disabled指定的服务之外的所有服务都可以启动。</p>
+<p>4) 注意问题<br>① 在重新配置的时候，下列的属性不能被改变：socket_type、wait、protocol、type；<br>② 如果only_from和no_access属性没有被指定（无论在服务项中直接指定还是通过默认项指定），那么对该服务的访问IP将没有限制；<br>③ 地址校验是针对IP地址而不是针对域名地址。</p>
+<p>6  xinetd防止拒绝服务攻击（Denial of Services）的原因<br>xinetd能有效地防止拒绝服务攻击（Denial of Services）的原因如下。</p>
+<p>1) 限制同时运行的进程数<br>通过设置instances选项设定同时运行的并发进程数：<br>instances＝20<br>当服务器被请求连接的进程数达到20个时，xinetd将停止接受多出部分的连接请求。直到请求连接数低于设定值为止。</p>
+<p>2) 限制一个IP地址的最大连接数<br>通过限制一个主机的最大连接数，从而防止某个主机独占某个服务。<br>per_source＝5<br>这里每个IP地址的连接数是5个。</p>
+<p>3) 限制日志文件大小，防止磁盘空间被填满<br>许多攻击者知道大多数服务需要写入日志。入侵者可以构造大量的错误信息并发送出来，服务器记录这些错误，可能就造成日志文件非常庞大，甚至会塞满硬盘。同时会让管理员面对大量的日志，而不能发现入侵者真正的入侵途径。因此，限制日志文件大小是防范拒绝服务攻击的一个方法。<br>log_type FILE.1 /var/log/myservice.log 8388608 15728640<br>这里设置的日志文件FILE.1临界值为8MB，到达此值时，syslog文件会出现告警，到达15MB，系统会停止所有使用这个日志系统的服务。</p>
+<p>4) 限制负载</p>
+<p>xinetd还可以使用限制负载的方法防范拒绝服务攻击。用一个浮点数作为负载系数，当负载达到这个数目的时候，该服务将暂停处理后续的连接。<br>max_load = 2.8<br>上面的设定表示当一项系统负载达到2.8时，所有服务将暂时中止，直到系统负载下降到设定值以下。<br>说明  要使用这个选项，编译时应加入“–with-loadavg”，xinetd将处理max-load配置选项，从而在系统负载过重时关闭某些服务进程，来实现防范某些拒绝服务攻击。</p>
+<p>5) 限制所有服务器数目（连接速率）<br>xinetd可以使用cps选项设定连接速率，下面的例子：<br>cps = 25 60<br>上面的设定表示服务器最多启动25个连接，如果达到这个数目将停止启动新服务60秒。在此期间不接受任何请求。</p>
+<p>6) 限制对硬件资源的利用<br>通过rlimit_as和rlimit_cpu两个选项可以有效地限制一种服务对内存、中央处理器的资源占用：<br>rlimit_as = 8M<br>rlimit_cpu=20<br>上面的设定表示对服务器硬件资源占用的限制，最多可用内存为8MB，CPU每秒处理20个进程。</p>
+<p>xinetd的一个重要功能是它能够控制从属服务可以利用的资源量，通过它的以上设置可以达到这个目的，有助于防止某个xinetd服务占用大量资源，从而导致“拒绝服务”情况的出现。 </p>
+<p>六 Service命令</p>
+<p>Linux的service命令就是查看和控制所有的独立启动的守护进程。 这个命令不是在所有的linux发行版本中都有。主要是在redhat系linux中。service此命令位于/sbin/service，用file命令查看此命令会发现它是一个脚本命令。分析脚本可知此命令的作用是去/etc/init.d目录下寻找相应的服务，进行开启和关闭等操作。例如service mysqld stop等价于/etc/init.d/mysqld stop。</p>
+<p>七 xinetd本身也是一个独立的守护进程，在/etc/init.d/xinetd。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/30/linux/管理命令汇总/" itemprop="url">
+                  linux管理维护命令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-30T15:00:00+08:00" content="2016-05-30">
+              2016-05-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/30/linux/管理命令汇总/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/管理命令汇总/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h3><p>nc localhost 20000 与 telnet localhost 20000相同</p>
+<p>激活一个20000端口来监听连接</p>
+<pre><code>nc -l localhost 20000 &amp;
+netstat -tlunp | grep nc
+nc localhost 20000
+</code></pre><p>这里localhost为只开启本机测试，如果想通过其他机器连接，可以使用ip或域名。</p>
+<p>linux命令中的&amp;，强制命令在后台执行。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/18/ehcache/ehcache/" itemprop="url">
+                  ehcache是什么
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-18T15:00:00+08:00" content="2016-05-18">
+              2016-05-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/ehcache/" itemprop="url" rel="index">
+                    <span itemprop="name">ehcache</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/18/ehcache/ehcache/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/18/ehcache/ehcache/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>转自carlosfu大大的bigmemory系列文章:  <a href="http://carlosfu.iteye.com/blog/2237511" target="_blank" rel="external">http://carlosfu.iteye.com/blog/2237511</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/17/dubbo-getting-started/" itemprop="url">
                   duboo入门
                 </a>
@@ -253,7 +1397,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-17T10:15:51+08:00" content="2016-05-17">
+            <time itemprop="dateCreated" datetime="2016-05-17T15:00:00+08:00" content="2016-05-17">
               2016-05-17
             </time>
           </span>
@@ -379,135 +1523,6 @@ Container: 服务运行容器。
             
               
                 
-                <a class="post-title-link" href="/2016/05/16/java-memory/" itemprop="url">
-                  Java内存区域
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-16T16:55:27+08:00" content="2016-05-16">
-              2016-05-16
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/16/java-memory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/16/java-memory/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>当前线程执行字节码的行号指示器。在虚拟机的概念模型里，通过这个行号指示下一条要执行的指令，分支、循环、跳转、异常处理、线程恢复等。线程独立。当执行java方法的时候，指示的是虚拟机字节码指令的地址；执行native方法是，这个值为空。</p>
-<p>唯一一个没有在虚拟机规范中规定任何OutOfMemoryError的区域。</p>
-<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>线程私有。栈帧的入栈和出栈过程。每个栈帧存储局部变量表、操作数栈、动态链接库、方法出口等信息。可以抛出StackOverflowError异常，栈本身不够用；OutOfMemoryError，扩充栈的时候没有申请到足够的空间。</p>
-<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>运行native方法服务。也会抛出上述两个异常。</p>
-<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>虚拟机管理的最大一块内存。虚拟机规范要求，所有对象实例以及数组都要在堆上分配。分代：新生代和老年代；新生代分为Eden区和两个Survivor区。规范规定，堆可以处于物理上不连续的内存空间中，只要逻辑上连续即可，就像磁盘一样。当堆中没有足够的内存分配，且堆无法扩展的时候，将会跑出OutOfMemoryError异常。</p>
-<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>线程共享，存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。HotSpot将其称为永久代，是因为GC分代收集扩展至方法区。回收目标针对常量池的回收和类型的卸载。也会跑出OutOfMemoryError异常。</p>
-<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>方法区的一部分，存放各种字面量和符号引用。String类的intern()返回这里的值。同意可能返回OutOfMemoryError异常。</p>
-<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>Direct Memory并不是虚机运行时数据区的一部分，也不是虚拟机规范定义的内存区域。堆内的DirectByteBuffer对象对堆外内存引用进行操作，避免在java堆和native堆间来回复制数据，一些场景可以提高性能。</p>
-<h2 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h2><p>对象类型信息存储在方法区。</p>
-<p>栈和堆之间的访问方式一般两种：1.使用句柄，reference中存储的是稳定的句柄地址，对象移动时只会改变句柄中的实例数据指针；2.使用之间指针，节省一次指针寻址。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/05/11/mysql-schema/" itemprop="url">
                   Schema
                 </a>
@@ -522,7 +1537,7 @@ Container: 服务运行容器。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-11T14:11:35+08:00" content="2016-05-11">
+            <time itemprop="dateCreated" datetime="2016-05-11T15:00:00+08:00" content="2016-05-11">
               2016-05-11
             </time>
           </span>
@@ -650,7 +1665,7 @@ Container: 服务运行容器。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-10T14:23:33+08:00" content="2016-05-10">
+            <time itemprop="dateCreated" datetime="2016-05-10T15:00:00+08:00" content="2016-05-10">
               2016-05-10
             </time>
           </span>
@@ -752,7 +1767,7 @@ Container: 服务运行容器。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-09T16:59:22+08:00" content="2016-05-09">
+            <time itemprop="dateCreated" datetime="2016-05-09T15:00:00+08:00" content="2016-05-09">
               2016-05-09
             </time>
           </span>
@@ -863,138 +1878,6 @@ Container: 服务运行容器。
             
               
                 
-                <a class="post-title-link" href="/2016/05/05/advanced-index/" itemprop="url">
-                  创建高性能的索引
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-05T20:05:08+08:00" content="2016-05-05">
-              2016-05-05
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/05/advanced-index/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/05/advanced-index/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="索引的优点"><a href="#索引的优点" class="headerlink" title="索引的优点"></a>索引的优点</h2><ol>
-<li>减少扫描的数据了</li>
-<li>避免排序和临时表</li>
-<li>将随机IO变为顺序IO</li>
-</ol>
-<p>三星系统：索引将相关记录放在一起；索引中的数据顺序和查找中的数据顺序一致；索引中的列包含了查询中需要的全部列。</p>
-<h2 id="高性能的索引策略"><a href="#高性能的索引策略" class="headerlink" title="高性能的索引策略"></a>高性能的索引策略</h2><h3 id="独立的列"><a href="#独立的列" class="headerlink" title="独立的列"></a>独立的列</h3><p>如果查询中的列不是独立的（索引的列不能是表达式的一部分或者函数的参数），则mysql不会使用索引。</p>
-<pre><code>这个查询
-select actor_id from sakila.actor where actor_id + 1 = 5;
-</code></pre><h3 id="前缀索引和索引的选择性"><a href="#前缀索引和索引的选择性" class="headerlink" title="前缀索引和索引的选择性"></a>前缀索引和索引的选择性</h3><p>当需要索引很长的字符列的时候，一种可以模拟hash索引；另一种是索引开始的部分字符，这样可以大大节约索引空间，提高索引效率。</p>
-<p>索引选择性，指的是不重复的索引值和记录总数（#T）的比值，范围从1/#T到1之间。索引选择性越高查询效率越高，因为mysql可以通过它过滤掉更多的行。唯一索引的选择性是1，性能最好。</p>
-<p>一般情况，某个列前缀的选择性也足够高，对应blob，text和很长的varchar，必须使用。mysql也不允许索引这些列的完整长度。因此关键在于选择前缀的长度，使其基数接近于整个列的基数。</p>
-<ol>
-<li>首先计算该字符列的count</li>
-<li>然后逐一测试left（column，num）的count，其中column是列，num是前缀长度；即比较各个前缀长度的count是否和第一步中的count相似。</li>
-</ol>
-<p>另一种方法是计算完整列的选择性，并使前缀的选择性接近于完整列的选择性。</p>
-<pre><code>select count(distinct city)/count(*) from city_demo;
-select count(distinct left(city,3)/count(*) as sel3,    #0.0239
-        count(distinct left(city,4)/count(*) as sel4,    #0.0293
-        count(distinct left(city,5)/count(*) as sel5,    #0.02305
-        count(distinct left(city,6)/count(*) as sel6,    #0.0309
-        count(distinct left(city,7)/count(*) as sel7,    #0.0310
-from city_demo;
-</code></pre><p>这个测试发现完整列的选择性是0.0312，所以当前缀选择性接近0.031的时候，基本就可用了。所以7的时候就可用了。如果再增加，提升的幅度已经就很小了。</p>
-<p>在考虑平均选择性的同时，有例外情况，需要考虑最坏情况下的选择性。即如果数据分布很不均匀，前缀效果会降低。比如上诉例子中长度为4的前缀，就可能出现不均的情况。实际中，如果地名用长度为4的前缀，以San和New开头的城市的选择性会很差，因为以这些词开头的城市太多了。所以使用平均选择性的时候还要考虑分布情况。</p>
-<p>创建前缀索引</p>
-<pre><code>alert table city_demo add key (city(7));
-</code></pre><p>但mysql无法使用前缀索引做group by和order by。</p>
-<p>针对16进制的唯一ID使用索引是常见场景，可考虑长度为8的前缀索引，通常能显著提升性能。</p>
-<h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>不要为每个列都建立索引，可以试图建立组合。mysql在5.0之后提供了一种“索引合并”的策略，一定程度上可以是用表上的多个单列索引定位指定的行，但实际情况更多的说明表上建立索引比较糟糕。</p>
-<p>- </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/05/05/markdown/" itemprop="url">
                   Markdown Grammar Example
                 </a>
@@ -1009,7 +1892,7 @@ from city_demo;
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-05T15:39:50+08:00" content="2016-05-05">
+            <time itemprop="dateCreated" datetime="2016-05-05T15:00:00+08:00" content="2016-05-05">
               2016-05-05
             </time>
           </span>
@@ -1102,133 +1985,11 @@ from city_demo;
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/05/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-05T14:56:31+08:00" content="2016-05-05">
-              2016-05-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/05/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/05/hello-world/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/05/hello-world/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1269,7 +2030,7 @@ from city_demo;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1277,7 +2038,7 @@ from city_demo;
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1286,7 +2047,7 @@ from city_demo;
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1297,6 +2058,26 @@ from city_demo;
         
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
           
         </div>
 
@@ -1323,7 +2104,7 @@ from city_demo;
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

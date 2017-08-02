@@ -1,0 +1,704 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql,事务," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="MySQL的逻辑架构图。最上层是连接管理、授权认证、安全等。每个客户端连接会在服务器中拥有一个线程。连接时，服务器首先对其进行认证，基于用户名、原始主机细信息和密码。成功后会进一步验证是否具有执行某个特定查询的权限。 第二层包括查询解析、分析、优化、换成以及所有内置函数（如，日期、时间、数学等），所有跨存储引擎的功能：存储过程、触发器、视图等。mysql会解析查询，创建内部数据结果（解析树），进行">
+<meta name="keywords" content="mysql,事务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transaction">
+<meta property="og:url" content="http://yoursite.com/2016/05/09/sql/mysql-transaction/index.html">
+<meta property="og:site_name" content="凤凰花开芙蓉畔">
+<meta property="og:description" content="MySQL的逻辑架构图。最上层是连接管理、授权认证、安全等。每个客户端连接会在服务器中拥有一个线程。连接时，服务器首先对其进行认证，基于用户名、原始主机细信息和密码。成功后会进一步验证是否具有执行某个特定查询的权限。 第二层包括查询解析、分析、优化、换成以及所有内置函数（如，日期、时间、数学等），所有跨存储引擎的功能：存储过程、触发器、视图等。mysql会解析查询，创建内部数据结果（解析树），进行">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://hi.csdn.net/attachment/201109/1/0_1314876855Seq2.gif">
+<meta property="og:updated_time" content="2017-07-21T11:12:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Transaction">
+<meta name="twitter:description" content="MySQL的逻辑架构图。最上层是连接管理、授权认证、安全等。每个客户端连接会在服务器中拥有一个线程。连接时，服务器首先对其进行认证，基于用户名、原始主机细信息和密码。成功后会进一步验证是否具有执行某个特定查询的权限。 第二层包括查询解析、分析、优化、换成以及所有内置函数（如，日期、时间、数学等），所有跨存储引擎的功能：存储过程、触发器、视图等。mysql会解析查询，创建内部数据结果（解析树），进行">
+<meta name="twitter:image" content="http://hi.csdn.net/attachment/201109/1/0_1314876855Seq2.gif">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Transaction | 凤凰花开芙蓉畔 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">凤凰花开芙蓉畔</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Transaction
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-09T15:00:00+08:00" content="2016-05-09">
+              2016-05-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/09/sql/mysql-transaction/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/09/sql/mysql-transaction/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="MySQL的逻辑架构图。"><a href="#MySQL的逻辑架构图。" class="headerlink" title="MySQL的逻辑架构图。"></a>MySQL的逻辑架构图。</h2><p>最上层是连接管理、授权认证、安全等。每个客户端连接会在服务器中拥有一个线程。连接时，服务器首先对其进行认证，基于用户名、原始主机细信息和密码。成功后会进一步验证是否具有执行某个特定查询的权限。</p>
+<p>第二层包括查询解析、分析、优化、换成以及所有内置函数（如，日期、时间、数学等），所有跨存储引擎的功能：存储过程、触发器、视图等。mysql会解析查询，创建内部数据结果（解析树），进行诸如，重新查询、决定表的读写顺序，以及如何选择合适的索引等。可以通过hint提示优化器，影响决策过程；也可以explain，请求优化器解释优化过程的各个因素。</p>
+<p>第三层是存储引擎。</p>
+<p><img src="http://hi.csdn.net/attachment/201109/1/0_1314876855Seq2.gif" alt="MySQL服务器逻辑架构图"></p>
+<a id="more"></a> 
+<h2 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h2><p>并发控制最简单的思路是使用锁。但锁的方法其实质并不支持并发处理，因为任意时刻只有一个操作可以获得锁。</p>
+<h3 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h3><p>共享锁（shared lock）和排他锁（exclusive lock）,或者叫读锁和写锁。</p>
+<p>读锁是共享的，互不阻塞的。同一时刻可以同时读取，互不干扰。写锁则是排他的，写锁会阻塞其他的写锁和读锁，这是出于安全策略（同一时刻只有一个人在写，防止其他人读到正在写入的数据）。当修改某一部分数据的时候，就会发生锁定。</p>
+<h3 id="锁粒度"><a href="#锁粒度" class="headerlink" title="锁粒度"></a>锁粒度</h3><p>一种提高共享资源并发性的方式是让锁定对象更有选择性。尽量只锁定需要修改的部分数据，而不是所有，也就是控制锁的粒度。</p>
+<p>但是加锁需要消耗资源，锁的各种操作包括，获取、检查是否已经解除、释放等，都会增加系统开销。如果系统花费大量时间管理锁而不是存储数据，则系统的系统将产生很大影响。mysql支持多种锁策略，最重要的两种是表锁和行级锁。</p>
+<p>表锁是最基本的锁策略，也是开销最小的。一个用户对表进行写操作（插入、删除、更新），就需要获得写锁，会阻止其他用户对该表的所有读写操作，只有没有写锁时，其他读取的用户才能获得读锁，读锁间不阻塞。虽然存储引擎可以管理自己的锁，但mysql会使用有效的表锁来实现不同的目的，如alter table会使用表锁而忽略存储引擎的锁机制。</p>
+<p>行级锁可以最大程度的地支持并发处理（也带来最大的锁开销）。行级锁只在存储引擎中实现，mysql服务器层没有实现，见前文逻辑架构图。</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h3><p>原子性（atomicity）很容易理解，不可分割。</p>
+<p>一致性（consistency）数据一致性，从一个状态转移到另一个一致性状态，有种质量守恒定律的感觉。</p>
+<p>隔离性（isolation）通常来说，一个事务所做的修改在最终提交前，对其他事务是不可见的。</p>
+<p>持久性（durability）一旦事务提交，修改就永久保存。</p>
+<h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><p><strong>READ UNCOMMITTED 未提交读</strong></p>
+<p>事务中的修改即使没有提交，也对其他事务是可见的。当事务读取到未提交的数据时成脏读（Dirty Read）。优点不明显，但却具备其他隔离级别的缺点。</p>
+<p><strong>READ COMMITTED 提交读</strong></p>
+<p>大多数数据库系统的默认隔离级别（但mysql不是）。它满足隔离性简单要求，只能看见已经提交事务的修改，但是不可重复读（nonrepeatable read），两次执行统一的查询，可能得到不同的结果，因为执行过程中可能有其他事务提交结果。在RC级别中，数据的读取都是不加锁的，但是数据的写入、修改和删除是需要加锁的。</p>
+<p><strong>REPEATABLE READ 可重复读</strong></p>
+<p>保证在同一个事务中多次读取结果一致。这是mysql默认的事务隔离级别。会产生幻读（Phantom Read），在范围读取时，读取到其他事务插入的数据。不可重复读在于update和delete，而幻读在于insert。</p>
+<p>如果使用锁机制来实现这两种隔离级别，在可重复读中，该sql第一次读取到数据后，就将这些数据加锁，其它事务无法修改这些数据，就可以实现可重复读了。但这种方法却无法锁住insert的数据，所以当事务A先前读取了数据，或者修改了全部数据，事务B还是可以insert数据提交，这时事务A就会发现莫名其妙多了一条之前没有的数据，这就是幻读，不能通过行锁来避免。需要Serializable隔离级别 ，读用读锁，写用写锁，读锁和写锁互斥，这么做可以有效的避免幻读、不可重复读、脏读等问题，但会极大的降低数据库的并发能力。</p>
+<p>为解决幻读问题，大多数事务型存储引擎实现的都不是简单的行级锁，基于提升性能考虑，使用基于乐观锁为理论基础实现的多版本并发控制（MVCC），它是行级锁的变种，在很多情况下避免了加锁操作，因此开销更低。因为MVCC没有统一的标准，所以各自的实现机制不尽相同。实现非阻塞的读操作，写操作只锁定必要的行。</p>
+<p>InnoDB的简化版行为说明MVCC：在每行记录后面保存两个隐藏的列，一个保存行的创建时间一个保存行的删除时间，时间为系统的版本号，每开始一个新的事务，系统版本号就自动递增。</p>
+<p>SELECT</p>
+<ol>
+<li>InnoDB只查找版本小于等于当前版本号的数据行，这样可以保证事务读取的行，要么是之前已经存在的要么是自身插入或修改的</li>
+<li>行的删除版本要么未定义，要么大于当前版本号。这可以确保数据行在事务开始前未被删除。</li>
+</ol>
+<p>两者都满足，返回的是事务开始之前（或自己插入修改的）已经存在的数据且还没有被删除的。保证不会出现脏读、不可重复读和幻读。</p>
+<p>INSERT</p>
+<p>为插入的每一行保存当前系统版本号。</p>
+<p>DELETE</p>
+<p>为删除的每一行保存删除版本号。</p>
+<p>UPDATE</p>
+<p>插入一行新纪录，保存当前版本号；同时保存当前系统版本号到原来的行作为删除版本号。</p>
+<p><strong>SERIALIZABLE 可串行化</strong></p>
+<p>最高的隔离级别，强制事务串行执行。</p>
+<table><br><tr><th>隔离级别</th><th>脏读</th><th>可重复读</th><th>幻读</th><th>加锁读</th></tr><br><tr><td>READ UNCOMMITTED</td><td>YES</td><td>YES</td><td>YES</td><td>NO</td></tr><br><tr><td>READ COMMITTED</td><td>NO</td><td>YES</td><td>YES</td><td>NO</td></tr><br><tr><td>REPEATABLE READ</td><td>NO</td><td>NO</td><td>YES</td><td>NO</td></tr><br><tr><td>SERIALIZABLE</td><td>NO</td><td>NO</td><td>NO</td><td>YES</td></tr><br></table>
+
+<h3 id="事务日志"><a href="#事务日志" class="headerlink" title="事务日志"></a>事务日志</h3><p>存储引擎在修改表数据的时候只需要修改其在内存中的拷贝，然后将该行为记录持久DOA硬盘上的事务日志中，而不用每次都将修改的数据本持久到硬盘。由于事务日志采用追加的方式，所以是顺序IO，相对更快。日志持久到硬盘后，后台可以慢慢地刷回硬盘。将其称之为预写式日志（Write-Ahead Logging），修改数据需要两次写磁盘。</p>
+<p>如果在刷新过程中出现问题，重启后，存储引擎可以自动恢复这部分数据。</p>
+<h3 id="自动提交"><a href="#自动提交" class="headerlink" title="自动提交"></a>自动提交</h3><p>mysql默认采用自动提交（AUTOCOMMIT）模式。如果不显示地开始一个事务，则每个查询被当做一个事务执行提交操作。</p>
+<pre><code>show variables like &apos;AUTOCOMMIT&apos;;
+set AUTOCOMMIT = 1;
+#1和ON表示启用， 0和OFF表示停用。
+</code></pre><p>当AUTOCOMMIT=0时，所有查询都在一个事务中，知道显示地执行commit或rollback。</p>
+<p>对于非事务型的表，相当于一直处于AUTOCOMMIT启用的状态。</p>
+<p>mysql和InnoDB支持所有的4个ANSI隔离级别，如果想要修可以使用</p>
+<pre><code>set session transaction isolation level read committed;
+</code></pre><h3 id="显示锁定"><a href="#显示锁定" class="headerlink" title="显示锁定"></a>显示锁定</h3><pre><code>select ... lock in share mode
+select ... for update
+</code></pre><p>因为有大量的并发访问，为了预防死锁，一般应用中推荐使用一次封锁法，就是在方法的开始阶段，已经预先知道会用到哪些数据，然后全部锁住，在方法运行之后，再全部解锁。这种方式可以有效的避免循环死锁，但在数据库中却不适用，因为在事务开始阶段，数据库并不知道会用到哪些数据。</p>
+<p>数据库遵循的是两段锁协议，将事务分成两个阶段，加锁阶段和解锁阶段（所以叫两段锁）</p>
+<p>加锁阶段：在该阶段可以进行加锁操作。在对任何数据进行读操作之前要申请并获得S锁（共享锁，其它事务可以继续加共享锁，但不能加排它锁），在进行写操作之前要申请并获得X锁（排它锁，其它事务不能再获得任何锁）。加锁不成功，则事务进入等待状态，直到加锁成功才继续执行。</p>
+<p>解锁阶段：当事务释放了一个封锁以后，事务进入解锁阶段，在该阶段只能进行解锁操作不能再进行加锁操作。</p>
+<p>begin； </p>
+<p>insert into test ….. 加insert对应的锁</p>
+<p>update test set… 加update对应的锁</p>
+<p>delete from test …. 加delete对应的锁</p>
+<p>commit; 事务提交时，同时释放insert、update、delete对应的锁</p>
+<p>这种方式虽然无法避免死锁，但是两段锁协议可以保证事务的并发调度是串行化（串行化很重要，尤其是在数据恢复和备份的时候）的。</p>
+<h2 id="一些其他和schema相关的术语"><a href="#一些其他和schema相关的术语" class="headerlink" title="一些其他和schema相关的术语"></a>一些其他和schema相关的术语</h2><p>范式和返范式混用</p>
+<p>缓存表（解决获取速度慢）、汇总表（解决group by聚合）</p>
+<p>计数器表</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag">#mysql</a>
+          
+            <a href="/tags/事务/" rel="tag">#事务</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/05/markdown/" rel="next" title="Markdown Grammar Example">
+                <i class="fa fa-chevron-left"></i> Markdown Grammar Example
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/10/sql/mysql-engine/" rel="prev" title="MySQL Engine">
+                MySQL Engine <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/09/sql/mysql-transaction/"
+           data-title="Transaction" data-url="http://yoursite.com/2016/05/09/sql/mysql-transaction/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/image/avatar.jpg"
+               alt="Sunwind" />
+          <p class="site-author-name" itemprop="name">Sunwind</p>
+          <p class="site-description motion-element" itemprop="description">含英咀华，凤凰于飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL的逻辑架构图。"><span class="nav-number">1.</span> <span class="nav-text">MySQL的逻辑架构图。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发控制"><span class="nav-number">2.</span> <span class="nav-text">并发控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读写锁"><span class="nav-number">2.1.</span> <span class="nav-text">读写锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#锁粒度"><span class="nav-number">2.2.</span> <span class="nav-text">锁粒度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">3.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ACID"><span class="nav-number">3.1.</span> <span class="nav-text">ACID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隔离级别"><span class="nav-number">3.2.</span> <span class="nav-text">隔离级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务日志"><span class="nav-number">3.3.</span> <span class="nav-text">事务日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动提交"><span class="nav-number">3.4.</span> <span class="nav-text">自动提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显示锁定"><span class="nav-number">3.5.</span> <span class="nav-text">显示锁定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些其他和schema相关的术语"><span class="nav-number">4.</span> <span class="nav-text">一些其他和schema相关的术语</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sunwind</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jolinzhangg"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -240,6 +240,539 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/20/java/serialize/" itemprop="url">
+                  序列化和readObject/writeObject
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
+              2016-06-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/20/java/serialize/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/java/serialize/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Java中需要序列化的类，只需实现Serializable接口，具体的实现由虚拟机负责调用相关实现方式去实现。所有的non-transient和non-static都将被序列化。</p>
+<pre><code>class SessionDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int data; // Stores session data
+
+    // Session activation time (creation, deserialization)
+    private long activationTime; 
+
+    public SessionDTO(int data) {
+        this.data = data;
+        this.activationTime = System.currentTimeMillis();
+    }
+
+    public int getData() {
+        return data;
+    }
+
+    public long getActivationTime() {
+        return activationTime;
+    }
+}
+
+public class SerializeTester implements Serializable {
+    public static void main(String... strings) throws Exception {
+        File file = new File(&quot;out.ser&quot;);
+
+        ObjectOutputStream oos = new ObjectOutputStream(
+            new FileOutputStream(file));
+        SessionDTO dto = new SessionDTO(1);
+        oos.writeObject(dto);
+        oos.close();
+
+        ObjectInputStream ois = new ObjectInputStream(
+            new FileInputStream(file));
+        SessionDTO dto = (SessionDTO) ois.readObject();
+
+        System.out.println(&quot;data : &quot; + dto.getData()
+            + &quot; activation time : &quot; + dto.getActivationTime());
+        ois.close();
+    }
+}
+</code></pre><p>某些情况下，如果某些字段不需要进行序列化，可以将其设置为transient，这样这些字段就不会进行序列化，以减轻对网络带宽的占用。某些值，如果需要在反序列化的时候重新赋值，可以设置为transient，并且重写readObject方法，在其中为该属性赋值。如果希望序列化的时候对某些值做自定义的处理，可以重写writeObject方法，添加相应逻辑。</p>
+<pre><code>class SessionDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private transient int data; // Stores session data
+
+    //Session activation time (creation, deserialization)
+    private transient long activationTime; 
+
+    public SessionDTO(int data) {
+        this.data = data;
+        this.activationTime = System.currentTimeMillis();
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+        oos.writeInt(data);
+        System.out.println(&quot;session serialized&quot;);
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException,
+            ClassNotFoundException {
+        ois.defaultReadObject();
+        data = ois.readInt();
+        activationTime = System.currentTimeMillis();
+        System.out.println(&quot;session deserialized&quot;);
+    }
+
+    public int getData() {
+        return data;
+    }
+
+    public long getActivationTime() {
+        return activationTime;
+    }
+}
+</code></pre><p>两个方法都是private的，并且它们既不存在于java.lang.Object，也没有在Serializable中声明。那么ObjectOutputStream如何使用它们的呢？这个吗，ObjectOutputStream使用了反射来寻找是否声明了这两个方法。因为ObjectOutputStream使用getPrivateMethod，所以这些方法不得不被声明为priate以至于供ObjectOutputStream来使用。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/20/IO/io/" itemprop="url">
+                  从操作系统的角度聊聊CPU和IO设备
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
+              2016-06-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/IO/" itemprop="url" rel="index">
+                    <span itemprop="name">IO</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/20/IO/io/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/IO/io/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="操作系统的发展过程"><a href="#操作系统的发展过程" class="headerlink" title="操作系统的发展过程"></a>操作系统的发展过程</h2><h3 id="无操作系统时代"><a href="#无操作系统时代" class="headerlink" title="无操作系统时代"></a>无操作系统时代</h3><p>1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。</p>
+<ol>
+<li>用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。</li>
+<li>CPU等待人工操作。</li>
+</ol>
+<p>为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量大，CPU等待时间长，引入外围机作中转，将数据通过外围机输入到磁带上，主机在需要的时候直接读取磁带，解决CPU在等待时，资源的浪费为。</p>
+<h3 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h3><p>由监控程序，每次保着将磁带上的一个作业装入内存，旨在提高资源的利用率和系统的吞吐量。系统中始终只保持一道程序。具备：自动性、顺序性、单道性。</p>
+<h3 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h3><p>CPU等待IO设备结果时，可以被系统调度出去，暂时中断其对CPU的占用，是其他程序可以使用CPU，待IO处理完成后再由系统调度回来。具备：多道性、无序性（先进入内存的作业可能较后完成）、调度性。</p>
+<p>内存中驻留躲到程序，可保持资源处于忙碌状态，资源充分利用。CPU和其他资源保持“忙碌”状态，挡作业运行完成或运行不下去的时候才进行切换，开销小。</p>
+<p>批处理系统推动了多任务操作系统的发展。</p>
+<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多用户样子的系统，一台主机上，连接了多个带有显示器和键盘的终端，允许同时多个用户通过自己的终端，以交互的方式使用计算机，共享主机中的资源。</p>
+<p>及时接收：多路卡连接终端，缓冲区暂存键入的命令或数据。</p>
+<p>及时处理：作业不能先存于磁盘再调入内容，因为磁盘中的作业不能运行，也不能进行交互；不允许一个作业长期占用cpu，只在运行完毕或出现IO请求才被调度是不合适的。采用时间片轮转的方式，让每个作业都能运行一小段时间，这样，在一个不长的时间内会感觉所有用户所有作业都在得到响应。</p>
+<h3 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h3><p>及时响应外部事件的请求。</p>
+<h2 id="操作系统的特性"><a href="#操作系统的特性" class="headerlink" title="操作系统的特性"></a>操作系统的特性</h2><p>并发、共享、虚拟、异步。其中并发是其他三个的前提。<br>并发和并行的差别。并行指同一时刻发生；并发指同一时间间隔内发生。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/15/juc/countdownlatch/" itemprop="url">
+                  CountDownLatch
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-15T15:00:00+08:00" content="2016-06-15">
+              2016-06-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/juc/" itemprop="url" rel="index">
+                    <span itemprop="name">juc</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/15/juc/countdownlatch/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/15/juc/countdownlatch/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <pre><code>package juc.test;
+/**
+ * 可以在闭锁上等待，每次执行countdown后，count-1，当count=0时，等待的线程被唤醒
+ */
+public class CountDownLatch {
+    /**
+     * 内部类，使用AQS同步，利用AQS的state做计数count
+     */
+    private static final class Sync extends AbstractQueuedSynchronizer {
+        private static final long serialVersionUID = 4982264981922014374L;
+
+        Sync(int count) {
+            setState(count);
+        }
+
+        int getCount() {
+            return getState();
+        }
+
+        /*
+         * count=0请求成功；否则，请求失败，请求线程将被阻塞
+         * 闭锁只有共享模式
+         */
+        protected int tryAcquireShared(int acquires) {
+            return (getState() == 0) ? 1 : -1;
+        }
+        /*
+         * 释放
+         */
+        protected boolean tryReleaseShared(int releases) {
+            // Decrement count; signal when transition to zero
+            for (;;) {
+                int c = getState();
+                if (c == 0) // 闭锁已经是0，无需释放
+                    return false;
+                int nextc = c-1;
+                if (compareAndSetState(c, nextc)) // CAS修改count=count-1
+                    // 如果修改后为0表示闭锁已经打开，返回true；否则，说明还有等待的，闭锁处于关闭状态，返回false
+                    return nextc == 0;
+            }
+        }
+    }
+
+    private final Sync sync;
+
+    /*
+     * 根据给定count值构造闭锁
+     */
+    public CountDownLatch(int count) {
+        if (count &lt; 0) throw new IllegalArgumentException(&quot;count &lt; 0&quot;);
+        this.sync = new Sync(count);
+    }
+
+     /* 
+      * 如果当前count为0，那么方法立即返回。 
+      * 如果当前count不为0，那么当前线程会一直等待，直到count被(其他线程)减到0或者当前线程被中断。 
+      */  
+    public void await() throws InterruptedException {
+        sync.acquireSharedInterruptibly(1); // AQS中的实现
+    }
+
+    /*
+     * 超时版await
+     */
+    public boolean await(long timeout, TimeUnit unit)
+        throws InterruptedException {
+        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
+    }
+
+    /*
+     * 递减count，当减到0时，唤醒所有等待的线程去调度。如果当前count是0，则什么都不会发生
+     */
+    public void countDown() {
+        sync.releaseShared(1);
+    }
+
+    public long getCount() {
+        return sync.getCount();
+    }
+
+    public String toString() {
+        return super.toString() + &quot;[Count = &quot; + sync.getCount() + &quot;]&quot;;
+    }
+}
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/14/juc/reentrantlock/" itemprop="url">
                   ReentrantLock
                 </a>
@@ -927,6 +1460,132 @@ public class Semaphore implements java.io.Serializable {
             
               
                 
+                <a class="post-title-link" href="/2016/05/30/linux/管理命令汇总/" itemprop="url">
+                  linux管理维护命令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-30T15:00:00+08:00" content="2016-05-30">
+              2016-05-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/30/linux/管理命令汇总/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/管理命令汇总/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h3><p>nc localhost 20000 与 telnet localhost 20000相同</p>
+<p>激活一个20000端口来监听连接</p>
+<pre><code>nc -l localhost 20000 &amp;
+netstat -tlunp | grep nc
+nc localhost 20000
+</code></pre><p>这里localhost为只开启本机测试，如果想通过其他机器连接，可以使用ip或域名。</p>
+<p>linux命令中的&amp;，强制命令在后台执行。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/30/linux/xinetd/" itemprop="url">
                   xinetd
                 </a>
@@ -1135,132 +1794,6 @@ includedir /etc/xinetd.d
             
               
                 
-                <a class="post-title-link" href="/2016/05/30/linux/管理命令汇总/" itemprop="url">
-                  linux管理维护命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-30T15:00:00+08:00" content="2016-05-30">
-              2016-05-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/30/linux/管理命令汇总/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/linux/管理命令汇总/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h3><p>nc localhost 20000 与 telnet localhost 20000相同</p>
-<p>激活一个20000端口来监听连接</p>
-<pre><code>nc -l localhost 20000 &amp;
-netstat -tlunp | grep nc
-nc localhost 20000
-</code></pre><p>这里localhost为只开启本机测试，如果想通过其他机器连接，可以使用ip或域名。</p>
-<p>linux命令中的&amp;，强制命令在后台执行。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/05/18/ehcache/ehcache/" itemprop="url">
                   ehcache是什么
                 </a>
@@ -1383,7 +1916,7 @@ nc localhost 20000
             
               
                 
-                <a class="post-title-link" href="/2016/05/17/dubbo-getting-started/" itemprop="url">
+                <a class="post-title-link" href="/2016/05/17/rpc/dubbo-getting-started/" itemprop="url">
                   duboo入门
                 </a>
               
@@ -1427,8 +1960,8 @@ nc localhost 20000
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/05/17/dubbo-getting-started/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/17/dubbo-getting-started/" itemprop="commentsCount"></span>
+                <a href="/2016/05/17/rpc/dubbo-getting-started/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/17/rpc/dubbo-getting-started/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1523,7 +2056,7 @@ Container: 服务运行容器。
             
               
                 
-                <a class="post-title-link" href="/2016/05/11/mysql-schema/" itemprop="url">
+                <a class="post-title-link" href="/2016/05/11/sql/mysql-schema/" itemprop="url">
                   Schema
                 </a>
               
@@ -1567,8 +2100,8 @@ Container: 服务运行容器。
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/05/11/mysql-schema/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/mysql-schema/" itemprop="commentsCount"></span>
+                <a href="/2016/05/11/sql/mysql-schema/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/sql/mysql-schema/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1600,362 +2133,7 @@ Container: 服务运行容器。
 </ol>
 <p>第一步需要确定大类型：数字、字符串、时间等；第二步，确定存储范围精度等。eg. TIMESTAMP（4B）比DATETIME（8B）少一半存储空间，可以根据时区变化，具有自动更新的能力；但同时允许的时间范围也小的多。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/11/mysql-schema/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/10/mysql-engine/" itemprop="url">
-                  MySQL Engine
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-10T15:00:00+08:00" content="2016-05-10">
-              2016-05-10
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/10/mysql-engine/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/10/mysql-engine/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在文件系统中，MySQL为每个数据库（也称schema）保存为数据目录下的一个子目录。创建表时，MySQL会在数据库子目录下创建一个和表同名的.frm文件报错表的定义。由于使用文件系统的目录和文件来保存数据库和表，所以大小写敏感性就和平台密切相关。windows大小写不敏感；而类unix则敏感。如图1-图3所示。</p>
-<p><img src="http://i1.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_3.jpg" alt="图1">图1<br><img src="http://i3.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_2.jpg" alt="图2">图2<br><img src="http://i2.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_1.jpg" alt="图3">图3</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/09/mysql-transaction/" itemprop="url">
-                  Transaction
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-09T15:00:00+08:00" content="2016-05-09">
-              2016-05-09
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/09/mysql-transaction/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/09/mysql-transaction/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="MySQL的逻辑架构图。"><a href="#MySQL的逻辑架构图。" class="headerlink" title="MySQL的逻辑架构图。"></a>MySQL的逻辑架构图。</h2><p>最上层是连接管理、授权认证、安全等。每个客户端连接会在服务器中拥有一个线程。连接时，服务器首先对其进行认证，基于用户名、原始主机细信息和密码。成功后会进一步验证是否具有执行某个特定查询的权限。</p>
-<p>第二层包括查询解析、分析、优化、换成以及所有内置函数（如，日期、时间、数学等），所有跨存储引擎的功能：存储过程、触发器、视图等。mysql会解析查询，创建内部数据结果（解析树），进行诸如，重新查询、决定表的读写顺序，以及如何选择合适的索引等。可以通过hint提示优化器，影响决策过程；也可以explain，请求优化器解释优化过程的各个因素。</p>
-<p>第三层是存储引擎。</p>
-<p><img src="http://hi.csdn.net/attachment/201109/1/0_1314876855Seq2.gif" alt="MySQL服务器逻辑架构图"></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/09/mysql-transaction/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/05/markdown/" itemprop="url">
-                  Markdown Grammar Example
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-05T15:00:00+08:00" content="2016-05-05">
-              2016-05-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/markdown/" itemprop="url" rel="index">
-                    <span itemprop="name">markdown</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/05/markdown/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/05/markdown/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <pre><code># h1
-## h2
-### h3
-#### h4
-##### h5
-###### h6
-</code></pre><h1 id="h1"><a href="#h1" class="headerlink" title="h1"></a>h1</h1><h2 id="h2"><a href="#h2" class="headerlink" title="h2"></a>h2</h2><h3 id="h3"><a href="#h3" class="headerlink" title="h3"></a>h3</h3><h4 id="h4"><a href="#h4" class="headerlink" title="h4"></a>h4</h4><h5 id="h5"><a href="#h5" class="headerlink" title="h5"></a>h5</h5><h6 id="h6"><a href="#h6" class="headerlink" title="h6"></a>h6</h6>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/05/markdown/#more" rel="contents">
+            <a class="btn" href="/2016/05/11/sql/mysql-schema/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2030,7 +2208,7 @@ Container: 服务运行容器。
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -2038,7 +2216,7 @@ Container: 服务运行容器。
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2047,7 +2225,7 @@ Container: 服务运行容器。
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

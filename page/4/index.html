@@ -240,6 +240,493 @@
             
               
                 
+                <a class="post-title-link" href="/2016/05/10/sql/mysql-engine/" itemprop="url">
+                  MySQL Engine
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-10T15:00:00+08:00" content="2016-05-10">
+              2016-05-10
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/10/sql/mysql-engine/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/10/sql/mysql-engine/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在文件系统中，MySQL为每个数据库（也称schema）保存为数据目录下的一个子目录。创建表时，MySQL会在数据库子目录下创建一个和表同名的.frm文件报错表的定义。由于使用文件系统的目录和文件来保存数据库和表，所以大小写敏感性就和平台密切相关。windows大小写不敏感；而类unix则敏感。如图1-图3所示。</p>
+<p><img src="http://i1.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_3.jpg" alt="图1">图1<br><img src="http://i3.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_2.jpg" alt="图2">图2<br><img src="http://i2.itc.cn/20160510/3094_f6bc222d_fd0b_ff61_72fe_3f2a276ee94f_1.jpg" alt="图3">图3</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/09/sql/mysql-transaction/" itemprop="url">
+                  Transaction
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-09T15:00:00+08:00" content="2016-05-09">
+              2016-05-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/09/sql/mysql-transaction/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/09/sql/mysql-transaction/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="MySQL的逻辑架构图。"><a href="#MySQL的逻辑架构图。" class="headerlink" title="MySQL的逻辑架构图。"></a>MySQL的逻辑架构图。</h2><p>最上层是连接管理、授权认证、安全等。每个客户端连接会在服务器中拥有一个线程。连接时，服务器首先对其进行认证，基于用户名、原始主机细信息和密码。成功后会进一步验证是否具有执行某个特定查询的权限。</p>
+<p>第二层包括查询解析、分析、优化、换成以及所有内置函数（如，日期、时间、数学等），所有跨存储引擎的功能：存储过程、触发器、视图等。mysql会解析查询，创建内部数据结果（解析树），进行诸如，重新查询、决定表的读写顺序，以及如何选择合适的索引等。可以通过hint提示优化器，影响决策过程；也可以explain，请求优化器解释优化过程的各个因素。</p>
+<p>第三层是存储引擎。</p>
+<p><img src="http://hi.csdn.net/attachment/201109/1/0_1314876855Seq2.gif" alt="MySQL服务器逻辑架构图"></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/09/sql/mysql-transaction/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/05/markdown/" itemprop="url">
+                  Markdown Grammar Example
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-05T15:00:00+08:00" content="2016-05-05">
+              2016-05-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/markdown/" itemprop="url" rel="index">
+                    <span itemprop="name">markdown</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/05/markdown/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/05/markdown/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <pre><code># h1
+## h2
+### h3
+#### h4
+##### h5
+###### h6
+</code></pre><h1 id="h1"><a href="#h1" class="headerlink" title="h1"></a>h1</h1><h2 id="h2"><a href="#h2" class="headerlink" title="h2"></a>h2</h2><h3 id="h3"><a href="#h3" class="headerlink" title="h3"></a>h3</h3><h4 id="h4"><a href="#h4" class="headerlink" title="h4"></a>h4</h4><h5 id="h5"><a href="#h5" class="headerlink" title="h5"></a>h5</h5><h6 id="h6"><a href="#h6" class="headerlink" title="h6"></a>h6</h6>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/05/markdown/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/05/sql/advanced-index/" itemprop="url">
+                  创建高性能的索引
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-05T15:00:00+08:00" content="2016-05-05">
+              2016-05-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/05/sql/advanced-index/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/05/sql/advanced-index/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="索引的优点"><a href="#索引的优点" class="headerlink" title="索引的优点"></a>索引的优点</h2><ol>
+<li>减少扫描的数据了</li>
+<li>避免排序和临时表</li>
+<li>将随机IO变为顺序IO</li>
+</ol>
+<p>三星系统：索引将相关记录放在一起；索引中的数据顺序和查找中的数据顺序一致；索引中的列包含了查询中需要的全部列。</p>
+<h2 id="高性能的索引策略"><a href="#高性能的索引策略" class="headerlink" title="高性能的索引策略"></a>高性能的索引策略</h2><h3 id="独立的列"><a href="#独立的列" class="headerlink" title="独立的列"></a>独立的列</h3><p>如果查询中的列不是独立的（索引的列不能是表达式的一部分或者函数的参数），则mysql不会使用索引。</p>
+<pre><code>这个查询
+select actor_id from sakila.actor where actor_id + 1 = 5;
+</code></pre><h3 id="前缀索引和索引的选择性"><a href="#前缀索引和索引的选择性" class="headerlink" title="前缀索引和索引的选择性"></a>前缀索引和索引的选择性</h3><p>当需要索引很长的字符列的时候，一种可以模拟hash索引；另一种是索引开始的部分字符，这样可以大大节约索引空间，提高索引效率。</p>
+<p>索引选择性，指的是不重复的索引值和记录总数（#T）的比值，范围从1/#T到1之间。索引选择性越高查询效率越高，因为mysql可以通过它过滤掉更多的行。唯一索引的选择性是1，性能最好。</p>
+<p>一般情况，某个列前缀的选择性也足够高，对应blob，text和很长的varchar，必须使用。mysql也不允许索引这些列的完整长度。因此关键在于选择前缀的长度，使其基数接近于整个列的基数。</p>
+<ol>
+<li>首先计算该字符列的count</li>
+<li>然后逐一测试left（column，num）的count，其中column是列，num是前缀长度；即比较各个前缀长度的count是否和第一步中的count相似。</li>
+</ol>
+<p>另一种方法是计算完整列的选择性，并使前缀的选择性接近于完整列的选择性。</p>
+<pre><code>select count(distinct city)/count(*) from city_demo;
+select count(distinct left(city,3)/count(*) as sel3,    #0.0239
+        count(distinct left(city,4)/count(*) as sel4,    #0.0293
+        count(distinct left(city,5)/count(*) as sel5,    #0.02305
+        count(distinct left(city,6)/count(*) as sel6,    #0.0309
+        count(distinct left(city,7)/count(*) as sel7,    #0.0310
+from city_demo;
+</code></pre><p>这个测试发现完整列的选择性是0.0312，所以当前缀选择性接近0.031的时候，基本就可用了。所以7的时候就可用了。如果再增加，提升的幅度已经就很小了。</p>
+<p>在考虑平均选择性的同时，有例外情况，需要考虑最坏情况下的选择性。即如果数据分布很不均匀，前缀效果会降低。比如上诉例子中长度为4的前缀，就可能出现不均的情况。实际中，如果地名用长度为4的前缀，以San和New开头的城市的选择性会很差，因为以这些词开头的城市太多了。所以使用平均选择性的时候还要考虑分布情况。</p>
+<p>创建前缀索引</p>
+<pre><code>alert table city_demo add key (city(7));
+</code></pre><p>但mysql无法使用前缀索引做group by和order by。</p>
+<p>针对16进制的唯一ID使用索引是常见场景，可考虑长度为8的前缀索引，通常能显著提升性能。</p>
+<h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>不要为每个列都建立索引，可以试图建立组合。mysql在5.0之后提供了一种“索引合并”的策略，一定程度上可以是用表上的多个单列索引定位指定的行，但实际情况更多的说明表上建立索引比较糟糕。</p>
+<p>- </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/05/hello-world/" itemprop="url">
                   Hello World
                 </a>
@@ -341,138 +828,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/05/advanced-index/" itemprop="url">
-                  创建高性能的索引
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-05T15:00:00+08:00" content="2016-05-05">
-              2016-05-05
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/05/advanced-index/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/05/advanced-index/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="索引的优点"><a href="#索引的优点" class="headerlink" title="索引的优点"></a>索引的优点</h2><ol>
-<li>减少扫描的数据了</li>
-<li>避免排序和临时表</li>
-<li>将随机IO变为顺序IO</li>
-</ol>
-<p>三星系统：索引将相关记录放在一起；索引中的数据顺序和查找中的数据顺序一致；索引中的列包含了查询中需要的全部列。</p>
-<h2 id="高性能的索引策略"><a href="#高性能的索引策略" class="headerlink" title="高性能的索引策略"></a>高性能的索引策略</h2><h3 id="独立的列"><a href="#独立的列" class="headerlink" title="独立的列"></a>独立的列</h3><p>如果查询中的列不是独立的（索引的列不能是表达式的一部分或者函数的参数），则mysql不会使用索引。</p>
-<pre><code>这个查询
-select actor_id from sakila.actor where actor_id + 1 = 5;
-</code></pre><h3 id="前缀索引和索引的选择性"><a href="#前缀索引和索引的选择性" class="headerlink" title="前缀索引和索引的选择性"></a>前缀索引和索引的选择性</h3><p>当需要索引很长的字符列的时候，一种可以模拟hash索引；另一种是索引开始的部分字符，这样可以大大节约索引空间，提高索引效率。</p>
-<p>索引选择性，指的是不重复的索引值和记录总数（#T）的比值，范围从1/#T到1之间。索引选择性越高查询效率越高，因为mysql可以通过它过滤掉更多的行。唯一索引的选择性是1，性能最好。</p>
-<p>一般情况，某个列前缀的选择性也足够高，对应blob，text和很长的varchar，必须使用。mysql也不允许索引这些列的完整长度。因此关键在于选择前缀的长度，使其基数接近于整个列的基数。</p>
-<ol>
-<li>首先计算该字符列的count</li>
-<li>然后逐一测试left（column，num）的count，其中column是列，num是前缀长度；即比较各个前缀长度的count是否和第一步中的count相似。</li>
-</ol>
-<p>另一种方法是计算完整列的选择性，并使前缀的选择性接近于完整列的选择性。</p>
-<pre><code>select count(distinct city)/count(*) from city_demo;
-select count(distinct left(city,3)/count(*) as sel3,    #0.0239
-        count(distinct left(city,4)/count(*) as sel4,    #0.0293
-        count(distinct left(city,5)/count(*) as sel5,    #0.02305
-        count(distinct left(city,6)/count(*) as sel6,    #0.0309
-        count(distinct left(city,7)/count(*) as sel7,    #0.0310
-from city_demo;
-</code></pre><p>这个测试发现完整列的选择性是0.0312，所以当前缀选择性接近0.031的时候，基本就可用了。所以7的时候就可用了。如果再增加，提升的幅度已经就很小了。</p>
-<p>在考虑平均选择性的同时，有例外情况，需要考虑最坏情况下的选择性。即如果数据分布很不均匀，前缀效果会降低。比如上诉例子中长度为4的前缀，就可能出现不均的情况。实际中，如果地名用长度为4的前缀，以San和New开头的城市的选择性会很差，因为以这些词开头的城市太多了。所以使用平均选择性的时候还要考虑分布情况。</p>
-<p>创建前缀索引</p>
-<pre><code>alert table city_demo add key (city(7));
-</code></pre><p>但mysql无法使用前缀索引做group by和order by。</p>
-<p>针对16进制的唯一ID使用索引是常见场景，可考虑长度为8的前缀索引，通常能显著提升性能。</p>
-<h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>不要为每个列都建立索引，可以试图建立组合。mysql在5.0之后提供了一种“索引合并”的策略，一定程度上可以是用表上的多个单列索引定位指定的行，但实际情况更多的说明表上建立索引比较糟糕。</p>
-<p>- </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -518,7 +873,7 @@ from city_demo;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -526,7 +881,7 @@ from city_demo;
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -535,7 +890,7 @@ from city_demo;
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

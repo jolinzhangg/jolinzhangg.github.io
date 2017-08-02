@@ -240,6 +240,780 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/31/open-falcon/counter数据的统计/" itemprop="url">
+                  counter类型数据的统计
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-31T15:00:00+08:00" content="2017-07-31">
+              2017-07-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/open-falcon/" itemprop="url" rel="index">
+                    <span itemprop="name">open-falcon</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/07/31/open-falcon/counter数据的统计/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/31/open-falcon/counter数据的统计/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。</p>
+<p><img src="./img/counter1.png" alt="图1，select_scan监控项是小数"><br>但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。</p>
+<p><img src="./img/counter2.png" alt=""><br>于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric的值的获取是否正确。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/07/31/open-falcon/counter数据的统计/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/25/open-falcon/redis-plugins/" itemprop="url">
+                  redis-plugins
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-25T15:00:00+08:00" content="2017-07-25">
+              2017-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/open-falcon/" itemprop="url" rel="index">
+                    <span itemprop="name">open-falcon</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/07/25/open-falcon/redis-plugins/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/25/open-falcon/redis-plugins/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在transfer组件的配置文件中有三个监听模块，分别是：http监听6060，rpc监听8433，socket监听4444。其中http为组件提供对外的控制接口；rpc为agent提供上报服务；socket提供一种基于socket的连接方式，但不推荐使用，日后可能会被废弃。</p>
+<p>经transfer组件后，由agent上报来的数据，会通过一致性hash路由到judge和graph组件。</p>
+<p>通过进程内队列将收集的数据放进queue，再由send_tasks，批量pop出batch条记录进行发送。</p>
+<pre><code>var (
+TsdbQueue   *nlist.SafeListLimited
+JudgeQueues = make(map[string]*nlist.SafeListLimited)// make用来初始化
+GraphQueues = make(map[string]*nlist.SafeListLimited)// map后面的string是key type, 后面的指针是value type
+</code></pre><p>)</p>
+<p>judge和graph发送逻辑类似，发送过程使用简单for循环进行重试，最多重试三次。</p>
+<blockquote>
+<p><a href="https://github.com/ZhuoRoger/redismon" target="_blank" rel="external">https://github.com/ZhuoRoger/redismon</a></p>
+<p><a href="https://github.com/iambocai/falcon-monit-scripts/tree/master/redis" target="_blank" rel="external">https://github.com/iambocai/falcon-monit-scripts/tree/master/redis</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/25/open-falcon/agent/" itemprop="url">
+                  agent
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-25T15:00:00+08:00" content="2017-07-25">
+              2017-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/open-falcon/" itemprop="url" rel="index">
+                    <span itemprop="name">open-falcon</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/07/25/open-falcon/agent/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/25/open-falcon/agent/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="./img/agent1.png" alt=""></p>
+<p>agent包含两部分上报信息：其一是上报心跳到HBS，其二是上报metrics到transfer。</p>
+<p>main.go在根目录下，是程序的入口。主函数依次创建一系列协程。除了在main中显示通过go创建的外，其他均在cron包中创建。</p>
+<h2 id="main函数"><a href="#main函数" class="headerlink" title="main函数"></a>main函数</h2><ol>
+<li>初始化相关配置。</li>
+<li>上报心跳到HBS组件。</li>
+<li>上报metrics到Transfer组件。</li>
+<li>开启http接口服务，端口是1988,对插件暴露的上报接口,收集其他插件上报来的metric,统一由agent上报给transfer。</li>
+<li>通过select{}，阻塞当前main函数，来使主函数不退出，可以一直在后台运行。</li>
+</ol>
+<h2 id="上报心跳数据"><a href="#上报心跳数据" class="headerlink" title="上报心跳数据"></a>上报心跳数据</h2><ol>
+<li>默认通过heartbeat.addr上报心跳到HBS组件，默认是6030端口。</li>
+<li>使用rpc，上报主机存活信息cron.ReportAgentStatus()。</li>
+<li>同步进程端口，cron.SyncBuiltinMetrics()</li>
+<li>同步监控插件，cron.SyncMinePlugins()</li>
+<li>同步信任ip，cron.SyncTrustableIps()</li>
+</ol>
+<h2 id="上报metrics"><a href="#上报metrics" class="headerlink" title="上报metrics"></a>上报metrics</h2><ol>
+<li><p>funcs.BuildMappers()函数，创建Mappers，包含四个FuncsAndInterval机器负载信息、硬件信息、服务器监控信息、开源软件监控指标。即Mappers中已经规定包含四个FuncsAndInterval，每个FuncsAndInterval中有一个Fs，Fs是一个model.MetricValue结构体数组指针，四个Fs内容如下：</p>
+<p> a、AgentMetrics，CpuMetrics，NetMetrics，KernelMetrics，LoadAvgMetrics，MemMetrics，DiskIOMetrics，IOStatsMetrics，NetstatMetrics，ProcMetrics，UdpMetrics</p>
+<p> b、DeviceMetrics</p>
+<p> c、PortMetrics，SocketStatSummaryMetrics</p>
+<p> d、DuMetrics</p>
+</li>
+<li><p>Metrics主要有两种类型，GAUGE和COUNTER，前者为瞬时指标，后者为累加数据。</p>
+</li>
+<li>通过cron.collect()函数定时收集上述metrics，再通过g.SendToTransfer（）函数上报给transfer组件。默认通过配置文件中的transfer.addrs获取组件ip和端口，默认8843端口。</li>
+<li>使用简单的随机策略,随机获取一组transfer中的一个.因此agent可以保证transfer集群的HA。上报成功,break;否则继续随机下一个transfer上报</li>
+</ol>
+<blockquote>
+<p><a href="https://github.com/open-falcon" target="_blank" rel="external">https://github.com/open-falcon</a></p>
+<p><a href="https://book.open-falcon.org/zh_0_2/" target="_blank" rel="external">https://book.open-falcon.org/zh_0_2/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/24/golang/tutorial/" itemprop="url">
+                  Golang学习
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-24T15:00:00+08:00" content="2017-07-24">
+              2017-07-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Golang/" itemprop="url" rel="index">
+                    <span itemprop="name">Golang</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/07/24/golang/tutorial/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/24/golang/tutorial/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>#包<br>每个 Go 程序都是由包组成的。</p>
+<p>程序运行的入口是包 main 。</p>
+<p>这个程序使用并导入了包 “fmt” 和 “math/rand” 。</p>
+<p>按照惯例，包名与导入路径的最后一个目录一致。例如，”math/rand” 包由 package rand 语句开始。</p>
+<p>#并发</p>
+<p>##goroutine</p>
+<p>goroutine 是由 Go 运行时环境管理的轻量级线程。</p>
+<p>go f(x, y, z)<br>开启一个新的 goroutine 执行</p>
+<p>f(x, y, z)<br>f，x，y 和 z 是当前 goroutine 中定义的，但是在新的 goroutine 中运行 f。</p>
+<p>goroutine 在相同的地址空间中运行，因此访问共享内存必须进行同步。</p>
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;time&quot;
+)
+
+func say(s string) {
+    for i := 0; i &lt; 5; i++ {
+        time.Sleep(100 * time.Millisecond)
+        fmt.Println(s)
+    }
+}
+
+func main() {
+    go say(&quot;world&quot;)
+    say(&quot;hello&quot;)
+}
+</code></pre>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/07/24/golang/tutorial/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/05/redis/getDeeper/" itemprop="url">
+                  redis进阶
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
+              2017-04-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/04/05/redis/getDeeper/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/redis/getDeeper/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>multi
+...
+exec
+
+watch
+</code></pre><h2 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h2><p>在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。</p>
+<pre><code>set key value
+expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败
+ttl key    返回键的剩余时间，单位是秒。当键不存在时，返回-2。-1表示永久键。
+persist key 取消过期时间，将键改为永久键。使用set和getset赋值的同时也可以清楚过期时间。
+
+对应的还有另外一组设置毫秒时间的
+pexpire
+pttl
+</code></pre><p>过期时间实现访问频率限制</p>
+<ol>
+<li>利用过期时间，每分钟设置一个key，incr到指定数量时，拒绝。过期后重新计数。</li>
+<li>用列表存储，每个新请求，判断列表是否到达最大长度，若未到达，直接加入；否则，与最早的时间比较，看时间间隔是否大于1分钟，若大于，将最早的时间删除，新时间插入；否则拒绝。</li>
+</ol>
+<p>过期时间实现缓存。限制redis占用的最大内存，不设置过期时间，而让redis通过一定的规则淘汰不需要的缓存键。修改maxmemory参数，设置maxmemory-policy。eg. allkeys-lru</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>127.0.0.1:6379&gt; sadd posts 2 6 12 26
+(integer) 4
+127.0.0.1:6379&gt; smember posts
+(error) ERR unknown command &apos;smember&apos;
+127.0.0.1:6379&gt; smembers posts
+1) &quot;2&quot;
+2) &quot;6&quot;
+3) &quot;12&quot;
+4) &quot;26&quot;
+127.0.0.1:6379&gt; hset post:2 time 1352619200
+(integer) 1
+127.0.0.1:6379&gt; hset post:6 time 1352619600
+(integer) 1
+127.0.0.1:6379&gt; hset post:12 time 1352610100
+(integer) 1
+127.0.0.1:6379&gt; hset post:26 time 1352612000
+(integer) 1
+127.0.0.1:6379&gt; sort posts
+1) &quot;2&quot;
+2) &quot;6&quot;
+3) &quot;12&quot;
+4) &quot;26&quot;
+## 这里by的感觉很像是表连接
+127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc
+1) &quot;6&quot;
+2) &quot;2&quot;
+3) &quot;26&quot;
+4) &quot;12&quot;
+</code></pre><p>通过sort命令的get参数，该参数不影响排序，作用是似的sort命令的返回结果不再是元素自身的值，而是get参数中指定的键值。</p>
+<pre><code>127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc get post:*-&gt;title
+1) &quot;66666&quot;
+2) &quot;windows 8&quot;
+3) &quot;262626&quot;
+4) &quot;121212&quot;
+## 一个sort也可以带有多个get参数（但by只能有一个）
+sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get #
+1) &quot;66666&quot;
+2) &quot;1352619600&quot;
+3) &quot;windows 8&quot;
+4) &quot;1352619200&quot;
+5) &quot;262626&quot;
+6) &quot;1352612000&quot;
+7) &quot;121212&quot;
+8) &quot;1352610100&quot;
+
+get # 会返回元素本身。
+</code></pre><p>store参数保存排序结果</p>
+<pre><code>sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get # store sort.result  
+(integer) 12   ## 保存的键类型是列表类型，返回值为结果个数
+127.0.0.1:6379&gt; lrange sort.result 0 -1
+ 1) &quot;66666&quot;
+ 2) &quot;1352619600&quot;
+ 3) &quot;6&quot;
+ 4) &quot;windows 8&quot;
+ 5) &quot;1352619200&quot;
+ 6) &quot;2&quot;
+ 7) &quot;262626&quot;
+ 8) &quot;1352612000&quot;
+ 9) &quot;26&quot;
+10) &quot;121212&quot;
+11) &quot;1352610100&quot;
+12) &quot;12&quot;
+</code></pre><p>sort对性能的影响<br>O(n+mlog(m))，n为待排序列表中元素个数，m为排序结果返回的个数。</p>
+<ol>
+<li>尽量减少待排序键中元素的数量（减少n）</li>
+<li>使用limit只获取需要的数据（减少m）</li>
+<li>尽量使用store参数缓存</li>
+</ol>
+<h2 id="消息通知"><a href="#消息通知" class="headerlink" title="消息通知"></a>消息通知</h2><p>订阅功能，将用户邮箱存储在集合中，当新增文章后，就向集合中的邮箱地址发送通知邮件。</p>
+<p>当页面需要进行如发送邮件、复杂数据运算等耗时较长的操作时会阻塞页面的渲染，为了避免用户等待太久，应该使用独立的线程来完成。</p>
+<p>松耦合，生产者和消费者无需知道彼此的实现细节。易于扩展，消费者可以有多个，分布在不同机器中，轻松降低单台服务器的负载。</p>
+<p>结合lpush和rpop，往列表左侧添加，右侧取出，模拟消息队列。同时redis提供brpop命令，当没有元素可以取出时，brpop命令将会阻塞，直到油新元素加入。</p>
+<pre><code>brpop key timeout
+其中time为超时时间，0表示不限制等待时间，即将一直等待下去。
+
+brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列表都有数据可以取出的时候，按从左到右的列表顺序
+</code></pre><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出，从简降低往返时延累计值。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/05/redis/begin/" itemprop="url">
                   redis入门
                 </a>
@@ -601,351 +1375,6 @@ Options:
             
               
                 
-                <a class="post-title-link" href="/2017/04/05/redis/getDeeper/" itemprop="url">
-                  redis进阶
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
-              2017-04-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/04/05/redis/getDeeper/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/redis/getDeeper/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>multi
-...
-exec
-
-watch
-</code></pre><h2 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h2><p>在关系型数据库中一般需要一个额外的字段记录到期时间，然后定期检查，删除过期数据。在redis中可以使用expire命令设置一个键的过期时间，到时间后redis会自动删除它。</p>
-<pre><code>set key value
-expire key time 设置过期时间，返回1表示成功；0表示键不存在或设置失败
-ttl key    返回键的剩余时间，单位是秒。当键不存在时，返回-2。-1表示永久键。
-persist key 取消过期时间，将键改为永久键。使用set和getset赋值的同时也可以清楚过期时间。
-
-对应的还有另外一组设置毫秒时间的
-pexpire
-pttl
-</code></pre><p>过期时间实现访问频率限制</p>
-<ol>
-<li>利用过期时间，每分钟设置一个key，incr到指定数量时，拒绝。过期后重新计数。</li>
-<li>用列表存储，每个新请求，判断列表是否到达最大长度，若未到达，直接加入；否则，与最早的时间比较，看时间间隔是否大于1分钟，若大于，将最早的时间删除，新时间插入；否则拒绝。</li>
-</ol>
-<p>过期时间实现缓存。限制redis占用的最大内存，不设置过期时间，而让redis通过一定的规则淘汰不需要的缓存键。修改maxmemory参数，设置maxmemory-policy。eg. allkeys-lru</p>
-<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>127.0.0.1:6379&gt; sadd posts 2 6 12 26
-(integer) 4
-127.0.0.1:6379&gt; smember posts
-(error) ERR unknown command &apos;smember&apos;
-127.0.0.1:6379&gt; smembers posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-127.0.0.1:6379&gt; hset post:2 time 1352619200
-(integer) 1
-127.0.0.1:6379&gt; hset post:6 time 1352619600
-(integer) 1
-127.0.0.1:6379&gt; hset post:12 time 1352610100
-(integer) 1
-127.0.0.1:6379&gt; hset post:26 time 1352612000
-(integer) 1
-127.0.0.1:6379&gt; sort posts
-1) &quot;2&quot;
-2) &quot;6&quot;
-3) &quot;12&quot;
-4) &quot;26&quot;
-## 这里by的感觉很像是表连接
-127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc
-1) &quot;6&quot;
-2) &quot;2&quot;
-3) &quot;26&quot;
-4) &quot;12&quot;
-</code></pre><p>通过sort命令的get参数，该参数不影响排序，作用是似的sort命令的返回结果不再是元素自身的值，而是get参数中指定的键值。</p>
-<pre><code>127.0.0.1:6379&gt; sort posts by post:*-&gt;time desc get post:*-&gt;title
-1) &quot;66666&quot;
-2) &quot;windows 8&quot;
-3) &quot;262626&quot;
-4) &quot;121212&quot;
-## 一个sort也可以带有多个get参数（但by只能有一个）
-sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get #
-1) &quot;66666&quot;
-2) &quot;1352619600&quot;
-3) &quot;windows 8&quot;
-4) &quot;1352619200&quot;
-5) &quot;262626&quot;
-6) &quot;1352612000&quot;
-7) &quot;121212&quot;
-8) &quot;1352610100&quot;
-
-get # 会返回元素本身。
-</code></pre><p>store参数保存排序结果</p>
-<pre><code>sort posts by post:*-&gt;time desc get post:*-&gt;title get post:*-&gt;time get # store sort.result  
-(integer) 12   ## 保存的键类型是列表类型，返回值为结果个数
-127.0.0.1:6379&gt; lrange sort.result 0 -1
- 1) &quot;66666&quot;
- 2) &quot;1352619600&quot;
- 3) &quot;6&quot;
- 4) &quot;windows 8&quot;
- 5) &quot;1352619200&quot;
- 6) &quot;2&quot;
- 7) &quot;262626&quot;
- 8) &quot;1352612000&quot;
- 9) &quot;26&quot;
-10) &quot;121212&quot;
-11) &quot;1352610100&quot;
-12) &quot;12&quot;
-</code></pre><p>sort对性能的影响<br>O(n+mlog(m))，n为待排序列表中元素个数，m为排序结果返回的个数。</p>
-<ol>
-<li>尽量减少待排序键中元素的数量（减少n）</li>
-<li>使用limit只获取需要的数据（减少m）</li>
-<li>尽量使用store参数缓存</li>
-</ol>
-<h2 id="消息通知"><a href="#消息通知" class="headerlink" title="消息通知"></a>消息通知</h2><p>订阅功能，将用户邮箱存储在集合中，当新增文章后，就向集合中的邮箱地址发送通知邮件。</p>
-<p>当页面需要进行如发送邮件、复杂数据运算等耗时较长的操作时会阻塞页面的渲染，为了避免用户等待太久，应该使用独立的线程来完成。</p>
-<p>松耦合，生产者和消费者无需知道彼此的实现细节。易于扩展，消费者可以有多个，分布在不同机器中，轻松降低单台服务器的负载。</p>
-<p>结合lpush和rpop，往列表左侧添加，右侧取出，模拟消息队列。同时redis提供brpop命令，当没有元素可以取出时，brpop命令将会阻塞，直到油新元素加入。</p>
-<pre><code>brpop key timeout
-其中time为超时时间，0表示不限制等待时间，即将一直等待下去。
-
-brpop key [key ...] timeout 可以实现优先队列，当多个key对应的列表都有数据可以取出的时候，按从左到右的列表顺序
-</code></pre><h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出，从简降低往返时延累计值。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/05/java-memory/" itemprop="url">
-                  Java内存区域
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-05T01:06:00+08:00" content="2017-04-05">
-              2017-04-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/04/05/java-memory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/java-memory/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>当前线程执行字节码的行号指示器。在虚拟机的概念模型里，通过这个行号指示下一条要执行的指令，分支、循环、跳转、异常处理、线程恢复等。线程独立。当执行java方法的时候，指示的是虚拟机字节码指令的地址；执行native方法是，这个值为空。</p>
-<p>唯一一个没有在虚拟机规范中规定任何OutOfMemoryError的区域。</p>
-<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>线程私有。栈帧的入栈和出栈过程。每个栈帧存储局部变量表、操作数栈、动态链接库、方法出口等信息。可以抛出StackOverflowError异常，栈本身不够用；OutOfMemoryError，扩充栈的时候没有申请到足够的空间。</p>
-<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>运行native方法服务。也会抛出上述两个异常。</p>
-<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>虚拟机管理的最大一块内存。虚拟机规范要求，所有对象实例以及数组都要在堆上分配。分代：新生代和老年代；新生代分为Eden区和两个Survivor区。规范规定，堆可以处于物理上不连续的内存空间中，只要逻辑上连续即可，就像磁盘一样。当堆中没有足够的内存分配，且堆无法扩展的时候，将会跑出OutOfMemoryError异常。</p>
-<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>线程共享，存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。HotSpot将其称为永久代，是因为GC分代收集扩展至方法区。回收目标针对常量池的回收和类型的卸载。也会跑出OutOfMemoryError异常。</p>
-<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>方法区的一部分，存放各种字面量和符号引用。String类的intern()返回这里的值。同意可能返回OutOfMemoryError异常。</p>
-<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>Direct Memory并不是虚机运行时数据区的一部分，也不是虚拟机规范定义的内存区域。堆内的DirectByteBuffer对象对堆外内存引用进行操作，避免在java堆和native堆间来回复制数据，一些场景可以提高性能。</p>
-<h2 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h2><p>对象类型信息存储在方法区。</p>
-<p>栈和堆之间的访问方式一般两种：1.使用句柄，reference中存储的是稳定的句柄地址，对象移动时只会改变句柄中的实例数据指针；2.使用之间指针，节省一次指针寻址。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2017/04/05/redis/persistence/" itemprop="url">
                   持久化
                 </a>
@@ -1080,8 +1509,8 @@ appendfsync no    不同步，由操作系统决定，即30s
             
               
                 
-                <a class="post-title-link" href="/2017/04/05/generic/" itemprop="url">
-                  泛型
+                <a class="post-title-link" href="/2017/04/05/java/java-memory/" itemprop="url">
+                  Java内存区域
                 </a>
               
             
@@ -1108,8 +1537,8 @@ appendfsync no    不同步，由操作系统决定，即30s
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/generic/" itemprop="url" rel="index">
-                    <span itemprop="name">generic</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -1124,8 +1553,8 @@ appendfsync no    不同步，由操作系统决定，即30s
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/04/05/generic/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/generic/" itemprop="commentsCount"></span>
+                <a href="/2017/04/05/java/java-memory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/05/java/java-memory/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1150,7 +1579,17 @@ appendfsync no    不同步，由操作系统决定，即30s
       
         
           
-            
+            <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>当前线程执行字节码的行号指示器。在虚拟机的概念模型里，通过这个行号指示下一条要执行的指令，分支、循环、跳转、异常处理、线程恢复等。线程独立。当执行java方法的时候，指示的是虚拟机字节码指令的地址；执行native方法是，这个值为空。</p>
+<p>唯一一个没有在虚拟机规范中规定任何OutOfMemoryError的区域。</p>
+<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>线程私有。栈帧的入栈和出栈过程。每个栈帧存储局部变量表、操作数栈、动态链接库、方法出口等信息。可以抛出StackOverflowError异常，栈本身不够用；OutOfMemoryError，扩充栈的时候没有申请到足够的空间。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>运行native方法服务。也会抛出上述两个异常。</p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>虚拟机管理的最大一块内存。虚拟机规范要求，所有对象实例以及数组都要在堆上分配。分代：新生代和老年代；新生代分为Eden区和两个Survivor区。规范规定，堆可以处于物理上不连续的内存空间中，只要逻辑上连续即可，就像磁盘一样。当堆中没有足够的内存分配，且堆无法扩展的时候，将会跑出OutOfMemoryError异常。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>线程共享，存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。HotSpot将其称为永久代，是因为GC分代收集扩展至方法区。回收目标针对常量池的回收和类型的卸载。也会跑出OutOfMemoryError异常。</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>方法区的一部分，存放各种字面量和符号引用。String类的intern()返回这里的值。同意可能返回OutOfMemoryError异常。</p>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>Direct Memory并不是虚机运行时数据区的一部分，也不是虚拟机规范定义的内存区域。堆内的DirectByteBuffer对象对堆外内存引用进行操作，避免在java堆和native堆间来回复制数据，一些场景可以提高性能。</p>
+<h2 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h2><p>对象类型信息存储在方法区。</p>
+<p>栈和堆之间的访问方式一般两种：1.使用句柄，reference中存储的是稳定的句柄地址，对象移动时只会改变句柄中的实例数据指针；2.使用之间指针，节省一次指针寻址。</p>
+
           
         
       
@@ -1681,450 +2120,6 @@ Java API
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/04/elk/elk-setup/" itemprop="url">
-                  elk安装
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T15:00:00+08:00" content="2016-11-04">
-              2016-11-04
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/elk/" itemprop="url" rel="index">
-                    <span itemprop="name">elk</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/11/04/elk/elk-setup/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/04/elk/elk-setup/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>安装rzsz</p>
-<pre><code>yum install -y lrzsz
-</code></pre><p>安装JDK</p>
-<p>安装elasticsearch</p>
-<pre><code>curl https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.5.2.tar.gz        下载
-
-tar -zxvf elasticsearch-1.5.2.tar.gz        解压
-
-su es    切换启动用户，es不能用root
-
-$ bin/elasticsearch        启动
-
-curl &apos;http://localhost:9200/?pretty&apos;        测试
-
-curl -XPOST &apos;http://localhost:9200/_shutdown&apos;        通过API关闭
-</code></pre><p>安装head插件</p>
-<pre><code>./plugin --install mobz/elasticsearch-head  #某些版本为install
-</code></pre><p>安装logstash</p>
-<pre><code>curl http://download.elastic.co/logstash/logstash/logstash-1.5.0.tar.gz        下载
-
-tar -zxvf logstash-1.5.0.tar.gz
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/03/nginx/windows-install/" itemprop="url">
-                  Windows启动、停止nginx
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-03T15:00:00+08:00" content="2016-08-03">
-              2016-08-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/03/nginx/windows-install/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/03/nginx/windows-install/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>长久以来一直是在linux上配置和使用nginx，竟发现没在本地的windows上装过，今天特意试了一下，把安装和配置记录一下。</p>
-<p>首先下载windows版的nginx，我这里是为了学习openresty，所以下载了openresty的windows版，    <a href="https://openresty.org/download/openresty-1.9.15.1-win32.zip" target="_blank" rel="external">https://openresty.org/download/openresty-1.9.15.1-win32.zip</a></p>
-<p>无需安装，解压到指定目录即可，目录下有nginx.exe，相当于在linux目录中/sbin/nginx的作用。</p>
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>进入nginx所在目录</p>
-<pre><code>1、start nginx
-2、nginx.exe
-两种方式，第二种或锁定命令行（cmd或者powershell），停服务需要再开启一个终端。建议第一种，这样命令行可以重新接受其他命令。
-</code></pre><h3 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h3><pre><code>1、nginx.exe -s stop
-2、nginx.exe -s quit
-网上资料有说这两种的区别：stop是快速停止nginx，可能并不保存相关信息；quit是完整有序的停止nginx，并保存相关信息。
-</code></pre><h3 id="重载配置"><a href="#重载配置" class="headerlink" title="重载配置"></a>重载配置</h3><pre><code>和linux中相同：nginx.exe -s reload
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/02/openresty/install/" itemprop="url">
-                  OpenResty安装
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-02T15:00:00+08:00" content="2016-08-02">
-              2016-08-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/OpenResty/" itemprop="url" rel="index">
-                    <span itemprop="name">OpenResty</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/02/openresty/install/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/02/openresty/install/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>正常的编译安装</p>
-<pre><code>wget http://openresty.org/download/ngx_openresty-1.7.4.1.tar.gz
-tar -xvf ngx_openresty-1.7.4.1.tar.gz
-cd ngx_openresty-1.7.4.1
-./configure --prefix=/opt/openresty
-make &amp;&amp; make install
-</code></pre><p>这里注意，make的时候报错：undefined reference to ‘pcre_free_study’，猜测可能是pcre库找不到的问题，在<a href="https://sourceforge.net/projects/pcre/下载pcre，并安装。" target="_blank" rel="external">https://sourceforge.net/projects/pcre/下载pcre，并安装。</a></p>
-<p>安装后，在configure中增加参数–with-pcre=../pcre-8.35，其中注意修改自己pcre库的目录即可。</p>
-<p>安装之后，测试下helloworld。例子来自官网。</p>
-<pre><code>mkdir ~/work
-cd ~/work
-mkdir logs/ conf/
-</code></pre><p>新建配置文件nginx.conf</p>
-<pre><code>worker_processes  1;
-error_log logs/error.log;
-events {
-    worker_connections 1024;
-}
-http {
-    server {
-        listen 8085;
-        location / {
-            default_type text/html;
-            content_by_lua &apos;
-                ngx.say(&quot;&lt;p&gt;hello, world&lt;/p&gt;&quot;)
-            &apos;;
-        }
-    }
-}
-</code></pre><p>在linux环境变量path中，增加/opt/openresty/nginx/sbin</p>
-<p>通过vi /etc/profile, 在文件中追加内容，source /etc/profile。</p>
-<p>启动测试的nginx</p>
-<pre><code>nginx -p `pwd`/ -c conf/nginx.conf
-</code></pre><p>测试</p>
-<pre><code>curl http://localhost:8085/
-</code></pre><p>显示的结果应该是</p>
-<pre><code>&lt;p&gt;hello, world&lt;/p&gt;
-</code></pre><p>代码说明</p>
-<pre><code>content_by_lua    后续lua代码
-content_by_lua_file  后续lua代码源文件
-lua_code_cache off；     默认是on，关闭后，会取消对lua代码的缓存，实时加载代码的更新，影响性能
-</code></pre><p>常用文档</p>
-<pre><code>https://www.nginx.com/resources/wiki/modules/lua/   
-https://github.com/openresty/lua-nginx-module         
-</code></pre><p>Lua的执行阶段</p>
-<ol>
-<li>init_by_lua http</li>
-<li>set_by_lua server, server if, location, location if</li>
-<li>rewrite_by_lua http, server, location, location if</li>
-<li>access_by_lua http, server, location, location if</li>
-<li>content_by_lua location, location if</li>
-<li>header_filter_by_lua http, server, location, location if</li>
-<li>body_filter_by_lua http, server, location, location if</li>
-<li>log_by_lua http, server, location, location if</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2170,7 +2165,7 @@ https://github.com/openresty/lua-nginx-module
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -2178,7 +2173,7 @@ https://github.com/openresty/lua-nginx-module
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2187,7 +2182,7 @@ https://github.com/openresty/lua-nginx-module
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

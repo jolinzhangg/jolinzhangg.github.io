@@ -1,0 +1,671 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="open-falcon,counter,mymon," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。 但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。 于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric">
+<meta name="keywords" content="open-falcon,counter,mymon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="counter类型数据的统计">
+<meta property="og:url" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/index.html">
+<meta property="og:site_name" content="凤凰花开芙蓉畔">
+<meta property="og:description" content="今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。 但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。 于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter1.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter2.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter3.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter4.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter5.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter6.png">
+<meta property="og:updated_time" content="2017-07-31T11:46:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="counter类型数据的统计">
+<meta name="twitter:description" content="今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。 但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。 于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric">
+<meta name="twitter:image" content="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/img/counter1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> counter类型数据的统计 | 凤凰花开芙蓉畔 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">凤凰花开芙蓉畔</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                counter类型数据的统计
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-31T15:00:00+08:00" content="2017-07-31">
+              2017-07-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/open-falcon/" itemprop="url" rel="index">
+                    <span itemprop="name">open-falcon</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/07/31/open-falcon/counter数据的统计/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/31/open-falcon/counter数据的统计/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天在整理mysql监控项数据时，发现对于全表扫描select_scan这个指标，监控到的数据竟然有的时候是小数，如图1所示。</p>
+<p><img src="./img/counter1.png" alt="图1，select_scan监控项是小数"><br>但是按理说次数应该是整数呀，并且在mysql官方文档中，也明确说明是integer类型，如图2所示。</p>
+<p><img src="./img/counter2.png" alt=""><br>于是我开始怀疑这个上报指标是不是有问题，并且群里之前有人吐槽mysql的插件mymon的好多监控指标有问题，单位模糊之类。所以我开始从mymon入手，调查这个metric的值的获取是否正确。</p>
+<a id="more"></a> 
+<h1 id="mymon"><a href="#mymon" class="headerlink" title="mymon"></a>mymon</h1><p>mymon是用golang写的，编译后部署到crontab中实现监控指标的定时获取，在通过插件的处理，将处理结果push到agent中，由agent统一上报。</p>
+<p>核心是通过mysql的命令完成信息的收集的。在插件中有metrics.txt文件，里面记述了400多个统计项。</p>
+<pre><code>show global status;
+show global variables;
+show innodb status;
+show slave status;
+...
+</code></pre><h1 id="插件数据收集"><a href="#插件数据收集" class="headerlink" title="插件数据收集"></a>插件数据收集</h1><p>在server.go中，mysqlState函数，是收集status和variables的入口。在这里为了确认收集到的数据是否准确，我加入了两条log记录每一项数据，并与mysql命令行的运行结果比对，发现并无异常。<br><img src="./img/counter3.png" alt=""><br>数据获取完后就要通过sendData.go中的sendData函数push数据。刚函数主要就是讲上一步收集来的数据转换成json，然后push到agent。在这个位置同样加入了log，发现json无误。可以坊间传言这个插件统计有误并不准确。</p>
+<p>那既然数据收集没问题，那数据与理想不符，必然出现在后续操作中。想来也是，如果没有bug的，这些监控插件只不过是执行下相应的info命令，也不会有出入。</p>
+<h3 id="counter类型"><a href="#counter类型" class="headerlink" title="counter类型"></a>counter类型</h3><p>open-falcon的数据主要分为两种类型：gauge（原始数值）和counter（计数器）。其中gauge就是统计项的瞬时数值，而counter是该数据的累加值。想来open-falcon必然对这种类型的数据做了相应的处理。</p>
+<h1 id="dashboard中的数据显示"><a href="#dashboard中的数据显示" class="headerlink" title="dashboard中的数据显示"></a>dashboard中的数据显示</h1><p>通过firebug，发现图表在显示过程中有两个请求和获取图表数据密切相关。其中第一个请求是获取页面显示的html，也就是python的控制器跳转（这个是我自己的理解，也不知道是不是应该这么说）；第二个是图中具体数据的获取，可以在response中看到如下所示的数据结果，其中的data就是具体的二维坐标系中的点，二元组分别是横坐标时间和纵坐标select_scan的值。</p>
+<p><img src="./img/counter4.png" alt=""></p>
+<p>根据open-falcon的架构，我们知道，agent将数据push到transfer，然后经过一致性hash，数据到达graph组件后并存储在graph组件配置的rrd文件路径中。    </p>
+<pre><code>http://****/chart/big?id=2085
+http://****/chart/h?cf=AVERAGE&amp;end=1501500422&amp;graph_type=h&amp;id=2085&amp;start=1501496882&amp;sum=off&amp;sumonly=off
+</code></pre><p>进一步分析上面的请求和dashboard代码对应，终于发现，经由chart.py文件调用rrdgraph.py中的graph_history函数，其中最终需要把参数请求发送的api_addr这个“环境变量”中，而它是在dashboard的配置文件中配置的，指向的是api组件。</p>
+<p><img src="./img/counter5.png" alt=""></p>
+<p>但是继续跟踪发现无非也就是一些获取，突然意识到，其实知道了数据发送没有问题，直接在数据存储就好了。于是找到了graph组件。</p>
+<h1 id="graph中的数据存储"><a href="#graph中的数据存储" class="headerlink" title="graph中的数据存储"></a>graph中的数据存储</h1><p>通过main函数中的rpc协程，很快可以定位到graph.go这个文件。在其中发现counter类型数据的处理。是两次数据值的差除以step，也就是数据收集的时间间隔。恍然大悟，这些指标都是定时收集的，对于counter的话，自然需要计算的是一定时间间隔的增量，而open-falcon正是采用这样理所当然的处理方式。</p>
+<p><img src="./img/counter6.png" alt=""></p>
+<p>这就可以解释为什么有些机器上收集到的数据是小数了，因为select_scan的值很小的时候，除以step=60，有可能就是小说。所以open-falcon和mymon组件均没有问题。</p>
+<blockquote>
+<p><a href="https://github.com/open-falcon/mymon" target="_blank" rel="external">https://github.com/open-falcon/mymon</a></p>
+<p><a href="https://github.com/open-falcon/dashboard" target="_blank" rel="external">https://github.com/open-falcon/dashboard</a></p>
+<p><a href="https://github.com/open-falcon/falcon-plus" target="_blank" rel="external">https://github.com/open-falcon/falcon-plus</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/open-falcon/" rel="tag">#open-falcon</a>
+          
+            <a href="/tags/counter/" rel="tag">#counter</a>
+          
+            <a href="/tags/mymon/" rel="tag">#mymon</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/25/open-falcon/redis-plugins/" rel="next" title="redis-plugins">
+                <i class="fa fa-chevron-left"></i> redis-plugins
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/07/31/open-falcon/counter数据的统计/"
+           data-title="counter类型数据的统计" data-url="http://yoursite.com/2017/07/31/open-falcon/counter数据的统计/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/image/avatar.jpg"
+               alt="Sunwind" />
+          <p class="site-author-name" itemprop="name">Sunwind</p>
+          <p class="site-description motion-element" itemprop="description">含英咀华，凤凰于飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://yanan0628.github.io/" target="_blank" title="shiye">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  shiye
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://calosfu.github.io/" target="_blank" title="dada">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  dada
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mymon"><span class="nav-number">1.</span> <span class="nav-text">mymon</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#插件数据收集"><span class="nav-number">2.</span> <span class="nav-text">插件数据收集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#counter类型"><span class="nav-number">2.0.1.</span> <span class="nav-text">counter类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dashboard中的数据显示"><span class="nav-number">3.</span> <span class="nav-text">dashboard中的数据显示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#graph中的数据存储"><span class="nav-number">4.</span> <span class="nav-text">graph中的数据存储</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sunwind</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jolinzhangg"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -240,6 +240,450 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/04/elk/elk-setup/" itemprop="url">
+                  elk安装
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-04T15:00:00+08:00" content="2016-11-04">
+              2016-11-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/elk/" itemprop="url" rel="index">
+                    <span itemprop="name">elk</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/04/elk/elk-setup/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/04/elk/elk-setup/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>安装rzsz</p>
+<pre><code>yum install -y lrzsz
+</code></pre><p>安装JDK</p>
+<p>安装elasticsearch</p>
+<pre><code>curl https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.5.2.tar.gz        下载
+
+tar -zxvf elasticsearch-1.5.2.tar.gz        解压
+
+su es    切换启动用户，es不能用root
+
+$ bin/elasticsearch        启动
+
+curl &apos;http://localhost:9200/?pretty&apos;        测试
+
+curl -XPOST &apos;http://localhost:9200/_shutdown&apos;        通过API关闭
+</code></pre><p>安装head插件</p>
+<pre><code>./plugin --install mobz/elasticsearch-head  #某些版本为install
+</code></pre><p>安装logstash</p>
+<pre><code>curl http://download.elastic.co/logstash/logstash/logstash-1.5.0.tar.gz        下载
+
+tar -zxvf logstash-1.5.0.tar.gz
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/03/nginx/windows-install/" itemprop="url">
+                  Windows启动、停止nginx
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-03T15:00:00+08:00" content="2016-08-03">
+              2016-08-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/03/nginx/windows-install/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/03/nginx/windows-install/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>长久以来一直是在linux上配置和使用nginx，竟发现没在本地的windows上装过，今天特意试了一下，把安装和配置记录一下。</p>
+<p>首先下载windows版的nginx，我这里是为了学习openresty，所以下载了openresty的windows版，    <a href="https://openresty.org/download/openresty-1.9.15.1-win32.zip" target="_blank" rel="external">https://openresty.org/download/openresty-1.9.15.1-win32.zip</a></p>
+<p>无需安装，解压到指定目录即可，目录下有nginx.exe，相当于在linux目录中/sbin/nginx的作用。</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>进入nginx所在目录</p>
+<pre><code>1、start nginx
+2、nginx.exe
+两种方式，第二种或锁定命令行（cmd或者powershell），停服务需要再开启一个终端。建议第一种，这样命令行可以重新接受其他命令。
+</code></pre><h3 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h3><pre><code>1、nginx.exe -s stop
+2、nginx.exe -s quit
+网上资料有说这两种的区别：stop是快速停止nginx，可能并不保存相关信息；quit是完整有序的停止nginx，并保存相关信息。
+</code></pre><h3 id="重载配置"><a href="#重载配置" class="headerlink" title="重载配置"></a>重载配置</h3><pre><code>和linux中相同：nginx.exe -s reload
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/02/openresty/install/" itemprop="url">
+                  OpenResty安装
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-02T15:00:00+08:00" content="2016-08-02">
+              2016-08-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/OpenResty/" itemprop="url" rel="index">
+                    <span itemprop="name">OpenResty</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/02/openresty/install/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/02/openresty/install/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>正常的编译安装</p>
+<pre><code>wget http://openresty.org/download/ngx_openresty-1.7.4.1.tar.gz
+tar -xvf ngx_openresty-1.7.4.1.tar.gz
+cd ngx_openresty-1.7.4.1
+./configure --prefix=/opt/openresty
+make &amp;&amp; make install
+</code></pre><p>这里注意，make的时候报错：undefined reference to ‘pcre_free_study’，猜测可能是pcre库找不到的问题，在<a href="https://sourceforge.net/projects/pcre/下载pcre，并安装。" target="_blank" rel="external">https://sourceforge.net/projects/pcre/下载pcre，并安装。</a></p>
+<p>安装后，在configure中增加参数–with-pcre=../pcre-8.35，其中注意修改自己pcre库的目录即可。</p>
+<p>安装之后，测试下helloworld。例子来自官网。</p>
+<pre><code>mkdir ~/work
+cd ~/work
+mkdir logs/ conf/
+</code></pre><p>新建配置文件nginx.conf</p>
+<pre><code>worker_processes  1;
+error_log logs/error.log;
+events {
+    worker_connections 1024;
+}
+http {
+    server {
+        listen 8085;
+        location / {
+            default_type text/html;
+            content_by_lua &apos;
+                ngx.say(&quot;&lt;p&gt;hello, world&lt;/p&gt;&quot;)
+            &apos;;
+        }
+    }
+}
+</code></pre><p>在linux环境变量path中，增加/opt/openresty/nginx/sbin</p>
+<p>通过vi /etc/profile, 在文件中追加内容，source /etc/profile。</p>
+<p>启动测试的nginx</p>
+<pre><code>nginx -p `pwd`/ -c conf/nginx.conf
+</code></pre><p>测试</p>
+<pre><code>curl http://localhost:8085/
+</code></pre><p>显示的结果应该是</p>
+<pre><code>&lt;p&gt;hello, world&lt;/p&gt;
+</code></pre><p>代码说明</p>
+<pre><code>content_by_lua    后续lua代码
+content_by_lua_file  后续lua代码源文件
+lua_code_cache off；     默认是on，关闭后，会取消对lua代码的缓存，实时加载代码的更新，影响性能
+</code></pre><p>常用文档</p>
+<pre><code>https://www.nginx.com/resources/wiki/modules/lua/   
+https://github.com/openresty/lua-nginx-module         
+</code></pre><p>Lua的执行阶段</p>
+<ol>
+<li>init_by_lua http</li>
+<li>set_by_lua server, server if, location, location if</li>
+<li>rewrite_by_lua http, server, location, location if</li>
+<li>access_by_lua http, server, location, location if</li>
+<li>content_by_lua location, location if</li>
+<li>header_filter_by_lua http, server, location, location if</li>
+<li>body_filter_by_lua http, server, location, location if</li>
+<li>log_by_lua http, server, location, location if</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/26/es/setup/" itemprop="url">
                   elasticsearch setup
                 </a>
@@ -1223,539 +1667,6 @@ $ kill `cat pid`
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/20/java/serialize/" itemprop="url">
-                  序列化和readObject/writeObject
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
-              2016-06-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/20/java/serialize/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/java/serialize/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Java中需要序列化的类，只需实现Serializable接口，具体的实现由虚拟机负责调用相关实现方式去实现。所有的non-transient和non-static都将被序列化。</p>
-<pre><code>class SessionDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private int data; // Stores session data
-
-    // Session activation time (creation, deserialization)
-    private long activationTime; 
-
-    public SessionDTO(int data) {
-        this.data = data;
-        this.activationTime = System.currentTimeMillis();
-    }
-
-    public int getData() {
-        return data;
-    }
-
-    public long getActivationTime() {
-        return activationTime;
-    }
-}
-
-public class SerializeTester implements Serializable {
-    public static void main(String... strings) throws Exception {
-        File file = new File(&quot;out.ser&quot;);
-
-        ObjectOutputStream oos = new ObjectOutputStream(
-            new FileOutputStream(file));
-        SessionDTO dto = new SessionDTO(1);
-        oos.writeObject(dto);
-        oos.close();
-
-        ObjectInputStream ois = new ObjectInputStream(
-            new FileInputStream(file));
-        SessionDTO dto = (SessionDTO) ois.readObject();
-
-        System.out.println(&quot;data : &quot; + dto.getData()
-            + &quot; activation time : &quot; + dto.getActivationTime());
-        ois.close();
-    }
-}
-</code></pre><p>某些情况下，如果某些字段不需要进行序列化，可以将其设置为transient，这样这些字段就不会进行序列化，以减轻对网络带宽的占用。某些值，如果需要在反序列化的时候重新赋值，可以设置为transient，并且重写readObject方法，在其中为该属性赋值。如果希望序列化的时候对某些值做自定义的处理，可以重写writeObject方法，添加相应逻辑。</p>
-<pre><code>class SessionDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private transient int data; // Stores session data
-
-    //Session activation time (creation, deserialization)
-    private transient long activationTime; 
-
-    public SessionDTO(int data) {
-        this.data = data;
-        this.activationTime = System.currentTimeMillis();
-    }
-
-    private void writeObject(ObjectOutputStream oos) throws IOException {
-        oos.defaultWriteObject();
-        oos.writeInt(data);
-        System.out.println(&quot;session serialized&quot;);
-    }
-
-    private void readObject(ObjectInputStream ois) throws IOException,
-            ClassNotFoundException {
-        ois.defaultReadObject();
-        data = ois.readInt();
-        activationTime = System.currentTimeMillis();
-        System.out.println(&quot;session deserialized&quot;);
-    }
-
-    public int getData() {
-        return data;
-    }
-
-    public long getActivationTime() {
-        return activationTime;
-    }
-}
-</code></pre><p>两个方法都是private的，并且它们既不存在于java.lang.Object，也没有在Serializable中声明。那么ObjectOutputStream如何使用它们的呢？这个吗，ObjectOutputStream使用了反射来寻找是否声明了这两个方法。因为ObjectOutputStream使用getPrivateMethod，所以这些方法不得不被声明为priate以至于供ObjectOutputStream来使用。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/20/IO/io/" itemprop="url">
-                  从操作系统的角度聊聊CPU和IO设备
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-20T15:00:00+08:00" content="2016-06-20">
-              2016-06-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/IO/" itemprop="url" rel="index">
-                    <span itemprop="name">IO</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/20/IO/io/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/IO/io/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="操作系统的发展过程"><a href="#操作系统的发展过程" class="headerlink" title="操作系统的发展过程"></a>操作系统的发展过程</h2><h3 id="无操作系统时代"><a href="#无操作系统时代" class="headerlink" title="无操作系统时代"></a>无操作系统时代</h3><p>1945年到上世纪50年代中期，这时还未出现OS，需要程序员使用人工方式直接使用计算机硬件系统，将穿孔的纸带装入纸带输入机，将程序和数据输入到计算机中，然后启动计算机运行；运行完毕后取走计算结果。</p>
-<ol>
-<li>用户独占全机的全部资源，每个用户需要等待上一个用户操作完全完成。</li>
-<li>CPU等待人工操作。</li>
-</ol>
-<p>为了解决人机矛盾，出现了脱机输入/输出（Off-Line I/O），输入数据量大，CPU等待时间长，引入外围机作中转，将数据通过外围机输入到磁带上，主机在需要的时候直接读取磁带，解决CPU在等待时，资源的浪费为。</p>
-<h3 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h3><p>由监控程序，每次保着将磁带上的一个作业装入内存，旨在提高资源的利用率和系统的吞吐量。系统中始终只保持一道程序。具备：自动性、顺序性、单道性。</p>
-<h3 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h3><p>CPU等待IO设备结果时，可以被系统调度出去，暂时中断其对CPU的占用，是其他程序可以使用CPU，待IO处理完成后再由系统调度回来。具备：多道性、无序性（先进入内存的作业可能较后完成）、调度性。</p>
-<p>内存中驻留躲到程序，可保持资源处于忙碌状态，资源充分利用。CPU和其他资源保持“忙碌”状态，挡作业运行完成或运行不下去的时候才进行切换，开销小。</p>
-<p>批处理系统推动了多任务操作系统的发展。</p>
-<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多用户样子的系统，一台主机上，连接了多个带有显示器和键盘的终端，允许同时多个用户通过自己的终端，以交互的方式使用计算机，共享主机中的资源。</p>
-<p>及时接收：多路卡连接终端，缓冲区暂存键入的命令或数据。</p>
-<p>及时处理：作业不能先存于磁盘再调入内容，因为磁盘中的作业不能运行，也不能进行交互；不允许一个作业长期占用cpu，只在运行完毕或出现IO请求才被调度是不合适的。采用时间片轮转的方式，让每个作业都能运行一小段时间，这样，在一个不长的时间内会感觉所有用户所有作业都在得到响应。</p>
-<h3 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h3><p>及时响应外部事件的请求。</p>
-<h2 id="操作系统的特性"><a href="#操作系统的特性" class="headerlink" title="操作系统的特性"></a>操作系统的特性</h2><p>并发、共享、虚拟、异步。其中并发是其他三个的前提。<br>并发和并行的差别。并行指同一时刻发生；并发指同一时间间隔内发生。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/15/juc/countdownlatch/" itemprop="url">
-                  CountDownLatch
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-15T15:00:00+08:00" content="2016-06-15">
-              2016-06-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/juc/" itemprop="url" rel="index">
-                    <span itemprop="name">juc</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/15/juc/countdownlatch/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/15/juc/countdownlatch/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <pre><code>package juc.test;
-/**
- * 可以在闭锁上等待，每次执行countdown后，count-1，当count=0时，等待的线程被唤醒
- */
-public class CountDownLatch {
-    /**
-     * 内部类，使用AQS同步，利用AQS的state做计数count
-     */
-    private static final class Sync extends AbstractQueuedSynchronizer {
-        private static final long serialVersionUID = 4982264981922014374L;
-
-        Sync(int count) {
-            setState(count);
-        }
-
-        int getCount() {
-            return getState();
-        }
-
-        /*
-         * count=0请求成功；否则，请求失败，请求线程将被阻塞
-         * 闭锁只有共享模式
-         */
-        protected int tryAcquireShared(int acquires) {
-            return (getState() == 0) ? 1 : -1;
-        }
-        /*
-         * 释放
-         */
-        protected boolean tryReleaseShared(int releases) {
-            // Decrement count; signal when transition to zero
-            for (;;) {
-                int c = getState();
-                if (c == 0) // 闭锁已经是0，无需释放
-                    return false;
-                int nextc = c-1;
-                if (compareAndSetState(c, nextc)) // CAS修改count=count-1
-                    // 如果修改后为0表示闭锁已经打开，返回true；否则，说明还有等待的，闭锁处于关闭状态，返回false
-                    return nextc == 0;
-            }
-        }
-    }
-
-    private final Sync sync;
-
-    /*
-     * 根据给定count值构造闭锁
-     */
-    public CountDownLatch(int count) {
-        if (count &lt; 0) throw new IllegalArgumentException(&quot;count &lt; 0&quot;);
-        this.sync = new Sync(count);
-    }
-
-     /* 
-      * 如果当前count为0，那么方法立即返回。 
-      * 如果当前count不为0，那么当前线程会一直等待，直到count被(其他线程)减到0或者当前线程被中断。 
-      */  
-    public void await() throws InterruptedException {
-        sync.acquireSharedInterruptibly(1); // AQS中的实现
-    }
-
-    /*
-     * 超时版await
-     */
-    public boolean await(long timeout, TimeUnit unit)
-        throws InterruptedException {
-        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
-    }
-
-    /*
-     * 递减count，当减到0时，唤醒所有等待的线程去调度。如果当前count是0，则什么都不会发生
-     */
-    public void countDown() {
-        sync.releaseShared(1);
-    }
-
-    public long getCount() {
-        return sync.getCount();
-    }
-
-    public String toString() {
-        return super.toString() + &quot;[Count = &quot; + sync.getCount() + &quot;]&quot;;
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1801,7 +1712,7 @@ public class CountDownLatch {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1809,7 +1720,7 @@ public class CountDownLatch {
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1818,7 +1729,7 @@ public class CountDownLatch {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
